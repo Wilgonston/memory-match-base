@@ -1,47 +1,88 @@
 /**
- * WalletButton Component Styles
+ * WalletButton Styles
  * 
- * Styles for wallet connection button and dropdown
+ * Styles for wallet connection button component.
  */
 
 .wallet-button-container {
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
-/* Ensure wallet button is visible and accessible */
-.wallet-button-container button {
-  min-height: 44px;
-  min-width: 44px;
+.wallet-connect-btn {
+  background: linear-gradient(135deg, #0052ff 0%, #0041cc 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 16px 32px;
+  font-size: 18px;
+  font-weight: 600;
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 82, 255, 0.3);
+  width: 100%;
+  max-width: 300px;
 }
 
-.wallet-button-container button:hover {
-  opacity: 0.9;
+.wallet-connect-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 82, 255, 0.4);
+  background: linear-gradient(135deg, #0041cc 0%, #0052ff 100%);
 }
 
-.wallet-button-container button:focus {
-  outline: 2px solid #0052FF;
-  outline-offset: 2px;
+.wallet-connect-btn:active {
+  transform: translateY(0);
 }
 
-/* Responsive adjustments */
-@media (max-width: 767px) {
-  .wallet-button-container {
-    font-size: 0.875rem;
+.wallet-connected {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+
+.wallet-address {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: white;
+  font-weight: 500;
+}
+
+.wallet-disconnect-btn {
+  background: rgba(255, 59, 48, 0.8);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.wallet-disconnect-btn:hover {
+  background: rgba(255, 59, 48, 1);
+  transform: scale(1.05);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .wallet-connect-btn {
+    font-size: 16px;
+    padding: 14px 28px;
   }
-}
-
-@media (min-width: 768px) and (max-width: 1023px) {
-  .wallet-button-container {
-    font-size: 1rem;
+  
+  .wallet-address {
+    font-size: 13px;
   }
-}
-
-@media (min-width: 1024px) {
-  .wallet-button-container {
-    font-size: 1rem;
+  
+  .wallet-disconnect-btn {
+    font-size: 13px;
+    padding: 6px 12px;
   }
 }

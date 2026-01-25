@@ -65,7 +65,7 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
               <p className="login-subdescription">
                 ✨ No seed phrases • 🔐 Secure with biometrics • ⚡ Gas-free transactions
               </p>
-              <div className="login-wallet-button">
+                  <div className="login-wallet-button">
                 <WalletButton />
               </div>
               <p className="login-note">
