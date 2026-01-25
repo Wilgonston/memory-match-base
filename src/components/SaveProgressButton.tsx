@@ -1,15 +1,23 @@
 /**
  * SaveProgressButton Component
  * 
- * Button for saving game progress to blockchain.
- * Uses OnchainKit's Transaction components for seamless UX.
+ * Button for saving game progress to blockchain with Paymaster support.
+ * Uses OnchainKit's Transaction components for gas-free transactions.
  * 
  * Requirements: 17.5, 17.6, 17.7, 21.1, 21.2, 21.3, 21.4, 21.5, 21.6, 21.7
  */
 
 import React from 'react';
 import { useAccount } from 'wagmi';
-import { useUpdateLevel } from '../hooks/useUpdateLevel';
+import { 
+  Transaction, 
+  TransactionButton,
+  TransactionStatus,
+  TransactionStatusLabel,
+  TransactionStatusAction,
+} from '@coinbase/onchainkit/transaction';
+import type { LifecycleStatus } from '@coinbase/onchainkit/transaction';
+import { getContractAddress, MEMORY_MATCH_PROGRESS_ABI } from '../types/blockchain';
 import './SaveProgressButton.css';
 
 export interface SaveProgressButtonProps {
@@ -28,9 +36,10 @@ export interface SaveProgressButtonProps {
 /**
  * SaveProgressButton component
  * 
- * Displays a button to save progress to blockchain.
+ * Displays a button to save progress to blockchain with Paymaster support.
  * Shows loading state during transaction and success/error messages.
  * Only visible when wallet is connected.
+ * Transactions are gas-free when Paymaster is configured.
  */
 export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
   level,
@@ -40,67 +49,65 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
   className = '',
 }) => {
   const { isConnected } = useAccount();
-  const { updateLevel, status, error, isPending, reset } = useUpdateLevel();
+  const contractAddress = getContractAddress();
 
   // Don't render if wallet not connected
   if (!isConnected) {
     return null;
   }
 
-  const handleSave = async () => {
-    try {
-      await updateLevel(level, stars);
+  // Transaction contracts configuration
+  const contracts = [
+    {
+      address: contractAddress,
+      abi: MEMORY_MATCH_PROGRESS_ABI,
+      functionName: 'update',
+      args: [level, stars],
+    },
+  ];
+
+  // Handle transaction status changes
+  const handleOnStatus = (status: LifecycleStatus) => {
+    console.log('Transaction status:', status);
+    
+    if (status.statusName === 'success') {
       if (onSuccess) {
         onSuccess();
       }
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Failed to save progress';
+    } else if (status.statusName === 'error') {
       if (onError) {
-        onError(errorMsg);
+        onError(status.statusData?.message || 'Transaction failed');
       }
     }
   };
 
-  const handleRetry = () => {
-    reset();
-    handleSave();
-  };
+  // Build Paymaster URL from OnchainKit API key
+  const apiKey = import.meta.env.VITE_ONCHAINKIT_API_KEY || '';
+  const paymasterUrl = apiKey 
+    ? `https://api.developer.coinbase.com/rpc/v1/base/${apiKey}`
+    : '';
 
   return (
     <div className={`save-progress-button-container ${className}`}>
-      {status === 'idle' && (
-        <button
-          onClick={handleSave}
+      <Transaction
+        contracts={contracts}
+        chainId={contractAddress ? undefined : 8453} // Base Mainnet
+        onStatus={handleOnStatus}
+        capabilities={{
+          paymasterService: {
+            url: paymasterUrl,
+          },
+        }}
+      >
+        <TransactionButton 
           className="save-progress-button"
-          disabled={isPending}
-        >
-          Save to Blockchain
-        </button>
-      )}
-
-      {status === 'pending' && (
-        <div className="save-progress-status saving">
-          <div className="spinner" />
-          <span>Saving to blockchain...</span>
-        </div>
-      )}
-
-      {status === 'success' && (
-        <div className="save-progress-status success">
-          <span className="success-icon">✓</span>
-          <span>Progress saved!</span>
-        </div>
-      )}
-
-      {status === 'error' && (
-        <div className="save-progress-status error">
-          <span className="error-icon">✗</span>
-          <span>Failed: {error}</span>
-          <button onClick={handleRetry} className="retry-button">
-            Retry
-          </button>
-        </div>
-      )}
+          text="Save to Blockchain (Gas-Free)"
+        />
+        <TransactionStatus>
+          <TransactionStatusLabel />
+          <TransactionStatusAction />
+        </TransactionStatus>
+      </Transaction>
     </div>
   );
 };
