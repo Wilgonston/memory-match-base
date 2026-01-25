@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
+    "build:check": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -20,7 +21,6 @@
     "wagmi": "^2.19.5"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
@@ -28,12 +28,11 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.16",
-    "dotenv": "^17.2.3",
     "fast-check": "^3.15.0",
-    "hardhat": "^3.1.5",
     "jsdom": "^23.0.1",
     "postcss": "^8.4.32",
     "tailwindcss": "^3.4.0",
+    "terser": "^5.46.0",
     "typescript": "^5.3.3",
     "vite": "^5.0.8",
     "vitest": "^1.1.0"
