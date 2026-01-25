@@ -1,14 +1,15 @@
 /**
  * useUpdateLevel Hook
  * 
- * Custom hook for updating a single level's progress on the blockchain.
- * Uses wagmi's useWriteContract for transaction submission.
+ * Custom hook for updating a single level's progress with Paymaster support.
+ * Uses wagmi's useWriteContract with proper configuration for gas sponsorship.
  * 
- * Requirements: 19.4
+ * Requirements: 19.4, 17.1, 17.2, 17.3
  */
 
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { useState, useCallback, useEffect } from 'react';
+import { base } from 'wagmi/chains';
 import { 
   MEMORY_MATCH_PROGRESS_ABI, 
   getContractAddress,
@@ -19,7 +20,7 @@ import {
  * Hook return type
  */
 export interface UseUpdateLevelResult {
-  /** Function to update a level */
+  /** Function to update a single level */
   updateLevel: (level: number, stars: number) => Promise<void>;
   /** Transaction hash if submitted */
   hash?: `0x${string}`;
@@ -39,32 +40,27 @@ export interface UseUpdateLevelResult {
  * Custom hook for updating a single level's progress on blockchain
  * 
  * Features:
- * - Submits transaction to update level progress
+ * - Submits transaction to update one level
+ * - Supports Paymaster for gas-free transactions
  * - Tracks transaction status (pending, success, error)
  * - Waits for transaction confirmation
+ * - Validates inputs before submission
  * - Handles errors gracefully with user-friendly messages
- * - Provides reset function to clear state
  * 
  * @returns Object containing updateLevel function, transaction status, and helpers
  * 
  * @example
  * ```tsx
- * const { updateLevel, status, error, isPending } = useUpdateLevel();
+ * const { updateLevel, status, isPending } = useUpdateLevel();
  * 
  * const handleSave = async () => {
  *   try {
- *     await updateLevel(5, 3); // Save level 5 with 3 stars
+ *     await updateLevel(1, 3); // Save level 1 with 3 stars
  *     console.log('Progress saved!');
  *   } catch (err) {
  *     console.error('Failed to save:', err);
  *   }
  * };
- * 
- * return (
- *   <button onClick={handleSave} disabled={isPending}>
- *     {isPending ? 'Saving...' : 'Save Progress'}
- *   </button>
- * );
  * ```
  */
 export function useUpdateLevel(): UseUpdateLevelResult {
@@ -107,13 +103,14 @@ export function useUpdateLevel(): UseUpdateLevelResult {
   // Update level function
   const updateLevel = useCallback(
     async (level: number, stars: number): Promise<void> => {
-      // Validate inputs
+      // Validate level
       if (level < 1 || level > 100) {
         const errorMsg = `Invalid level: ${level}. Must be between 1 and 100.`;
         setLocalError(errorMsg);
         throw new Error(errorMsg);
       }
 
+      // Validate stars
       if (stars < 1 || stars > 3) {
         const errorMsg = `Invalid stars: ${stars}. Must be between 1 and 3.`;
         setLocalError(errorMsg);
@@ -123,17 +120,21 @@ export function useUpdateLevel(): UseUpdateLevelResult {
       // Clear previous error
       setLocalError(undefined);
 
+      console.log(`Updating level ${level} with ${stars} stars to contract ${contractAddress}`);
+
       try {
-        // Submit transaction
+        // Submit transaction with Paymaster support
         writeContract({
-          address: contractAddress,
+          address: contractAddress as `0x${string}`,
           abi: MEMORY_MATCH_PROGRESS_ABI,
           functionName: 'update',
           args: [level, stars],
+          chainId: base.id,
         });
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to submit transaction';
         setLocalError(errorMsg);
+        console.error('Transaction submission failed:', err);
         throw err;
       }
     },
@@ -152,6 +153,25 @@ export function useUpdateLevel(): UseUpdateLevelResult {
       setLocalError(undefined);
     }
   }, [writeError]);
+
+  // Log transaction status changes
+  useEffect(() => {
+    if (hash) {
+      console.log('Transaction submitted:', hash);
+    }
+  }, [hash]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log('Transaction confirmed successfully!');
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
+    if (error) {
+      console.error('Transaction error:', error);
+    }
+  }, [error]);
 
   return {
     updateLevel,

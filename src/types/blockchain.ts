@@ -73,7 +73,7 @@ export const MEMORY_MATCH_PROGRESS_ABI = [
  * Contract addresses by network
  */
 export const CONTRACT_ADDRESSES = {
-  mainnet: (import.meta.env.VITE_PROGRESS_CONTRACT_MAINNET || '0x0000000000000000000000000000000000000000') as Address,
+  mainnet: (import.meta.env.VITE_CONTRACT_ADDRESS || import.meta.env.VITE_PROGRESS_CONTRACT_MAINNET || '0x93aC1C769aCE5caE403a454cBd236aB2EA7B17F5') as Address,
   sepolia: (import.meta.env.VITE_PROGRESS_CONTRACT_SEPOLIA || '0x0000000000000000000000000000000000000000') as Address,
 } as const;
 

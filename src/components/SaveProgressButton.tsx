@@ -9,6 +9,7 @@
 
 import React from 'react';
 import { useAccount } from 'wagmi';
+import { base } from 'wagmi/chains';
 import { 
   Transaction, 
   TransactionButton,
@@ -56,10 +57,13 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
     return null;
   }
 
+  console.log('SaveProgressButton - Contract Address:', contractAddress);
+  console.log('SaveProgressButton - Level:', level, 'Stars:', stars);
+
   // Transaction contracts configuration
   const contracts = [
     {
-      address: contractAddress,
+      address: contractAddress as `0x${string}`,
       abi: MEMORY_MATCH_PROGRESS_ABI,
       functionName: 'update',
       args: [level, stars],
@@ -71,10 +75,12 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
     console.log('Transaction status:', status);
     
     if (status.statusName === 'success') {
+      console.log('Transaction successful!');
       if (onSuccess) {
         onSuccess();
       }
     } else if (status.statusName === 'error') {
+      console.error('Transaction failed:', status.statusData);
       if (onError) {
         onError(status.statusData?.message || 'Transaction failed');
       }
@@ -87,16 +93,18 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
     ? `https://api.developer.coinbase.com/rpc/v1/base/${apiKey}`
     : '';
 
+  console.log('Paymaster URL configured:', paymasterUrl ? 'Yes' : 'No');
+
   return (
     <div className={`save-progress-button-container ${className}`}>
       <Transaction
         contracts={contracts}
-        chainId={contractAddress ? undefined : 8453} // Base Mainnet
+        chainId={base.id}
         onStatus={handleOnStatus}
         capabilities={{
-          paymasterService: {
+          paymasterService: paymasterUrl ? {
             url: paymasterUrl,
-          },
+          } : undefined,
         }}
       >
         <TransactionButton 
