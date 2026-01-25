@@ -24,11 +24,19 @@ export default defineConfig({
           'react-vendor': ['react', 'react-dom'],
           'blockchain-vendor': ['wagmi', 'viem', '@coinbase/onchainkit', '@tanstack/react-query'],
         }
+      },
+      // Suppress pure annotation warnings
+      onwarn(warning, warn) {
+        // Ignore pure annotation warnings from ox library
+        if (warning.code === 'INVALID_ANNOTATION' && warning.message.includes('/*#__PURE__*/')) {
+          return;
+        }
+        warn(warning);
       }
     },
     
-    // Increase chunk size warning limit
-    chunkSizeWarningLimit: 1000,
+    // Increase chunk size warning limit to 2MB (blockchain libraries are large)
+    chunkSizeWarningLimit: 2000,
     
     // Source maps for production debugging (optional)
     sourcemap: false,

@@ -15,6 +15,7 @@ import { LevelSelect } from './components/LevelSelect';
 import { GameBoard } from './components/GameBoard';
 import { useProgress } from './hooks/useProgress';
 import { useGameState } from './hooks/useGameState';
+import { useSyncManager } from './hooks/useSyncManager';
 import { calculateStars } from './utils/scoring';
 import { getLevelConfig } from './utils/levelConfig';
 import './index.css';
@@ -31,7 +32,10 @@ function App() {
   const { address, isConnected } = useAccount();
   
   // Progress management hook
-  const { progress, completeLevel } = useProgress();
+  const { progress, completeLevel, updateProgress } = useProgress();
+
+  // Sync manager for blockchain synchronization
+  const { syncToBlockchain, mergeFromBlockchain, syncStatus } = useSyncManager();
 
   // Game state management hook
   const { state: gameState, dispatch } = useGameState();
@@ -39,6 +43,38 @@ function App() {
   // Current screen state
   const [currentScreen, setCurrentScreen] = useState<Screen>('login');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [hasLoadedBlockchainProgress, setHasLoadedBlockchainProgress] = useState(false);
+
+  /**
+   * Load progress from blockchain when wallet connects
+   */
+  useEffect(() => {
+    const loadBlockchainProgress = async () => {
+      if (isConnected && address && isAuthenticated && !hasLoadedBlockchainProgress) {
+        try {
+          console.log('Loading progress from blockchain...');
+          const mergedProgress = await mergeFromBlockchain(progress);
+          updateProgress(() => mergedProgress);
+          setHasLoadedBlockchainProgress(true);
+          console.log('Progress loaded from blockchain successfully');
+        } catch (error) {
+          console.error('Failed to load blockchain progress:', error);
+          // Continue with local progress on error
+        }
+      }
+    };
+
+    loadBlockchainProgress();
+  }, [isConnected, address, isAuthenticated, hasLoadedBlockchainProgress, mergeFromBlockchain, progress, updateProgress]);
+
+  /**
+   * Reset blockchain progress loaded flag when wallet disconnects
+   */
+  useEffect(() => {
+    if (!isConnected || !address) {
+      setHasLoadedBlockchainProgress(false);
+    }
+  }, [isConnected, address]);
 
   /**
    * Check authentication status on mount and wallet change
@@ -110,6 +146,7 @@ function App() {
   /**
    * Effect to handle level completion
    * When a level is won, save progress and update completion status
+   * Also automatically sync to blockchain if wallet is connected
    */
   useEffect(() => {
     if (gameState.gameStatus === 'won' && gameState.isPlaying === false) {
@@ -117,10 +154,31 @@ function App() {
       const config = getLevelConfig(gameState.level);
       const stars = calculateStars(gameState.moves, config);
       
-      // Save level completion to progress
+      // Save level completion to progress (local storage)
       completeLevel(gameState.level, stars);
+
+      // Automatically sync to blockchain if wallet is connected
+      if (isConnected && address && syncStatus.mode === 'blockchain') {
+        console.log(`Auto-syncing level ${gameState.level} to blockchain...`);
+        
+        // Create updated progress with the new level
+        const updatedProgress = {
+          ...progress,
+          completedLevels: new Set([...progress.completedLevels, gameState.level]),
+          levelStars: new Map([...progress.levelStars, [gameState.level, stars]]),
+          highestUnlockedLevel: gameState.level === progress.highestUnlockedLevel
+            ? Math.min(gameState.level + 1, 100)
+            : progress.highestUnlockedLevel,
+        };
+
+        // Sync to blockchain (fire and forget, don't block UI)
+        syncToBlockchain(updatedProgress).catch((error) => {
+          console.error('Auto-sync to blockchain failed:', error);
+          // User can manually sync later via SaveProgressButton
+        });
+      }
     }
-  }, [gameState.gameStatus, gameState.isPlaying, gameState.level, gameState.moves, completeLevel]);
+  }, [gameState.gameStatus, gameState.isPlaying, gameState.level, gameState.moves, completeLevel, isConnected, address, syncStatus.mode, syncToBlockchain, progress]);
 
   return (
     <div className="app">
