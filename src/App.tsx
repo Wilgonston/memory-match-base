@@ -8,7 +8,9 @@
  * Requirements: All
  */
 
-import React, { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { useAccount } from 'wagmi';
+import { LoginScreen } from './components/LoginScreen';
 import { LevelSelect } from './components/LevelSelect';
 import { GameBoard } from './components/GameBoard';
 import { useProgress } from './hooks/useProgress';
@@ -20,12 +22,14 @@ import './index.css';
 /**
  * Screen types for app navigation
  */
-type Screen = 'level-select' | 'game';
+type Screen = 'login' | 'menu' | 'level-select' | 'game';
 
 /**
  * Main App component
  */
 function App() {
+  const { address, isConnected } = useAccount();
+  
   // Progress management hook
   const { progress, completeLevel } = useProgress();
 
@@ -33,7 +37,44 @@ function App() {
   const { state: gameState, dispatch } = useGameState();
 
   // Current screen state
-  const [currentScreen, setCurrentScreen] = useState<Screen>('level-select');
+  const [currentScreen, setCurrentScreen] = useState<Screen>('login');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  /**
+   * Check authentication status on mount and wallet change
+   */
+  useEffect(() => {
+    const authenticated = localStorage.getItem('authenticated') === 'true';
+    const authenticatedAddress = localStorage.getItem('authenticatedAddress');
+    
+    // Check if authenticated and address matches
+    if (authenticated && authenticatedAddress === address && isConnected) {
+      setIsAuthenticated(true);
+      setCurrentScreen('level-select');
+    } else {
+      setIsAuthenticated(false);
+      setCurrentScreen('login');
+      // Clear old authentication
+      localStorage.removeItem('authenticated');
+      localStorage.removeItem('authenticatedAddress');
+      localStorage.removeItem('authTimestamp');
+    }
+  }, [address, isConnected]);
+
+  /**
+   * Handle successful authentication
+   */
+  const handleAuthenticated = useCallback(() => {
+    setIsAuthenticated(true);
+    setCurrentScreen('level-select');
+  }, []);
+
+  /**
+   * Handle back to main menu
+   */
+  const handleBackToMenu = useCallback(() => {
+    setCurrentScreen('level-select');
+  }, []);
 
   /**
    * Handle level selection from LevelSelect screen
@@ -83,14 +124,19 @@ function App() {
         Skip to main content
       </a>
 
-      {currentScreen === 'level-select' && (
+      {currentScreen === 'login' && (
+        <LoginScreen onAuthenticated={handleAuthenticated} />
+      )}
+
+      {currentScreen === 'level-select' && isAuthenticated && (
         <LevelSelect
           progressData={progress}
           onLevelSelect={handleLevelSelect}
+          onBackToMenu={handleBackToMenu}
         />
       )}
 
-      {currentScreen === 'game' && (
+      {currentScreen === 'game' && isAuthenticated && (
         <GameBoard
           gameState={gameState}
           onAction={handleGameAction}

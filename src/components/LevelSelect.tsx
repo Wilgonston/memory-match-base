@@ -17,6 +17,8 @@ export interface LevelSelectProps {
   progressData: ProgressData;
   /** Callback when a level is selected */
   onLevelSelect: (level: number) => void;
+  /** Callback when back to menu is clicked */
+  onBackToMenu?: () => void;
 }
 
 /**
@@ -25,6 +27,7 @@ export interface LevelSelectProps {
 export const LevelSelect: React.FC<LevelSelectProps> = ({
   progressData,
   onLevelSelect,
+  onBackToMenu,
 }) => {
   const { completedLevels, levelStars, highestUnlockedLevel } = progressData;
 
@@ -142,6 +145,29 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
   return (
     <div className="level-select" role="main" id="main-content">
       <div className="level-select-header">
+        {onBackToMenu && (
+          <button 
+            className="back-to-menu-button"
+            onClick={onBackToMenu}
+            aria-label="Back to main menu"
+          >
+            <svg 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              xmlns="http://www.w3.org/2000/svg"
+              className="back-icon"
+            >
+              <path 
+                d="M19 12H5M5 12L12 19M5 12L12 5" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              />
+            </svg>
+            Back to Menu
+          </button>
+        )}
         <h1 className="level-select-title">Select Level</h1>
         <div className="progress-summary">
           <span className="progress-text">
