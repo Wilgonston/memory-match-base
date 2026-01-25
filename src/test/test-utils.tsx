@@ -37,6 +37,25 @@ export function AllTheProviders({ children }: { children: React.ReactNode }) {
 }
 
 /**
+ * Mock authentication for tests
+ * Sets up localStorage to simulate authenticated state
+ */
+export function setupMockAuthentication(address = '0x1234567890123456789012345678901234567890') {
+  localStorage.setItem('authenticated', 'true');
+  localStorage.setItem('authenticatedAddress', address);
+  localStorage.setItem('authTimestamp', Date.now().toString());
+}
+
+/**
+ * Clear mock authentication
+ */
+export function clearMockAuthentication() {
+  localStorage.removeItem('authenticated');
+  localStorage.removeItem('authenticatedAddress');
+  localStorage.removeItem('authTimestamp');
+}
+
+/**
  * Custom render function with providers
  */
 export function renderWithProviders(

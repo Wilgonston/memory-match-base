@@ -312,6 +312,21 @@ describe('Accessibility - Focus Management', () => {
   });
 
   it('ResultScreen should auto-focus primary action button', async () => {
+    // Mock wallet as disconnected to avoid SaveProgressButton interfering with focus
+    const { useAccount } = await import('wagmi');
+    vi.mocked(useAccount).mockReturnValue({
+      address: undefined,
+      isConnected: false,
+      isConnecting: false,
+      isDisconnected: true,
+      isReconnecting: false,
+      status: 'disconnected',
+      addresses: undefined,
+      chain: undefined,
+      chainId: undefined,
+      connector: undefined,
+    });
+
     const mockCallbacks = {
       onNextLevel: vi.fn(),
       onRetry: vi.fn(),

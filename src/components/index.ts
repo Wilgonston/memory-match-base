@@ -29,7 +29,7 @@ export type { GameBoardProps } from './GameBoard';
 export { LevelSelect } from './LevelSelect';
 export type { LevelSelectProps } from './LevelSelect';
 
-export { WalletButton } from './WalletButton';
+export { WalletComponents, WalletButton } from './WalletComponents';
 
 export { IdentityDisplay } from './IdentityDisplay';
 export type { IdentityDisplayProps } from './IdentityDisplay';

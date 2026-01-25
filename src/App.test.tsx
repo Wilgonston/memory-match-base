@@ -11,7 +11,7 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { screen, waitFor, act } from '@testing-library/react';
-import { render } from './test/test-utils';
+import { render, setupMockAuthentication, clearMockAuthentication } from './test/test-utils';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 
@@ -27,9 +27,13 @@ describe('App Integration Tests', () => {
     // Clear localStorage before each test
     localStorage.clear();
     vi.clearAllMocks();
+    
+    // Setup mock authentication for all tests
+    setupMockAuthentication();
   });
 
   afterEach(() => {
+    clearMockAuthentication();
     vi.restoreAllMocks();
   });
 
@@ -209,6 +213,9 @@ describe('App Integration Tests', () => {
     it('should handle empty localStorage gracefully', async () => {
       // Ensure localStorage is empty
       localStorage.clear();
+      
+      // But we still need authentication to access the app
+      setupMockAuthentication();
 
       render(<App />);
 

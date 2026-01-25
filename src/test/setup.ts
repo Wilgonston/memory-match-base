@@ -1,4 +1,4 @@
-import { afterEach, beforeAll } from 'vitest';
+import { afterEach, beforeAll, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
@@ -17,6 +17,23 @@ beforeAll(() => {
       dispatchEvent: () => true,
     }),
   });
+});
+
+// Mock wagmi hooks globally
+vi.mock('wagmi', async () => {
+  const actual = await vi.importActual('wagmi');
+  return {
+    ...actual,
+    useAccount: vi.fn(() => ({
+      address: '0x1234567890123456789012345678901234567890',
+      isConnected: true,
+      isConnecting: false,
+      isDisconnected: false,
+    })),
+    useSignMessage: vi.fn(() => ({
+      signMessageAsync: vi.fn().mockResolvedValue('0xmockedsignature'),
+    })),
+  };
 });
 
 // Cleanup after each test case

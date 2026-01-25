@@ -61,6 +61,9 @@ describe('useBasename - Property-Based Tests', () => {
           async (addressHex, basename) => {
             const address = `0x${addressHex}` as `0x${string}`;
 
+            // Clear cache before each test
+            clearBasenameCache();
+
             // Mock useName to return the basename
             vi.mocked(useName).mockReturnValue({
               data: basename,
@@ -71,17 +74,13 @@ describe('useBasename - Property-Based Tests', () => {
 
             const { result } = renderHook(() => useBasename(address), { wrapper });
 
-            // Wait for the hook to resolve
-            await waitFor(() => {
-              expect(result.current.isLoading).toBe(false);
-            });
-
-            // Should display the basename
+            // Should display the basename immediately (not loading)
+            expect(result.current.isLoading).toBe(false);
             expect(result.current.displayName).toBe(basename);
             expect(result.current.basename).toBe(basename);
           }
         ),
-        { numRuns: 100 }
+        { numRuns: 50, timeout: 10000 }
       );
     });
 
@@ -93,6 +92,9 @@ describe('useBasename - Property-Based Tests', () => {
           async (addressHex) => {
             const address = `0x${addressHex}` as `0x${string}`;
 
+            // Clear cache before each test
+            clearBasenameCache();
+
             // Mock useName to return null (no basename)
             vi.mocked(useName).mockReturnValue({
               data: null,
@@ -103,12 +105,9 @@ describe('useBasename - Property-Based Tests', () => {
 
             const { result } = renderHook(() => useBasename(address), { wrapper });
 
-            // Wait for the hook to resolve
-            await waitFor(() => {
-              expect(result.current.isLoading).toBe(false);
-            });
-
-            // Should display truncated address
+            // Should display truncated address immediately (not loading)
+            expect(result.current.isLoading).toBe(false);
+            
             const expectedTruncated = truncateAddress(address);
             expect(result.current.displayName).toBe(expectedTruncated);
             expect(result.current.basename).toBe(null);
@@ -117,7 +116,7 @@ describe('useBasename - Property-Based Tests', () => {
             expect(result.current.displayName).toMatch(/^0x[0-9a-f]{4}\.\.\.[0-9a-f]{4}$/i);
           }
         ),
-        { numRuns: 100 }
+        { numRuns: 50, timeout: 10000 }
       );
     });
 

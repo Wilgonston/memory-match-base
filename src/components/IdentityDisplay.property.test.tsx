@@ -88,7 +88,9 @@ describe('IdentityDisplay Property Tests', () => {
     );
     
     // Should not render without address
-    expect(container.firstChild).toBeNull();
+    // The wrapper div exists, but IdentityDisplay returns null
+    const identityElement = container.querySelector('[class*="identity"]');
+    expect(identityElement).toBeNull();
   });
 
   /**

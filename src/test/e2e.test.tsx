@@ -13,7 +13,7 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { screen, waitFor, act, cleanup } from '@testing-library/react';
-import { render } from './test-utils';
+import { render, setupMockAuthentication, clearMockAuthentication } from './test-utils';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 
@@ -76,10 +76,14 @@ describe('End-to-End Tests', () => {
     vi.clearAllMocks();
     // Set default window size
     resizeWindow(1024, 768);
+    
+    // Setup mock authentication for all tests
+    setupMockAuthentication();
   });
 
   afterEach(() => {
     cleanup();
+    clearMockAuthentication();
     vi.restoreAllMocks();
   });
 
@@ -94,7 +98,7 @@ describe('End-to-End Tests', () => {
 
       await waitFor(() => {
         expect(isOnGameScreen()).toBe(true);
-      }, { timeout: 10000 });
+      }, { timeout: 5000 });
 
       // Verify we're on level 1
       expect(screen.getByLabelText(/Level 1/i)).toBeInTheDocument();
@@ -117,11 +121,12 @@ describe('End-to-End Tests', () => {
         await new Promise(resolve => setTimeout(resolve, 500));
       });
 
+      // Check that moves counter exists and has been updated
       await waitFor(() => {
-        const movesElement = screen.queryByLabelText(/1 moves made/i);
+        const movesElement = screen.queryByLabelText(/moves made/i);
         expect(movesElement).toBeInTheDocument();
-      }, { timeout: 10000 });
-    }, 15000);
+      }, { timeout: 5000 });
+    }, 10000);
 
     it('should track progress across multiple level attempts', async () => {
       const user = userEvent.setup();

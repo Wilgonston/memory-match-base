@@ -25,7 +25,6 @@ import {
   Address,
   EthBalance,
 } from '@coinbase/onchainkit/identity';
-import { color } from '@coinbase/onchainkit/theme';
 
 /**
  * WalletComponents - Main wallet UI component
@@ -44,7 +43,7 @@ export function WalletComponents() {
         <Identity className="px-4 pt-3 pb-2" hasCopyAddressOnClick>
           <Avatar />
           <Name />
-          <Address className={color.foregroundMuted} />
+          <Address />
           <EthBalance />
         </Identity>
         <WalletDropdownDisconnect />
@@ -70,7 +69,7 @@ export function WalletButton() {
         <Identity className="px-4 pt-3 pb-2" hasCopyAddressOnClick>
           <Avatar />
           <Name />
-          <Address className={color.foregroundMuted} />
+          <Address />
           <EthBalance />
         </Identity>
         <WalletDropdownDisconnect />

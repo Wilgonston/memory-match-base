@@ -11,7 +11,7 @@ export const defaultChain = network === 'mainnet' ? base : baseSepolia;
 // Format: https://api.developer.coinbase.com/rpc/v1/base/YOUR_API_KEY
 const paymasterUrl = apiKey 
   ? `https://api.developer.coinbase.com/rpc/v1/base/${apiKey}`
-  : '';
+  : undefined;
 
 // OnchainKit configuration with Paymaster and Smart Wallet support
 export const onchainKitConfig = {
@@ -30,10 +30,8 @@ export const onchainKitConfig = {
       termsUrl: 'https://www.coinbase.com/legal/user-agreement',
       privacyUrl: 'https://www.coinbase.com/legal/privacy',
     },
-    // Paymaster configuration for gas-free transactions (Smart Wallet only)
-    paymaster: paymasterUrl ? {
-      url: paymasterUrl,
-    } : undefined,
+    // Paymaster URL for gas-free transactions (Smart Wallet only)
+    paymaster: paymasterUrl,
   },
 };
 
