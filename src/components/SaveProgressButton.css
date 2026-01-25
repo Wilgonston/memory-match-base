@@ -37,6 +37,60 @@
   cursor: not-allowed;
 }
 
+/* Wallet Warning */
+.wallet-warning {
+  background: rgba(255, 193, 7, 0.1);
+  border: 2px solid rgba(255, 193, 7, 0.5);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  max-width: 400px;
+}
+
+.warning-text {
+  color: #ffc107;
+  font-size: 0.9rem;
+  margin: 0 0 0.75rem 0;
+  line-height: 1.5;
+}
+
+.warning-dismiss {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffc107;
+  background: rgba(255, 193, 7, 0.2);
+  border: 1px solid rgba(255, 193, 7, 0.5);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.warning-dismiss:hover {
+  background: rgba(255, 193, 7, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Smart Wallet Info */
+.smart-wallet-info {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.smart-wallet-info a {
+  color: #0052ff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.smart-wallet-info a:hover {
+  color: #0041cc;
+  text-decoration: underline;
+}
+
 .save-progress-status {
   display: flex;
   align-items: center;
@@ -116,5 +170,18 @@
   .save-progress-status {
     padding: 0.625rem 1.25rem;
     font-size: 0.875rem;
+  }
+
+  .wallet-warning {
+    padding: 0.875rem;
+    max-width: 100%;
+  }
+
+  .warning-text {
+    font-size: 0.85rem;
+  }
+
+  .smart-wallet-info {
+    font-size: 0.8rem;
   }
 }

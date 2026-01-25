@@ -13,7 +13,7 @@ const paymasterUrl = apiKey
   ? `https://api.developer.coinbase.com/rpc/v1/base/${apiKey}`
   : '';
 
-// OnchainKit configuration with Paymaster
+// OnchainKit configuration with Paymaster and Smart Wallet support
 export const onchainKitConfig = {
   apiKey,
   chain: defaultChain,
@@ -22,9 +22,15 @@ export const onchainKitConfig = {
       mode: 'auto' as const, // 'auto', 'light', or 'dark'
       theme: 'base' as const, // Use BASE theme
       name: 'Memory Match BASE',
-      logo: `${window.location.origin}/icon-512.png`,
+      logo: `${window.location.origin}/assets/miniapp/icon-512.svg`,
     },
-    // Paymaster configuration for gas-free transactions
+    // Wallet configuration for Smart Wallet support
+    wallet: {
+      display: 'modal' as const,
+      termsUrl: 'https://www.coinbase.com/legal/user-agreement',
+      privacyUrl: 'https://www.coinbase.com/legal/privacy',
+    },
+    // Paymaster configuration for gas-free transactions (Smart Wallet only)
     paymaster: paymasterUrl ? {
       url: paymasterUrl,
     } : undefined,
