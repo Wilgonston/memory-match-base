@@ -1,0 +1,82 @@
+<svg width="1080" height="1920" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1080" height="1920" fill="#F5F5F5"/>
+  <text x="540" y="200" font-family="Arial, sans-serif" font-size="56" font-weight="bold" fill="#333" text-anchor="middle">Select Level</text>
+  <g transform="translate(90, 300)">
+    <g transform="translate(0, 0)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">1</text>
+        </g><g transform="translate(180, 0)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">2</text>
+        </g><g transform="translate(360, 0)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">3</text>
+        </g><g transform="translate(540, 0)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">4</text>
+        </g><g transform="translate(720, 0)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">5</text>
+        </g><g transform="translate(0, 180)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">6</text>
+        </g><g transform="translate(180, 180)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">7</text>
+        </g><g transform="translate(360, 180)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">8</text>
+        </g><g transform="translate(540, 180)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">9</text>
+        </g><g transform="translate(720, 180)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">10</text>
+        </g><g transform="translate(0, 360)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">11</text>
+        </g><g transform="translate(180, 360)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">12</text>
+        </g><g transform="translate(360, 360)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">13</text>
+        </g><g transform="translate(540, 360)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">14</text>
+        </g><g transform="translate(720, 360)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">15</text>
+        </g><g transform="translate(0, 540)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">16</text>
+        </g><g transform="translate(180, 540)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">17</text>
+        </g><g transform="translate(360, 540)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">18</text>
+        </g><g transform="translate(540, 540)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">19</text>
+        </g><g transform="translate(720, 540)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">20</text>
+        </g><g transform="translate(0, 720)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">21</text>
+        </g><g transform="translate(180, 720)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">22</text>
+        </g><g transform="translate(360, 720)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">23</text>
+        </g><g transform="translate(540, 720)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">24</text>
+        </g><g transform="translate(720, 720)">
+          <rect width="150" height="150" rx="15" fill="#0052FF"/>
+          <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">25</text>
+        </g>
+  </g>
+</svg>

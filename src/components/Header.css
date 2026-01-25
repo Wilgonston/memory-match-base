@@ -1,0 +1,203 @@
+/**
+ * Header Component Styles
+ * 
+ * Implements responsive layout for game status display.
+ * Shows level number, timer, and move counter.
+ * 
+ * Requirements: 4.7, 5.4, 6.1, 11.1, 10.1, 10.2, 10.3
+ */
+
+.game-header {
+  width: 100%;
+  background: linear-gradient(135deg, #000D1F 0%, #001A3D 100%);
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 16px;
+}
+
+.header-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  min-width: 0; /* Allow flex items to shrink below content size */
+}
+
+.header-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.header-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  font-variant-numeric: tabular-nums; /* Monospaced numbers for consistent width */
+}
+
+/* Timer warning state (when time is running low) */
+.time-warning {
+  color: #FF4444;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Level display styling */
+.level-display .header-value {
+  color: #0052FF;
+}
+
+/* Timer display styling */
+.timer-display .header-value {
+  color: #00D4FF;
+  min-width: 5ch; /* Reserve space for MM:SS format */
+}
+
+/* Moves display styling */
+.moves-display .header-value {
+  color: #00FF88;
+}
+
+/* Wallet display styling */
+.wallet-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wallet-display .wallet-button-container {
+  width: 100%;
+}
+
+/* Mobile Responsive (320px - 767px) */
+@media (max-width: 767px) {
+  .game-header {
+    padding: 12px;
+  }
+
+  .header-container {
+    gap: 8px;
+  }
+
+  .header-label {
+    font-size: 0.625rem;
+  }
+
+  .header-value {
+    font-size: 1.25rem;
+  }
+
+  /* Stack vertically on very small screens */
+  @media (max-width: 360px) {
+    .header-container {
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .header-item {
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 200px;
+    }
+
+    .header-label {
+      font-size: 0.75rem;
+    }
+
+    .header-value {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+/* Tablet Responsive (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .game-header {
+    padding: 16px;
+  }
+
+  .header-container {
+    gap: 20px;
+  }
+
+  .header-label {
+    font-size: 0.875rem;
+  }
+
+  .header-value {
+    font-size: 1.75rem;
+  }
+}
+
+/* Desktop Responsive (1024px+) */
+@media (min-width: 1024px) {
+  .game-header {
+    padding: 20px;
+  }
+
+  .header-container {
+    gap: 32px;
+  }
+
+  .header-label {
+    font-size: 0.875rem;
+  }
+
+  .header-value {
+    font-size: 2rem;
+  }
+}
+
+/* Accessibility: Focus states */
+.game-header:focus-within {
+  outline: 2px solid #0052FF;
+  outline-offset: -2px;
+}
+
+/* Smooth transitions */
+.header-value {
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .header-label {
+    color: #FFFFFF;
+  }
+
+  .header-value {
+    font-weight: 800;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .time-warning {
+    animation: none;
+  }
+
+  .header-value {
+    transition: none;
+  }
+}

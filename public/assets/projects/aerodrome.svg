@@ -1,0 +1,12 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="aeroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0052FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00D4FF;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="100" fill="url(#aeroGrad)"/>
+  <circle cx="100" cy="80" r="25" fill="white"/>
+  <path d="M 75 100 L 100 140 L 125 100 Z" fill="white"/>
+  <text x="100" y="175" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white" text-anchor="middle">AERO</text>
+</svg>

@@ -1,0 +1,167 @@
+/**
+ * PauseButton Component Styles
+ * 
+ * Styles for the pause button with icon.
+ * Implements responsive design and accessibility features.
+ * 
+ * Requirements: 11.2, 10.1, 10.2, 10.3, 10.5
+ */
+
+.pause-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #0052FF 0%, #0041CC 100%);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 82, 255, 0.3);
+  min-height: 44px; /* Minimum touch target size for mobile */
+  min-width: 44px;
+}
+
+.pause-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.button-text {
+  white-space: nowrap;
+}
+
+/* Hover state */
+.pause-button:hover {
+  background: linear-gradient(135deg, #0041CC 0%, #0033AA 100%);
+  box-shadow: 0 4px 12px rgba(0, 82, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Active state */
+.pause-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(0, 82, 255, 0.3);
+}
+
+/* Focus state for accessibility */
+.pause-button:focus {
+  outline: 2px solid #00D4FF;
+  outline-offset: 2px;
+}
+
+.pause-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.pause-button:focus-visible {
+  outline: 2px solid #00D4FF;
+  outline-offset: 2px;
+}
+
+/* Disabled state */
+.pause-button:disabled {
+  background: #666666;
+  cursor: not-allowed;
+  opacity: 0.5;
+  box-shadow: none;
+}
+
+.pause-button:disabled:hover {
+  transform: none;
+}
+
+/* Mobile Responsive (320px - 767px) */
+@media (max-width: 767px) {
+  .pause-button {
+    padding: 10px 16px;
+    font-size: 0.875rem;
+    gap: 6px;
+  }
+
+  .pause-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Hide text on very small screens, show icon only */
+  @media (max-width: 360px) {
+    .button-text {
+      display: none;
+    }
+
+    .pause-button {
+      padding: 12px;
+      width: 44px;
+      height: 44px;
+    }
+  }
+}
+
+/* Tablet Responsive (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .pause-button {
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
+
+  .pause-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Desktop Responsive (1024px+) */
+@media (min-width: 1024px) {
+  .pause-button {
+    padding: 14px 24px;
+    font-size: 1.125rem;
+  }
+
+  .pause-icon {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .pause-button {
+    border: 2px solid #FFFFFF;
+  }
+
+  .pause-button:focus {
+    outline-width: 3px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .pause-button {
+    transition: none;
+  }
+
+  .pause-button:hover {
+    transform: none;
+  }
+
+  .pause-button:active {
+    transform: none;
+  }
+}
+
+/* Dark mode support (if needed) */
+@media (prefers-color-scheme: dark) {
+  .pause-button {
+    box-shadow: 0 2px 8px rgba(0, 82, 255, 0.5);
+  }
+
+  .pause-button:hover {
+    box-shadow: 0 4px 12px rgba(0, 82, 255, 0.6);
+  }
+}

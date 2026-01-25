@@ -1,0 +1,288 @@
+/**
+ * PauseOverlay Component Styles
+ * 
+ * Styles for the pause overlay that covers the game board.
+ * Prevents interaction with game elements when paused.
+ * 
+ * Requirements: 11.5, 10.1, 10.2, 10.3
+ */
+
+.pause-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 13, 31, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.pause-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 40px;
+  background: linear-gradient(135deg, #001A3D 0%, #000D1F 100%);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 82, 255, 0.3);
+  border: 2px solid rgba(0, 82, 255, 0.3);
+  max-width: 90%;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.pause-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0;
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(0, 82, 255, 0.5);
+}
+
+.pause-message {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  text-align: center;
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+.resume-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 32px;
+  background: linear-gradient(135deg, #00FF88 0%, #00CC6A 100%);
+  color: #000D1F;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(0, 255, 136, 0.4);
+  min-height: 44px; /* Minimum touch target size for mobile */
+  min-width: 44px;
+}
+
+.resume-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.button-text {
+  white-space: nowrap;
+}
+
+/* Hover state */
+.resume-button:hover {
+  background: linear-gradient(135deg, #00CC6A 0%, #00AA55 100%);
+  box-shadow: 0 6px 20px rgba(0, 255, 136, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Active state */
+.resume-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 255, 136, 0.4);
+}
+
+/* Focus state for accessibility */
+.resume-button:focus {
+  outline: 2px solid #00D4FF;
+  outline-offset: 2px;
+}
+
+.resume-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.resume-button:focus-visible {
+  outline: 2px solid #00D4FF;
+  outline-offset: 2px;
+}
+
+/* Mobile Responsive (320px - 767px) */
+@media (max-width: 767px) {
+  .pause-content {
+    padding: 32px 24px;
+    gap: 20px;
+  }
+
+  .pause-title {
+    font-size: 1.5rem;
+  }
+
+  .pause-message {
+    font-size: 0.875rem;
+  }
+
+  .resume-button {
+    padding: 14px 28px;
+    font-size: 1rem;
+    gap: 6px;
+  }
+
+  .resume-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Very small screens */
+  @media (max-width: 360px) {
+    .pause-content {
+      padding: 24px 16px;
+      gap: 16px;
+    }
+
+    .pause-title {
+      font-size: 1.25rem;
+    }
+
+    .pause-message {
+      font-size: 0.8125rem;
+    }
+  }
+}
+
+/* Tablet Responsive (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .pause-content {
+    padding: 48px;
+    gap: 28px;
+  }
+
+  .pause-title {
+    font-size: 2.25rem;
+  }
+
+  .pause-message {
+    font-size: 1.125rem;
+  }
+
+  .resume-button {
+    padding: 16px 32px;
+    font-size: 1.125rem;
+  }
+
+  .resume-icon {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* Desktop Responsive (1024px+) */
+@media (min-width: 1024px) {
+  .pause-content {
+    padding: 56px;
+    gap: 32px;
+  }
+
+  .pause-title {
+    font-size: 2.5rem;
+  }
+
+  .pause-message {
+    font-size: 1.25rem;
+  }
+
+  .resume-button {
+    padding: 18px 36px;
+    font-size: 1.25rem;
+  }
+
+  .resume-icon {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .pause-overlay {
+    background: rgba(0, 0, 0, 0.98);
+  }
+
+  .pause-content {
+    border: 3px solid #FFFFFF;
+  }
+
+  .resume-button {
+    border: 2px solid #000000;
+  }
+
+  .resume-button:focus {
+    outline-width: 3px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .pause-overlay {
+    animation: none;
+  }
+
+  .pause-content {
+    animation: none;
+  }
+
+  .resume-button {
+    transition: none;
+  }
+
+  .resume-button:hover {
+    transform: none;
+  }
+
+  .resume-button:active {
+    transform: none;
+  }
+}
+
+/* Dark mode support (already dark, but ensure consistency) */
+@media (prefers-color-scheme: dark) {
+  .pause-overlay {
+    background: rgba(0, 13, 31, 0.97);
+  }
+
+  .pause-content {
+    box-shadow: 0 8px 32px rgba(0, 82, 255, 0.4);
+  }
+
+  .resume-button {
+    box-shadow: 0 4px 16px rgba(0, 255, 136, 0.5);
+  }
+
+  .resume-button:hover {
+    box-shadow: 0 6px 20px rgba(0, 255, 136, 0.6);
+  }
+}

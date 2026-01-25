@@ -1,0 +1,113 @@
+/**
+ * Grid Component Styles
+ * 
+ * Implements responsive grid layout using CSS Grid.
+ * Adapts to different grid sizes (4x4, 6x6, 8x8) and screen sizes.
+ * 
+ * Requirements: 1.6, 10.1, 10.2, 10.3, 10.4, 10.5
+ */
+
+.memory-grid {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* 4x4 Grid Layout */
+.memory-grid.grid-4x4 {
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 600px;
+}
+
+/* 6x6 Grid Layout */
+.memory-grid.grid-6x6 {
+  grid-template-columns: repeat(6, 1fr);
+  max-width: 800px;
+}
+
+/* 8x8 Grid Layout */
+.memory-grid.grid-8x8 {
+  grid-template-columns: repeat(8, 1fr);
+  max-width: 1000px;
+}
+
+/* Mobile Responsive (320px - 767px) */
+@media (max-width: 767px) {
+  .memory-grid {
+    gap: 8px;
+    padding: 12px;
+  }
+
+  /* Adjust grid for smaller screens */
+  .memory-grid.grid-4x4 {
+    max-width: 100%;
+  }
+
+  .memory-grid.grid-6x6 {
+    max-width: 100%;
+  }
+
+  .memory-grid.grid-8x8 {
+    max-width: 100%;
+    gap: 6px;
+  }
+
+  /* Ensure minimum touch target size (44x44px) */
+  .memory-grid > * {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* Tablet Responsive (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .memory-grid {
+    gap: 10px;
+    padding: 16px;
+  }
+
+  .memory-grid.grid-4x4 {
+    max-width: 500px;
+  }
+
+  .memory-grid.grid-6x6 {
+    max-width: 700px;
+  }
+
+  .memory-grid.grid-8x8 {
+    max-width: 900px;
+  }
+}
+
+/* Desktop Responsive (1024px+) */
+@media (min-width: 1024px) {
+  .memory-grid {
+    gap: 16px;
+    padding: 20px;
+  }
+
+  .memory-grid.grid-4x4 {
+    max-width: 600px;
+  }
+
+  .memory-grid.grid-6x6 {
+    max-width: 800px;
+  }
+
+  .memory-grid.grid-8x8 {
+    max-width: 1000px;
+  }
+}
+
+/* Maintain aspect ratio for cards */
+.memory-grid > * {
+  aspect-ratio: 1;
+}
+
+/* Smooth transitions for grid changes */
+.memory-grid {
+  transition: gap 0.3s ease, padding 0.3s ease;
+}

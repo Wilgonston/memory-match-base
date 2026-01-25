@@ -1,0 +1,47 @@
+/**
+ * WalletButton Component Styles
+ * 
+ * Styles for wallet connection button and dropdown
+ */
+
+.wallet-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure wallet button is visible and accessible */
+.wallet-button-container button {
+  min-height: 44px;
+  min-width: 44px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.wallet-button-container button:hover {
+  opacity: 0.9;
+}
+
+.wallet-button-container button:focus {
+  outline: 2px solid #0052FF;
+  outline-offset: 2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .wallet-button-container {
+    font-size: 0.875rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .wallet-button-container {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .wallet-button-container {
+    font-size: 1rem;
+  }
+}

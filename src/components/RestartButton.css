@@ -1,0 +1,167 @@
+/**
+ * RestartButton Component Styles
+ * 
+ * Styles for the restart button with icon.
+ * Implements responsive design and accessibility features.
+ * 
+ * Requirements: 11.3, 10.1, 10.2, 10.3, 10.5
+ */
+
+.restart-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #FF6B00 0%, #CC5500 100%);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(255, 107, 0, 0.3);
+  min-height: 44px; /* Minimum touch target size for mobile */
+  min-width: 44px;
+}
+
+.restart-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.button-text {
+  white-space: nowrap;
+}
+
+/* Hover state */
+.restart-button:hover {
+  background: linear-gradient(135deg, #CC5500 0%, #AA4400 100%);
+  box-shadow: 0 4px 12px rgba(255, 107, 0, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Active state */
+.restart-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(255, 107, 0, 0.3);
+}
+
+/* Focus state for accessibility */
+.restart-button:focus {
+  outline: 2px solid #00D4FF;
+  outline-offset: 2px;
+}
+
+.restart-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.restart-button:focus-visible {
+  outline: 2px solid #00D4FF;
+  outline-offset: 2px;
+}
+
+/* Disabled state */
+.restart-button:disabled {
+  background: #666666;
+  cursor: not-allowed;
+  opacity: 0.5;
+  box-shadow: none;
+}
+
+.restart-button:disabled:hover {
+  transform: none;
+}
+
+/* Mobile Responsive (320px - 767px) */
+@media (max-width: 767px) {
+  .restart-button {
+    padding: 10px 16px;
+    font-size: 0.875rem;
+    gap: 6px;
+  }
+
+  .restart-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Hide text on very small screens, show icon only */
+  @media (max-width: 360px) {
+    .button-text {
+      display: none;
+    }
+
+    .restart-button {
+      padding: 12px;
+      width: 44px;
+      height: 44px;
+    }
+  }
+}
+
+/* Tablet Responsive (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .restart-button {
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
+
+  .restart-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Desktop Responsive (1024px+) */
+@media (min-width: 1024px) {
+  .restart-button {
+    padding: 14px 24px;
+    font-size: 1.125rem;
+  }
+
+  .restart-icon {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .restart-button {
+    border: 2px solid #FFFFFF;
+  }
+
+  .restart-button:focus {
+    outline-width: 3px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .restart-button {
+    transition: none;
+  }
+
+  .restart-button:hover {
+    transform: none;
+  }
+
+  .restart-button:active {
+    transform: none;
+  }
+}
+
+/* Dark mode support (if needed) */
+@media (prefers-color-scheme: dark) {
+  .restart-button {
+    box-shadow: 0 2px 8px rgba(255, 107, 0, 0.5);
+  }
+
+  .restart-button:hover {
+    box-shadow: 0 4px 12px rgba(255, 107, 0, 0.6);
+  }
+}

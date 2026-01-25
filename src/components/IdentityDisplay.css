@@ -1,0 +1,80 @@
+/**
+ * IdentityDisplay Component Styles
+ * 
+ * Styles for the identity display component showing user's Basename/address
+ */
+
+.identity-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  transition: background-color 0.2s ease;
+}
+
+.identity-display:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.identity-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.identity-avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.identity-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+.identity-address {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Courier New', monospace;
+}
+
+/* Responsive styles */
+@media (max-width: 767px) {
+  .identity-display {
+    padding: 0.375rem;
+  }
+
+  .identity-avatar {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .identity-name {
+    font-size: 0.75rem;
+    max-width: 100px;
+  }
+
+  .identity-address {
+    display: none; /* Hide full address on mobile */
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .identity-name {
+    max-width: 120px;
+  }
+}
+
+/* Tooltip styles for full address on hover */
+.identity-display [title] {
+  cursor: pointer;
+}

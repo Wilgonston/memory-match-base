@@ -1,0 +1,314 @@
+/**
+ * LevelSelect Component Styles
+ * 
+ * Implements responsive grid layout for level selection.
+ * Styles locked/unlocked states and star ratings.
+ * 
+ * Requirements: 5.1, 5.2, 5.4, 5.5, 6.7, 11.4, 10.1, 10.2, 10.3
+ */
+
+.level-select {
+  width: 100%;
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(135deg, #0052ff 0%, #003db3 100%);
+  overflow-y: auto;
+}
+
+/* Header Section */
+.level-select-header {
+  max-width: 1200px;
+  margin: 0 auto 30px;
+  text-align: center;
+}
+
+.level-select-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: white;
+  margin: 0 0 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.progress-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.progress-text {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+/* Level Grid */
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+}
+
+/* Level Button */
+.level-button {
+  position: relative;
+  aspect-ratio: 1;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  padding: 8px;
+}
+
+/* Unlocked Level */
+.level-button.unlocked {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+  border-color: rgba(0, 82, 255, 0.3);
+}
+
+.level-button.unlocked:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 82, 255, 0.3);
+  border-color: #0052ff;
+}
+
+.level-button.unlocked:active {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.level-button.unlocked:focus-visible {
+  outline: 3px solid #0052ff;
+  outline-offset: 2px;
+}
+
+/* Completed Level */
+.level-button.completed {
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  border-color: #ffa500;
+}
+
+.level-button.completed:hover {
+  background: linear-gradient(135deg, #ffe44d 0%, #fff176 100%);
+}
+
+/* Locked Level */
+.level-button.locked {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.2);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.level-button.locked:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Level Number */
+.level-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  line-height: 1;
+}
+
+/* Lock Icon */
+.lock-icon {
+  width: 32px;
+  height: 32px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Star Rating */
+.level-stars {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  justify-content: center;
+}
+
+.level-stars .star {
+  width: 14px;
+  height: 14px;
+}
+
+.level-stars .star.filled {
+  animation: starPulse 0.5s ease-in-out;
+}
+
+@keyframes starPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+/* Mobile Responsive (320px - 767px) */
+@media (max-width: 767px) {
+  .level-select {
+    padding: 16px;
+  }
+
+  .level-select-title {
+    font-size: 1.8rem;
+    margin-bottom: 16px;
+  }
+
+  .progress-summary {
+    gap: 6px;
+  }
+
+  .progress-text {
+    font-size: 0.875rem;
+  }
+
+  .level-grid {
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .level-button {
+    min-height: 60px;
+    min-width: 60px;
+    border-radius: 8px;
+  }
+
+  .level-number {
+    font-size: 1.2rem;
+  }
+
+  .lock-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .level-stars .star {
+    width: 10px;
+    height: 10px;
+  }
+
+  /* Ensure minimum touch target size (44x44px) */
+  .level-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* Tablet Responsive (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .level-select {
+    padding: 20px;
+  }
+
+  .level-select-title {
+    font-size: 2.2rem;
+  }
+
+  .level-grid {
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 14px;
+    padding: 18px;
+  }
+
+  .level-button {
+    min-height: 70px;
+  }
+
+  .level-number {
+    font-size: 1.4rem;
+  }
+
+  .lock-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .level-stars .star {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+/* Desktop Responsive (1024px+) */
+@media (min-width: 1024px) {
+  .level-select {
+    padding: 24px;
+  }
+
+  .level-select-title {
+    font-size: 2.5rem;
+  }
+
+  .level-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 16px;
+    padding: 20px;
+  }
+
+  .level-button {
+    min-height: 80px;
+  }
+
+  .level-number {
+    font-size: 1.5rem;
+  }
+
+  .lock-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .level-stars .star {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* Smooth transitions */
+.level-button {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+/* Accessibility: High contrast mode support */
+@media (prefers-contrast: high) {
+  .level-button.unlocked {
+    border-width: 3px;
+  }
+
+  .level-button.locked {
+    opacity: 0.5;
+  }
+}
+
+/* Accessibility: Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .level-button {
+    transition: none;
+  }
+
+  .level-button.unlocked:hover {
+    transform: none;
+  }
+
+  .level-stars .star.filled {
+    animation: none;
+  }
+}
