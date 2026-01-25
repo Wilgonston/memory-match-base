@@ -70,10 +70,15 @@ function App() {
   }, []);
 
   /**
-   * Handle back to main menu
+   * Handle back to main menu (logout)
    */
   const handleBackToMenu = useCallback(() => {
-    setCurrentScreen('level-select');
+    // Clear authentication
+    localStorage.removeItem('authenticated');
+    localStorage.removeItem('authenticatedAddress');
+    localStorage.removeItem('authTimestamp');
+    setIsAuthenticated(false);
+    setCurrentScreen('login');
   }, []);
 
   /**
@@ -141,6 +146,7 @@ function App() {
           gameState={gameState}
           onAction={handleGameAction}
           onLevelSelect={handleBackToLevelSelect}
+          onLogout={handleBackToMenu}
         />
       )}
     </div>

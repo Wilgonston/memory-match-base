@@ -26,6 +26,8 @@ export interface GameBoardProps {
   onAction: (action: any) => void;
   /** Callback when returning to level select */
   onLevelSelect: () => void;
+  /** Optional callback for logout */
+  onLogout?: () => void;
 }
 
 /**
@@ -35,6 +37,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({
   gameState,
   onAction,
   onLevelSelect,
+  onLogout,
 }) => {
   const { 
     level, 
@@ -135,7 +138,8 @@ export const GameBoard: React.FC<GameBoardProps> = ({
       <Header 
         level={level} 
         moves={moves} 
-        timeRemaining={timeRemaining} 
+        timeRemaining={timeRemaining}
+        onLogout={onLogout}
       />
 
       {/* Main game area */}
@@ -149,6 +153,28 @@ export const GameBoard: React.FC<GameBoardProps> = ({
 
         {/* Control buttons */}
         <div className="game-controls">
+          <button 
+            className="back-to-menu-btn"
+            onClick={onLevelSelect}
+            aria-label="Back to level select"
+            type="button"
+          >
+            <svg 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              xmlns="http://www.w3.org/2000/svg"
+              className="back-icon"
+            >
+              <path 
+                d="M19 12H5M5 12L12 19M5 12L12 5" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              />
+            </svg>
+            Menu
+          </button>
           <PauseButton onPause={handlePause} />
           <RestartButton onRestart={handleRestart} />
         </div>
