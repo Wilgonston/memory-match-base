@@ -60,18 +60,26 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
           {!isConnected ? (
             <>
               <p className="login-description">
-                Connect your wallet to start playing and save your progress on-chain
+                Create your Smart Wallet with Passkey to start playing
+              </p>
+              <p className="login-subdescription">
+                ✨ No seed phrases • 🔐 Secure with biometrics • ⚡ Gas-free transactions
               </p>
               <div className="login-wallet-button">
                 <WalletButton />
               </div>
+              <p className="login-note">
+                A Smart Wallet will be created automatically for you.
+                <br />
+                All transactions are free (sponsored by Paymaster).
+              </p>
             </>
           ) : (
             <>
               <div className="login-connected">
                 <div className="login-check-icon">✓</div>
                 <p className="login-connected-text">
-                  Wallet Connected
+                  Smart Wallet Connected
                 </p>
                 <p className="login-address">
                   {address?.slice(0, 6)}...{address?.slice(-4)}
