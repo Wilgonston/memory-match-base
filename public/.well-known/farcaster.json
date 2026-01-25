@@ -1,37 +1,30 @@
 {
   "accountAssociation": {
-    "header": "eyJmaWQiOjEsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIn0",
-    "payload": "eyJkb21haW4iOiJtZW1vcnktbWF0Y2gtYmFzZS5hcHAifQ",
-    "signature": "MHg..."
-  },
-  "frame": {
-    "version": "1",
-    "name": "Memory Match BASE",
-    "iconUrl": "https://memory-match-base.app/icon-512.png",
-    "splashImageUrl": "https://memory-match-base.app/splash.png",
-    "splashBackgroundColor": "#0052FF",
-    "homeUrl": "https://memory-match-base.app",
-    "webhookUrl": "https://memory-match-base.app/api/webhook"
+    "header": "",
+    "payload": "",
+    "signature": ""
   },
   "miniapp": {
     "version": "1",
     "name": "Memory Match BASE",
-    "subtitle": "Test your memory with BASE projects",
-    "description": "Classic memory card game featuring BASE blockchain ecosystem projects. Match pairs, complete 100 levels, and master the BASE ecosystem!",
-    "screenshotUrls": [
-      "https://memory-match-base.app/screenshots/gameplay.png",
-      "https://memory-match-base.app/screenshots/level-select.png"
-    ],
-    "iconUrl": "https://memory-match-base.app/icon-512.png",
-    "splashImageUrl": "https://memory-match-base.app/splash.png",
-    "splashBackgroundColor": "#0052FF",
     "homeUrl": "https://memory-match-base.app",
+    "iconUrl": "https://memory-match-base.app/assets/miniapp/icon-512.svg",
+    "splashImageUrl": "https://memory-match-base.app/assets/miniapp/splash.svg",
+    "splashBackgroundColor": "#0052FF",
+    "webhookUrl": "https://memory-match-base.app/api/webhook",
+    "subtitle": "Test your memory with BASE projects",
+    "description": "Classic memory card game featuring BASE blockchain ecosystem projects. Match pairs, complete 100 levels, and master the BASE ecosystem! Play now and save your progress on-chain with gas-free transactions.",
+    "screenshotUrls": [
+      "https://memory-match-base.app/screenshots/gameplay.svg",
+      "https://memory-match-base.app/screenshots/level-select.svg"
+    ],
     "primaryCategory": "games",
-    "tags": ["memory", "game", "base", "crypto", "puzzle", "blockchain"],
-    "heroImageUrl": "https://memory-match-base.app/hero.png",
+    "tags": ["memory", "game", "base", "crypto", "puzzle", "blockchain", "web3"],
+    "heroImageUrl": "https://memory-match-base.app/assets/miniapp/hero.svg",
     "tagline": "Master the BASE ecosystem through memory!",
     "ogTitle": "Memory Match BASE - Blockchain Memory Game",
     "ogDescription": "Test your memory with BASE blockchain projects. 100 levels of crypto fun!",
-    "ogImageUrl": "https://memory-match-base.app/og-image.png"
+    "ogImageUrl": "https://memory-match-base.app/assets/miniapp/og-image.svg",
+    "noindex": false
   }
 }

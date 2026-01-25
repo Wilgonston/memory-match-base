@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAccount, useSignMessage } from 'wagmi';
-import { WalletButton } from './WalletButton';
+import { WalletComponents } from './WalletComponents';
 import './LoginScreen.css';
 
 interface LoginScreenProps {
@@ -66,7 +66,7 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
                 ✨ No seed phrases • 🔐 Secure with biometrics • ⚡ Gas-free transactions
               </p>
                   <div className="login-wallet-button">
-                <WalletButton />
+                <WalletComponents />
               </div>
               <p className="login-note">
                 A Smart Wallet will be created automatically for you.

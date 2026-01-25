@@ -10,7 +10,7 @@
 
 import React from 'react';
 import { formatTime } from '../utils/timeFormat';
-import { WalletButton } from './WalletButton';
+import { WalletComponents } from './WalletComponents';
 import './Header.css';
 
 export interface HeaderProps {
@@ -60,7 +60,7 @@ export const Header: React.FC<HeaderProps> = ({ level, moves, timeRemaining, onL
 
         {/* Wallet Connection Button */}
         <div className="header-item wallet-display">
-          <WalletButton />
+          <WalletComponents />
         </div>
 
         {/* Logout Button */}
