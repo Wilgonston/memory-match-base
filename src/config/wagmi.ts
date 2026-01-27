@@ -17,12 +17,14 @@ export const wagmiConfig = createConfig({
   chains,
   connectors: [
     // Coinbase Wallet with Smart Wallet preference
+    // This creates a Smart Wallet automatically on first connect
     coinbaseWallet({
       appName: 'Memory Match BASE',
       appLogoUrl: `${appUrl}/assets/miniapp/icon-512-improved.svg`,
-      preference: 'smartWalletOnly',
+      preference: 'smartWalletOnly', // Force Smart Wallet creation
+      version: '4', // Use latest SDK version
     }),
-    // WalletConnect
+    // WalletConnect as fallback
     walletConnect({
       projectId: walletConnectProjectId,
       metadata: {
@@ -31,6 +33,7 @@ export const wagmiConfig = createConfig({
         url: appUrl,
         icons: [`${appUrl}/assets/miniapp/icon-512-improved.svg`],
       },
+      showQrModal: true,
     }),
   ],
   transports: {
