@@ -32,11 +32,22 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
 }) => {
   const { completedLevels, levelStars, highestUnlockedLevel } = progressData;
 
+  // Debug logging
+  console.log('[LevelSelect] Progress data:', {
+    completedLevels: Array.from(completedLevels),
+    highestUnlockedLevel,
+    levelStarsCount: levelStars.size,
+  });
+
   /**
    * Check if a level is unlocked
    */
   const isLevelUnlocked = (level: number): boolean => {
-    return level <= highestUnlockedLevel;
+    const unlocked = level <= highestUnlockedLevel;
+    if (level === 1) {
+      console.log('[LevelSelect] Level 1 unlocked check:', { level, highestUnlockedLevel, unlocked });
+    }
+    return unlocked;
   };
 
   /**

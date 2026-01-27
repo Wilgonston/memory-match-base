@@ -86,7 +86,13 @@ export interface UseProgressReturn {
 export function useProgress(): UseProgressReturn {
   // Load progress from LocalStorage on mount
   const [progress, setProgress] = useState<ProgressData>(() => {
-    return StorageManager.loadProgress();
+    const initialProgress = StorageManager.loadProgress();
+    console.log('[useProgress] Initial progress loaded:', {
+      completedLevels: Array.from(initialProgress.completedLevels),
+      highestUnlockedLevel: initialProgress.highestUnlockedLevel,
+      levelStarsCount: initialProgress.levelStars.size,
+    });
+    return initialProgress;
   });
 
   // Save progress to LocalStorage whenever it changes

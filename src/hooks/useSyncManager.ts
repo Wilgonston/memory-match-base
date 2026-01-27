@@ -130,13 +130,24 @@ export function useSyncManager(): UseSyncManagerResult {
    */
   const mergeFromBlockchain = useCallback(
     async (localProgress: ProgressData): Promise<ProgressData> => {
+      console.log('[useSyncManager] mergeFromBlockchain called');
+      console.log('[useSyncManager] isConnected:', isConnected);
+      console.log('[useSyncManager] address:', address);
+      console.log('[useSyncManager] onChainProgress:', onChainProgress);
+      
       if (!isConnected || !address || !onChainProgress) {
         // Return local progress if not connected
+        console.log('[useSyncManager] No blockchain connection, returning local progress');
         return localProgress;
       }
 
       try {
         const merged = mergeProgress(localProgress, onChainProgress);
+        console.log('[useSyncManager] Merged progress result:', {
+          completedLevels: Array.from(merged.completedLevels),
+          highestUnlockedLevel: merged.highestUnlockedLevel,
+          levelStarsCount: merged.levelStars.size,
+        });
         
         return merged;
       } catch (error) {
@@ -145,6 +156,7 @@ export function useSyncManager(): UseSyncManagerResult {
           ...prev,
           syncError: errorMsg,
         }));
+        console.error('[useSyncManager] Merge error:', error);
         // Return local progress on error
         return localProgress;
       }

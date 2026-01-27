@@ -93,7 +93,18 @@ export function usePlayerProgress(): UsePlayerProgressResult {
 
   // Combine data into OnChainProgress format
   const progress = useMemo((): OnChainProgress | null => {
-    if (!isConnected || !address || totalStars === undefined || updated === undefined) {
+    if (!isConnected || !address) {
+      return null;
+    }
+
+    // If data is still loading, return null
+    if (totalStars === undefined || updated === undefined) {
+      return null;
+    }
+
+    // For new users with no progress, return null to use local progress
+    // This prevents overwriting local progress with empty blockchain data
+    if (totalStars === 0n && updated === 0n) {
       return null;
     }
 

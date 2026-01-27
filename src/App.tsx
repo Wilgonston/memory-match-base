@@ -77,8 +77,18 @@ function App() {
       if (isConnected && address && isAuthenticated && !hasLoadedBlockchainProgress) {
         try {
           console.log('Loading progress from blockchain...');
+          console.log('Current local progress:', {
+            completedLevels: Array.from(progress.completedLevels),
+            highestUnlockedLevel: progress.highestUnlockedLevel,
+            levelStarsCount: progress.levelStars.size,
+          });
           setIsLoadingBlockchainProgress(true);
           const mergedProgress = await mergeFromBlockchain(progress);
+          console.log('Merged progress:', {
+            completedLevels: Array.from(mergedProgress.completedLevels),
+            highestUnlockedLevel: mergedProgress.highestUnlockedLevel,
+            levelStarsCount: mergedProgress.levelStars.size,
+          });
           updateProgress(() => mergedProgress);
           setHasLoadedBlockchainProgress(true);
           console.log('Progress loaded from blockchain successfully');
