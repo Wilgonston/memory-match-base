@@ -83,11 +83,56 @@
   box-shadow: 0 8px 24px rgba(0, 82, 255, 0.4);
 }
 
+.login-connect-primary {
+  background: linear-gradient(135deg, #0052FF 0%, #00D4FF 100%);
+  box-shadow: 0 4px 16px rgba(0, 82, 255, 0.3);
+}
+
+.login-connect-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.login-connect-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  margin: 8px 0 16px 0;
+  text-align: center;
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.login-divider-text {
+  padding: 0 16px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .login-connectors {
   display: flex;
   flex-direction: column;
   gap: 12px;
   margin-bottom: 16px;
+}
+
+.login-connectors-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 8px 0;
+  text-align: center;
 }
 
 .login-connector-button {
@@ -101,12 +146,34 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .login-connector-button:hover {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(0, 82, 255, 0.5);
   transform: translateY(-1px);
+}
+
+.login-back-button {
+  width: 100%;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-back-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
 }
 
 .login-connected {

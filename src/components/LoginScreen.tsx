@@ -97,7 +97,7 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
   };
 
   const handleConnect = () => {
-    console.log('[LoginScreen] Connecting wallet...');
+    console.log('[LoginScreen] Connecting Smart Wallet...');
     console.log('[LoginScreen] Available connectors:', connectors.map(c => c.id));
     
     // First, disconnect any existing connection
@@ -105,17 +105,17 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
       console.log('[LoginScreen] Disconnecting existing wallet...');
       disconnect();
       // Wait a bit before reconnecting
-      setTimeout(() => connectWallet(), 500);
+      setTimeout(() => connectSmartWallet(), 500);
     } else {
-      connectWallet();
+      connectSmartWallet();
     }
   };
 
-  const connectWallet = () => {
+  const connectSmartWallet = () => {
     // Get Coinbase Wallet connector (Smart Wallet)
     const coinbaseConnector = connectors.find(c => c.id === 'coinbaseWalletSDK');
     if (coinbaseConnector) {
-      console.log('[LoginScreen] Using Coinbase Wallet connector');
+      console.log('[LoginScreen] Using Coinbase Smart Wallet connector');
       console.log('[LoginScreen] Forcing chainId:', base.id);
       // Connect with Base Mainnet chainId to ensure Smart Wallet is created on correct network
       connect({ 
@@ -123,9 +123,23 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
         chainId: base.id, // Force Base Mainnet
       });
     } else {
-      console.log('[LoginScreen] Coinbase connector not found, showing all connectors');
-      setShowConnectors(true);
+      console.log('[LoginScreen] Coinbase connector not found');
+      setError('Coinbase Smart Wallet connector not available');
     }
+  };
+
+  const handleConnectOtherWallet = () => {
+    console.log('[LoginScreen] Showing other wallet options...');
+    setShowConnectors(true);
+  };
+
+  const handleConnectorClick = (connector: any) => {
+    console.log('[LoginScreen] Connecting with:', connector.name);
+    connect({ 
+      connector,
+      chainId: base.id, // Force Base Mainnet
+    });
+    setShowConnectors(false);
   };
 
   const handleAuthenticate = async () => {
@@ -191,30 +205,56 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
               </p>
               
               {!showConnectors ? (
-                <button 
-                  onClick={handleConnect}
-                  className="login-connect-button"
-                >
-                  Connect Wallet
-                </button>
+                <>
+                  <button 
+                    onClick={handleConnect}
+                    className="login-connect-button login-connect-primary"
+                  >
+                    🔐 Create Smart Wallet (Recommended)
+                  </button>
+
+                  <div className="login-divider">
+                    <span className="login-divider-text">or</span>
+                  </div>
+
+                  <button 
+                    onClick={handleConnectOtherWallet}
+                    className="login-connect-button login-connect-secondary"
+                  >
+                    🦊 Connect Existing Wallet (MetaMask, etc.)
+                  </button>
+                </>
               ) : (
-                <div className="login-connectors">
-                  {connectors.map((connector) => (
-                    <button
-                      key={connector.id}
-                      onClick={() => connect({ connector })}
-                      className="login-connector-button"
-                    >
-                      {connector.name}
-                    </button>
-                  ))}
-                </div>
+                <>
+                  <div className="login-connectors">
+                    <p className="login-connectors-title">Choose your wallet:</p>
+                    {connectors
+                      .filter(c => c.id !== 'coinbaseWalletSDK') // Exclude Coinbase Smart Wallet from this list
+                      .map((connector) => (
+                        <button
+                          key={connector.id}
+                          onClick={() => handleConnectorClick(connector)}
+                          className="login-connector-button"
+                        >
+                          {connector.name === 'WalletConnect' && '🔗 '}
+                          {connector.name === 'MetaMask' && '🦊 '}
+                          {connector.name}
+                        </button>
+                      ))}
+                  </div>
+                  <button 
+                    onClick={() => setShowConnectors(false)}
+                    className="login-back-button"
+                  >
+                    ← Back
+                  </button>
+                </>
               )}
               
               <p className="login-note">
-                A Smart Wallet will be created automatically for you.
+                <strong>Smart Wallet (Recommended):</strong> No seed phrases, biometric login, gas-free transactions
                 <br />
-                All transactions are free (sponsored by Paymaster).
+                <strong>Existing Wallet:</strong> Use MetaMask or other wallets (you pay gas fees)
               </p>
 
               <div className="login-troubleshooting">
