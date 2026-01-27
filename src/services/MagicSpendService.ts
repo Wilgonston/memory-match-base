@@ -111,6 +111,7 @@ export class MagicSpendService {
         blockNumber: BigInt(Math.floor(Math.random() * 1000000)),
         from: '0x0000000000000000000000000000000000000000' as Address,
         to,
+        contractAddress: null,
         gasUsed: 21000n,
         cumulativeGasUsed: 21000n,
         effectiveGasPrice: 1000000000n,

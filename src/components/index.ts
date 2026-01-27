@@ -29,23 +29,19 @@ export type { GameBoardProps } from './GameBoard';
 export { LevelSelect } from './LevelSelect';
 export type { LevelSelectProps } from './LevelSelect';
 
-export { WalletComponents, WalletButton } from './WalletComponents';
+export { WalletComponents } from './WalletComponents';
 
 export { IdentityDisplay } from './IdentityDisplay';
-export type { IdentityDisplayProps } from './IdentityDisplay';
 
 export { SaveProgressButton } from './SaveProgressButton';
-export type { SaveProgressButtonProps } from './SaveProgressButton';
 
 export { LoginScreen } from './LoginScreen';
 
 export { SpendPermissionStatus } from './SpendPermissionStatus';
-export type { SpendPermissionStatusProps } from './SpendPermissionStatus';
 
 export { MagicSpendStatus } from './MagicSpendStatus';
 
 export { BatchTransactionPreview } from './BatchTransactionPreview';
-export type { BatchTransactionPreviewProps } from './BatchTransactionPreview';
 
 export { NetworkSwitcher } from './NetworkSwitcher';
 

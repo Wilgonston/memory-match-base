@@ -96,23 +96,23 @@ export function optimizeForBaseApp(): void {
 
   // Disable pull-to-refresh
   body.style.overscrollBehavior = 'none';
-  body.style.webkitOverscrollBehavior = 'none';
+  (body.style as any).webkitOverscrollBehavior = 'none';
 
   // Disable tap highlight
-  body.style.webkitTapHighlightColor = 'transparent';
-  body.style.tapHighlightColor = 'transparent';
+  (body.style as any).webkitTapHighlightColor = 'transparent';
+  (body.style as any).tapHighlightColor = 'transparent';
 
   // Disable touch callout (long-press menu on iOS)
-  body.style.webkitTouchCallout = 'none';
+  (body.style as any).webkitTouchCallout = 'none';
 
   // Prevent text selection during gameplay
   body.style.userSelect = 'none';
-  body.style.webkitUserSelect = 'none';
-  body.style.msUserSelect = 'none';
-  body.style.mozUserSelect = 'none';
+  (body.style as any).webkitUserSelect = 'none';
+  (body.style as any).msUserSelect = 'none';
+  (body.style as any).mozUserSelect = 'none';
 
   // Optimize touch scrolling
-  body.style.webkitOverflowScrolling = 'touch';
+  (body.style as any).webkitOverflowScrolling = 'touch';
 
   console.log('✓ Base App optimizations applied');
 }
@@ -133,15 +133,15 @@ export function removeBaseAppOptimizations(): void {
 
   // Reset styles
   body.style.overscrollBehavior = '';
-  body.style.webkitOverscrollBehavior = '';
-  body.style.webkitTapHighlightColor = '';
-  body.style.tapHighlightColor = '';
-  body.style.webkitTouchCallout = '';
+  (body.style as any).webkitOverscrollBehavior = '';
+  (body.style as any).webkitTapHighlightColor = '';
+  (body.style as any).tapHighlightColor = '';
+  (body.style as any).webkitTouchCallout = '';
   body.style.userSelect = '';
-  body.style.webkitUserSelect = '';
-  body.style.msUserSelect = '';
-  body.style.mozUserSelect = '';
-  body.style.webkitOverflowScrolling = '';
+  (body.style as any).webkitUserSelect = '';
+  (body.style as any).msUserSelect = '';
+  (body.style as any).mozUserSelect = '';
+  (body.style as any).webkitOverflowScrolling = '';
 
   console.log('✓ Base App optimizations removed');
 }

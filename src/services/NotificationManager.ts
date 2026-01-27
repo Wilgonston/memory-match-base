@@ -8,6 +8,7 @@
  * Requirements: 13.1, 13.2, 13.3, 13.4, 13.5, 13.6, 13.7
  */
 
+import React from 'react';
 import { TransactionStatus } from '../components/TransactionNotification';
 
 export interface Notification {
@@ -156,7 +157,6 @@ class NotificationManagerClass {
    */
   subscribe(listener: NotificationListener): () => void {
     this.listeners.add(listener);
-    // Return unsubscribe function
     return () => {
       this.listeners.delete(listener);
     };
@@ -215,7 +215,6 @@ class NotificationManagerClass {
   }
 }
 
-// Export singleton instance
 export const NotificationManager = new NotificationManagerClass();
 
 /**
@@ -243,13 +242,3 @@ export function useNotifications() {
     clearAll: NotificationManager.clearAll.bind(NotificationManager),
   };
 }
-
-// Import React for hook
-import React from 'react';
-
-</content>
-</file></function_calls>
-
-<function_calls>
-<invoke name="executePwsh">
-<parameter name="command">npm test -- src/components/LoadingIndicator --run
