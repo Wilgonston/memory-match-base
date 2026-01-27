@@ -39,7 +39,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
     return null;
   }
 
-  const handleSave = async () => {
+  const handleSave = () => {
     setIsSaving(true);
     setShowSuccess(false);
     setShowError(null);
@@ -55,8 +55,8 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       console.log('[SaveAllProgressButton] Levels:', levels);
       console.log('[SaveAllProgressButton] Stars:', stars);
       
-      await updateLevels(levels, stars);
-      console.log('[SaveAllProgressButton] All progress saved successfully!');
+      updateLevels(levels, stars);
+      console.log('[SaveAllProgressButton] Transaction submitted, waiting for confirmation...');
     } catch (err) {
       console.error('[SaveAllProgressButton] Failed to save progress:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to save progress';
@@ -70,17 +70,17 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
                  !errorMessage.includes('wallet_sendCalls')) {
         setShowError('Transaction failed. Please try again.');
       }
-    } finally {
       setIsSaving(false);
     }
   };
 
-  // Handle success
+  // Handle success - only when transaction is confirmed on blockchain
   useEffect(() => {
-    if (isSuccess && !isSaving && !isPending) {
-      console.log('[SaveAllProgressButton] Transaction confirmed successfully');
+    if (isSuccess && !isPending) {
+      console.log('[SaveAllProgressButton] ✅ Transaction confirmed on blockchain');
       setShowSuccess(true);
       setShowError(null);
+      setIsSaving(false);
       onSuccess?.();
       
       // Hide success message after 3 seconds
@@ -88,7 +88,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
         setShowSuccess(false);
       }, 3000);
     }
-  }, [isSuccess, isSaving, isPending, onSuccess]);
+  }, [isSuccess, isPending, onSuccess]);
 
   // Handle error
   useEffect(() => {
@@ -104,6 +104,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       
       setShowError(errorMsg);
       setShowSuccess(false);
+      setIsSaving(false);
       onError?.(errorMsg);
     }
   }, [error, onError]);

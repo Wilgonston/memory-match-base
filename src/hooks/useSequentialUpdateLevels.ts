@@ -23,7 +23,7 @@ import { getChainId } from '../utils/network';
  */
 export interface UseSequentialUpdateLevelsResult {
   /** Function to update multiple levels sequentially */
-  updateLevels: (levels: number[], stars: number[]) => Promise<void>;
+  updateLevels: (levels: number[], stars: number[]) => void;
   /** Current transaction hash */
   hash?: `0x${string}`;
   /** Current transaction status */
@@ -104,7 +104,7 @@ export function useSequentialUpdateLevels(): UseSequentialUpdateLevelsResult {
 
   // Sequential update function
   const updateLevels = useCallback(
-    async (levels: number[], stars: number[]): Promise<void> => {
+    (levels: number[], stars: number[]): void => {
       // Check if on correct network
       if (chainId !== expectedChainId) {
         const errorMsg = `Wrong network. Please switch to Base ${expectedChainId === 8453 ? 'Mainnet' : 'Sepolia'}`;
@@ -161,7 +161,7 @@ export function useSequentialUpdateLevels(): UseSequentialUpdateLevelsResult {
           args: [levels, stars],
         });
         
-        console.log('[useSequentialUpdateLevels] Transaction submitted, waiting for confirmation...');
+        console.log('[useSequentialUpdateLevels] Transaction submitted, waiting for user signature and blockchain confirmation...');
         
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to update levels';
