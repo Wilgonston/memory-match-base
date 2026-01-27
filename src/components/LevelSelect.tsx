@@ -37,36 +37,11 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
   const [isResetting, setIsResetting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Debug logging
-  console.log('[LevelSelect] Progress data:', {
-    completedLevels: Array.from(completedLevels),
-    highestUnlockedLevel,
-    levelStarsCount: levelStars.size,
-  });
-
-  // Debug: Check localStorage
-  useEffect(() => {
-    const stored = localStorage.getItem('memory-match-base-progress');
-    console.log('[LevelSelect] localStorage raw:', stored);
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        console.log('[LevelSelect] localStorage parsed:', parsed);
-      } catch (e) {
-        console.error('[LevelSelect] localStorage parse error:', e);
-      }
-    }
-  }, []);
-
   /**
    * Check if a level is unlocked
    */
   const isLevelUnlocked = (level: number): boolean => {
-    const unlocked = level <= highestUnlockedLevel;
-    if (level === 1) {
-      console.log('[LevelSelect] Level 1 unlocked check:', { level, highestUnlockedLevel, unlocked });
-    }
-    return unlocked;
+    return level <= highestUnlockedLevel;
   };
 
   /**
@@ -281,19 +256,6 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
             Logout
           </button>
         )}
-        
-        {/* Debug button to clear localStorage */}
-        <button 
-          className="back-to-menu-button"
-          onClick={() => {
-            localStorage.removeItem('memory-match-base-progress');
-            window.location.reload();
-          }}
-          style={{ right: '160px', left: 'auto' }}
-          aria-label="Clear progress and reload"
-        >
-          Clear Progress
-        </button>
 
         {/* Wallet reset button */}
         <button 

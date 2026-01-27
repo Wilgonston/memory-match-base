@@ -121,16 +121,13 @@ export class Web3ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Log error for debugging
+    // Log error for monitoring
     console.error('Web3 Error Boundary caught an error:', error, errorInfo);
     
     // Update state with error info
     this.setState({
       errorInfo,
     });
-    
-    // TODO: Send to error monitoring service (Sentry, etc.)
-    // errorMonitoring.captureException(error, { errorInfo });
   }
 
   handleReset = () => {

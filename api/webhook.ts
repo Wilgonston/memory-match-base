@@ -10,7 +10,9 @@
  * Security:
  * - Verifies HMAC-SHA256 signature from X-Farcaster-Signature header
  * - Uses timing-safe comparison to prevent timing attacks
+ * - Rate limiting: 10 requests per minute per FID
  * - Returns 401 for invalid signatures
+ * - Returns 429 for rate limit exceeded
  * 
  * Environment Variables:
  * - WEBHOOK_SECRET: Secret key for signature verification
@@ -26,6 +28,49 @@ interface WebhookEvent {
     [key: string]: any;
   };
 }
+
+/**
+ * Simple in-memory rate limiter
+ */
+class WebhookRateLimiter {
+  private attempts: Map<string, number[]> = new Map();
+  private maxRequests = 10;
+  private windowMs = 60000; // 1 minute
+
+  isAllowed(identifier: string): boolean {
+    const now = Date.now();
+    const attempts = this.attempts.get(identifier) || [];
+    
+    // Remove old attempts
+    const recentAttempts = attempts.filter(time => now - time < this.windowMs);
+    
+    if (recentAttempts.length >= this.maxRequests) {
+      return false;
+    }
+    
+    recentAttempts.push(now);
+    this.attempts.set(identifier, recentAttempts);
+    
+    return true;
+  }
+
+  cleanup(): void {
+    const now = Date.now();
+    for (const [key, attempts] of this.attempts.entries()) {
+      const recent = attempts.filter(time => now - time < this.windowMs);
+      if (recent.length === 0) {
+        this.attempts.delete(key);
+      } else {
+        this.attempts.set(key, recent);
+      }
+    }
+  }
+}
+
+const rateLimiter = new WebhookRateLimiter();
+
+// Cleanup every 5 minutes
+setInterval(() => rateLimiter.cleanup(), 5 * 60 * 1000);
 
 /**
  * Verify webhook signature using HMAC-SHA256
@@ -59,14 +104,6 @@ async function handleInstall(event: WebhookEvent): Promise<void> {
   const { fid, timestamp } = event.data;
   
   console.log(`[Install] User ${fid} installed the app at ${new Date(timestamp * 1000).toISOString()}`);
-  
-  // Track installation metrics
-  // TODO: Add analytics tracking
-  // analytics.track('miniapp_install', { fid, timestamp });
-  
-  // Optional: Send welcome notification
-  // TODO: Implement notification system
-  // await sendWelcomeNotification(fid);
 }
 
 /**
@@ -76,14 +113,6 @@ async function handleUninstall(event: WebhookEvent): Promise<void> {
   const { fid, timestamp } = event.data;
   
   console.log(`[Uninstall] User ${fid} uninstalled the app at ${new Date(timestamp * 1000).toISOString()}`);
-  
-  // Track churn metrics
-  // TODO: Add analytics tracking
-  // analytics.track('miniapp_uninstall', { fid, timestamp });
-  
-  // Optional: Cleanup user data
-  // TODO: Implement data cleanup if needed
-  // await cleanupUserData(fid);
 }
 
 /**
@@ -93,31 +122,15 @@ async function handleOpen(event: WebhookEvent): Promise<void> {
   const { fid, timestamp } = event.data;
   
   console.log(`[Open] User ${fid} opened the app at ${new Date(timestamp * 1000).toISOString()}`);
-  
-  // Track engagement metrics
-  // TODO: Add analytics tracking
-  // analytics.track('miniapp_open', { fid, timestamp });
-  
-  // Optional: Update last active timestamp
-  // TODO: Implement user activity tracking
-  // await updateLastActive(fid, timestamp);
 }
 
 /**
  * Handle frame.button event
  */
 async function handleFrameButton(event: WebhookEvent): Promise<void> {
-  const { fid, timestamp, buttonIndex, ...rest } = event.data;
+  const { fid, timestamp, buttonIndex } = event.data;
   
   console.log(`[Frame] User ${fid} clicked button ${buttonIndex} at ${new Date(timestamp * 1000).toISOString()}`);
-  
-  // Track Frame interactions
-  // TODO: Add analytics tracking
-  // analytics.track('frame_button_click', { fid, buttonIndex, timestamp });
-  
-  // Optional: Handle specific button actions
-  // TODO: Implement Frame action handlers
-  // await handleFrameAction(fid, buttonIndex, rest);
 }
 
 /**
@@ -156,6 +169,31 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
+    // Parse event first to get FID for rate limiting
+    const body = typeof req.body === 'string' 
+      ? req.body 
+      : JSON.stringify(req.body);
+    
+    const event: WebhookEvent = typeof req.body === 'string'
+      ? JSON.parse(req.body)
+      : req.body;
+
+    // Validate event structure
+    if (!event.event || !event.data || !event.data.fid || !event.data.timestamp) {
+      console.error('Invalid event structure:', event);
+      return res.status(400).json({ error: 'Invalid event structure' });
+    }
+
+    // Rate limiting check
+    const identifier = `fid:${event.data.fid}`;
+    if (!rateLimiter.isAllowed(identifier)) {
+      console.warn(`Rate limit exceeded for ${identifier}`);
+      return res.status(429).json({ 
+        error: 'Rate limit exceeded',
+        message: 'Too many requests. Please try again later.'
+      });
+    }
+
     // Extract signature from header
     const signature = req.headers['x-farcaster-signature'];
     
@@ -172,28 +210,12 @@ export default async function handler(req: any, res: any) {
       return res.status(500).json({ error: 'Server configuration error' });
     }
 
-    // Get request body as string
-    const body = typeof req.body === 'string' 
-      ? req.body 
-      : JSON.stringify(req.body);
-
     // Verify signature
     const isValid = verifySignature(body, signature, secret);
     
     if (!isValid) {
       console.error('Invalid webhook signature');
       return res.status(401).json({ error: 'Invalid signature' });
-    }
-
-    // Parse event
-    const event: WebhookEvent = typeof req.body === 'string'
-      ? JSON.parse(req.body)
-      : req.body;
-
-    // Validate event structure
-    if (!event.event || !event.data || !event.data.fid || !event.data.timestamp) {
-      console.error('Invalid event structure:', event);
-      return res.status(400).json({ error: 'Invalid event structure' });
     }
 
     // Handle event
