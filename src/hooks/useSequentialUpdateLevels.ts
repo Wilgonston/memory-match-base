@@ -9,7 +9,7 @@
  */
 
 import { useAccount, useChainId, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Address } from 'viem';
 import { 
   MEMORY_MATCH_PROGRESS_ABI, 
@@ -48,6 +48,7 @@ export interface UseSequentialUpdateLevelsResult {
  * - Tracks progress of sequential updates
  * - Validates inputs before submission
  * - Handles errors gracefully with user-friendly messages
+ * - Waits for transaction confirmation before marking as success
  * 
  * @returns Object containing updateLevels function, transaction status, and helpers
  * 
@@ -71,12 +72,11 @@ export function useSequentialUpdateLevels(): UseSequentialUpdateLevelsResult {
   const expectedChainId = getChainId();
   const contractAddress = getContractAddress();
   const [localError, setLocalError] = useState<string>();
-  const [isSuccess, setIsSuccess] = useState(false);
   const [progress, setProgress] = useState({ current: 0, total: 0 });
 
-  const { writeContract, data: hash, isPending: isWritePending, error: writeError } = useWriteContract();
+  const { writeContract, data: hash, isPending: isWritePending, error: writeError, reset: resetWrite } = useWriteContract();
   
-  const { isLoading: isConfirming } = useWaitForTransactionReceipt({
+  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
     hash,
   });
 
@@ -85,7 +85,7 @@ export function useSequentialUpdateLevels(): UseSequentialUpdateLevelsResult {
   // Determine transaction status
   const status: TransactionStatus = isPending
     ? 'pending'
-    : isSuccess
+    : isConfirmed
     ? 'success'
     : writeError || localError
     ? 'error'
@@ -93,6 +93,14 @@ export function useSequentialUpdateLevels(): UseSequentialUpdateLevelsResult {
 
   // Combined error message
   const error = localError || writeError?.message;
+
+  // Log transaction confirmation
+  useEffect(() => {
+    if (isConfirmed && hash) {
+      console.log('[useSequentialUpdateLevels] ✅ Transaction confirmed on blockchain:', hash);
+      console.log('[useSequentialUpdateLevels] Data successfully saved to blockchain');
+    }
+  }, [isConfirmed, hash]);
 
   // Sequential update function
   const updateLevels = useCallback(
@@ -138,15 +146,14 @@ export function useSequentialUpdateLevels(): UseSequentialUpdateLevelsResult {
 
       // Clear previous state
       setLocalError(undefined);
-      setIsSuccess(false);
       setProgress({ current: 0, total: levels.length });
 
       try {
-        console.log(`[useSequentialUpdateLevels] Updating ${levels.length} levels sequentially`);
+        console.log(`[useSequentialUpdateLevels] Updating ${levels.length} levels`);
+        console.log('[useSequentialUpdateLevels] Levels:', levels);
+        console.log('[useSequentialUpdateLevels] Stars:', stars);
         
-        // Use batchUpdate function if available (single transaction)
-        console.log('[useSequentialUpdateLevels] Using batchUpdate for all levels');
-        
+        // Submit transaction to blockchain
         writeContract({
           address: contractAddress as Address,
           abi: MEMORY_MATCH_PROGRESS_ABI,
@@ -154,8 +161,7 @@ export function useSequentialUpdateLevels(): UseSequentialUpdateLevelsResult {
           args: [levels, stars],
         });
         
-        setProgress({ current: levels.length, total: levels.length });
-        setIsSuccess(true);
+        console.log('[useSequentialUpdateLevels] Transaction submitted, waiting for confirmation...');
         
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to update levels';
@@ -170,9 +176,9 @@ export function useSequentialUpdateLevels(): UseSequentialUpdateLevelsResult {
   // Reset function
   const reset = useCallback(() => {
     setLocalError(undefined);
-    setIsSuccess(false);
     setProgress({ current: 0, total: 0 });
-  }, []);
+    resetWrite();
+  }, [resetWrite]);
 
   return {
     updateLevels,
@@ -180,7 +186,7 @@ export function useSequentialUpdateLevels(): UseSequentialUpdateLevelsResult {
     status,
     error,
     isPending,
-    isSuccess,
+    isSuccess: isConfirmed, // Only true when transaction is confirmed on blockchain
     progress,
     reset,
   };
