@@ -65,8 +65,17 @@ export class FrameImageGenerator {
     // Generate star display
     const starDisplay = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
     
-    // Format username display
-    const userDisplay = username ? `by ${username}` : '';
+    // Sanitize and escape username for SVG
+    const escapeSvg = (str: string): string => str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
+    
+    // Format username display with sanitization
+    const safeUsername = username ? username.trim().slice(0, 50) : '';
+    const userDisplay = safeUsername ? `by ${escapeSvg(safeUsername)}` : '';
     
     // Create SVG with game-themed styling
     return `
@@ -190,12 +199,19 @@ export function generateFrameMetaTags(metadata: FrameMetadata): string {
  */
 export function addFrameMetaToHead(metadata: FrameMetadata): void {
   const tags = generateFrameMetaTags(metadata);
-  const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = tags;
-
-  // Add each meta tag to head
-  Array.from(tempDiv.children).forEach((tag) => {
-    document.head.appendChild(tag);
+  
+  // Безопасный парсинг без innerHTML
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(tags, 'text/html');
+  
+  // Добавляем только meta теги с явным созданием элементов
+  const metaTags = doc.querySelectorAll('meta');
+  metaTags.forEach((tag) => {
+    const newTag = document.createElement('meta');
+    Array.from(tag.attributes).forEach(attr => {
+      newTag.setAttribute(attr.name, attr.value);
+    });
+    document.head.appendChild(newTag);
   });
 }
 

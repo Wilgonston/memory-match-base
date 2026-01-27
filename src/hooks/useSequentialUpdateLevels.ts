@@ -67,7 +67,6 @@ export interface UseSequentialUpdateLevelsResult {
  * ```
  */
 export function useSequentialUpdateLevels(): UseSequentialUpdateLevelsResult {
-  const { address } = useAccount();
   const chainId = useChainId();
   const expectedChainId = getChainId();
   const contractAddress = getContractAddress();
