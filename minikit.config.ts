@@ -1,5 +1,5 @@
 // Mini App configuration for BASE App integration
-const ROOT_URL = import.meta.env.VITE_APP_URL || 'https://memory-match-base.app';
+const ROOT_URL = import.meta.env.VITE_APP_URL || 'https://memory-match-base.vercel.app';
 
 /**
  * Account Association Configuration for Farcaster Mini Apps
