@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAccount, useConnect, useSignMessage, useSwitchChain, useChainId } from 'wagmi';
+import { useAccount, useConnect, useDisconnect, useSignMessage, useSwitchChain, useChainId } from 'wagmi';
 import { base } from 'wagmi/chains';
 import { setAuthentication } from '../utils/auth';
 import './LoginScreen.css';
@@ -12,19 +12,62 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
   const { connectors, connect } = useConnect();
+  const { disconnect } = useDisconnect();
   const { signMessageAsync } = useSignMessage();
   const { switchChain } = useSwitchChain();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showConnectors, setShowConnectors] = useState(false);
+  const [showWrongNetworkWarning, setShowWrongNetworkWarning] = useState(false);
 
   // Auto-switch to Base Mainnet when wallet connects
   useEffect(() => {
     if (isConnected && chainId !== base.id) {
-      console.log('[LoginScreen] Wallet connected on wrong network. Switching to Base Mainnet...');
+      console.log('[LoginScreen] Wallet connected on wrong network:', chainId);
+      console.log('[LoginScreen] Expected network:', base.id);
+      setShowWrongNetworkWarning(true);
+      
+      // Try to switch network
+      console.log('[LoginScreen] Attempting to switch to Base Mainnet...');
       switchChain({ chainId: base.id });
+    } else if (isConnected && chainId === base.id) {
+      setShowWrongNetworkWarning(false);
     }
   }, [isConnected, chainId, switchChain]);
+
+  const handleResetWallet = () => {
+    console.log('[LoginScreen] Resetting wallet...');
+    
+    // Disconnect wallet
+    disconnect();
+    
+    // Clear all Coinbase Wallet SDK data
+    try {
+      // Clear localStorage items related to Coinbase Wallet
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (
+          key.includes('coinbase') || 
+          key.includes('walletlink') || 
+          key.includes('-walletUsername') ||
+          key.includes('CBWSDK')
+        )) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(key => localStorage.removeItem(key));
+      
+      // Clear sessionStorage
+      sessionStorage.clear();
+      
+      console.log('[LoginScreen] Wallet data cleared. Please refresh the page and reconnect.');
+      setError('Wallet reset complete. Please refresh the page (F5) and connect again.');
+    } catch (err) {
+      console.error('[LoginScreen] Failed to clear wallet data:', err);
+      setError('Failed to reset wallet. Please clear your browser cache manually.');
+    }
+  };
 
   const handleConnect = () => {
     // Get Coinbase Wallet connector (Smart Wallet)
@@ -140,42 +183,68 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
                   {address?.slice(0, 6)}...{address?.slice(-4)}
                 </p>
                 {chainId !== base.id && (
-                  <p className="login-network-warning">
-                    ⚠️ Switching to Base Mainnet...
-                  </p>
+                  <>
+                    <p className="login-network-warning">
+                      ⚠️ Wrong Network: {chainId === 137 ? 'Polygon' : `Chain ${chainId}`}
+                    </p>
+                    <p className="login-network-warning">
+                      Your Smart Wallet was created on the wrong network.
+                    </p>
+                  </>
                 )}
               </div>
 
-              <button
-                onClick={handleAuthenticate}
-                disabled={isAuthenticating || chainId !== base.id}
-                className="login-auth-button"
-              >
-                {chainId !== base.id ? (
-                  <>
-                    <span className="login-spinner"></span>
-                    Switching Network...
-                  </>
-                ) : isAuthenticating ? (
-                  <>
-                    <span className="login-spinner"></span>
-                    Authenticating...
-                  </>
-                ) : (
-                  'Sign Message to Continue'
-                )}
-              </button>
+              {chainId !== base.id ? (
+                <>
+                  <button
+                    onClick={() => switchChain({ chainId: base.id })}
+                    className="login-auth-button"
+                  >
+                    Try Switch to Base Mainnet
+                  </button>
+                  
+                  <button
+                    onClick={handleResetWallet}
+                    className="login-reset-button"
+                  >
+                    Reset Wallet & Start Over
+                  </button>
+                  
+                  <p className="login-info login-warning">
+                    ⚠️ Your Smart Wallet was created on {chainId === 137 ? 'Polygon' : 'wrong network'}.
+                    <br />
+                    Click "Reset Wallet" to disconnect and clear cache, then refresh page and reconnect.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={handleAuthenticate}
+                    disabled={isAuthenticating}
+                    className="login-auth-button"
+                  >
+                    {isAuthenticating ? (
+                      <>
+                        <span className="login-spinner"></span>
+                        Authenticating...
+                      </>
+                    ) : (
+                      'Sign Message to Continue'
+                    )}
+                  </button>
 
-              {error && (
-                <div className="login-error">
-                  {error}
-                </div>
+                  <p className="login-info">
+                    You'll be asked to sign a message to prove wallet ownership. This is free and doesn't require gas.
+                  </p>
+                </>
               )}
-
-              <p className="login-info">
-                You'll be asked to sign a message to prove wallet ownership. This is free and doesn't require gas.
-              </p>
             </>
+          )}
+          
+          {error && (
+            <div className="login-error">
+              {error}
+            </div>
           )}
         </div>
 
