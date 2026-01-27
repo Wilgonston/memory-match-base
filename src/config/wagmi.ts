@@ -16,23 +16,19 @@ export const wagmiConfig = createConfig({
   chains,
   connectors: [
     // Coinbase Wallet with Smart Wallet preference
-    // Smart Wallet provides gasless transactions and enhanced security
-    // Following Base documentation best practices
     coinbaseWallet({
       appName: 'Memory Match BASE',
-      appLogoUrl: `${window.location.origin}/assets/miniapp/icon-512.svg`,
-      preference: 'smartWalletOnly', // Prefer Smart Wallet for best UX
+      appLogoUrl: 'https://memory-match-base.vercel.app/assets/miniapp/icon-512-improved.svg',
+      preference: 'smartWalletOnly',
     }),
-    // Injected wallets (MetaMask, Zerion, etc.)
-    injected(),
     // WalletConnect
     walletConnect({
       projectId: walletConnectProjectId,
       metadata: {
         name: 'Memory Match BASE',
         description: 'Web3 Memory Card Game on Base Blockchain',
-        url: window.location.origin,
-        icons: [`${window.location.origin}/assets/miniapp/icon-512.svg`],
+        url: 'https://memory-match-base.vercel.app',
+        icons: ['https://memory-match-base.vercel.app/assets/miniapp/icon-512-improved.svg'],
       },
     }),
   ],
