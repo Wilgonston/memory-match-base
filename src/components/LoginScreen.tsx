@@ -38,12 +38,12 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
   const handleResetWallet = () => {
     console.log('[LoginScreen] Resetting wallet...');
     
-    // Disconnect wallet
+    // Disconnect wallet first
     disconnect();
     
-    // Clear all Coinbase Wallet SDK data
+    // Clear all Coinbase Wallet SDK and wagmi data
     try {
-      // Clear localStorage items related to Coinbase Wallet
+      // Clear localStorage items
       const keysToRemove = [];
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
@@ -51,21 +51,48 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
           key.includes('coinbase') || 
           key.includes('walletlink') || 
           key.includes('-walletUsername') ||
-          key.includes('CBWSDK')
+          key.includes('CBWSDK') ||
+          key.includes('wagmi') ||
+          key.includes('recentConnector') ||
+          key.includes('wallet')
         )) {
           keysToRemove.push(key);
         }
       }
-      keysToRemove.forEach(key => localStorage.removeItem(key));
+      keysToRemove.forEach(key => {
+        console.log('[LoginScreen] Removing localStorage key:', key);
+        localStorage.removeItem(key);
+      });
       
       // Clear sessionStorage
       sessionStorage.clear();
       
-      console.log('[LoginScreen] Wallet data cleared. Please refresh the page and reconnect.');
-      setError('Wallet reset complete. Please refresh the page (F5) and connect again.');
+      // Clear IndexedDB (Coinbase Wallet SDK uses it)
+      if (window.indexedDB) {
+        window.indexedDB.databases().then((databases) => {
+          databases.forEach((db) => {
+            if (db.name && (
+              db.name.includes('coinbase') || 
+              db.name.includes('walletlink') ||
+              db.name.includes('CBWSDK')
+            )) {
+              console.log('[LoginScreen] Deleting IndexedDB:', db.name);
+              window.indexedDB.deleteDatabase(db.name);
+            }
+          });
+        });
+      }
+      
+      console.log('[LoginScreen] Wallet data cleared successfully');
+      setError('✅ Wallet reset complete! Please refresh the page (F5) and connect again.');
+      
+      // Auto-refresh after 2 seconds
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } catch (err) {
       console.error('[LoginScreen] Failed to clear wallet data:', err);
-      setError('Failed to reset wallet. Please clear your browser cache manually.');
+      setError('Failed to reset wallet. Please clear your browser cache manually and refresh.');
     }
   };
 
