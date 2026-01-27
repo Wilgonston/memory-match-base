@@ -29,6 +29,8 @@ export const onchainKitConfig = {
     },
     paymaster: paymasterUrl,
   },
+  // Disable analytics to prevent CORS errors
+  schemaId: undefined,
 };
 
 // Export chain for use in components

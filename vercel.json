@@ -24,15 +24,11 @@
       "headers": [
         {
           "key": "Permissions-Policy",
-          "value": "camera=*, microphone=*, geolocation=*, interest-cohort=(), payment=*, usb=*, bluetooth=*, serial=*, hid=*"
+          "value": "camera=*, microphone=*, geolocation=*, payment=*"
         },
         {
           "key": "X-Content-Type-Options",
           "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "SAMEORIGIN"
         },
         {
           "key": "Referrer-Policy",
