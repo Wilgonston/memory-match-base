@@ -9,15 +9,9 @@
  */
 
 import React from 'react';
-import { useAccount } from 'wagmi';
 import { formatTime } from '../utils/timeFormat';
-import { IdentityDisplay } from './IdentityDisplay';
-import {
-  ConnectWallet,
-  Wallet,
-  WalletDropdown,
-  WalletDropdownDisconnect,
-} from '@coinbase/onchainkit/wallet';
+import { ConnectWallet, WalletDropdown, WalletDropdownDisconnect } from '@coinbase/onchainkit/wallet';
+import { Identity, Avatar, Name, Address } from '@coinbase/onchainkit/identity';
 import { SoundToggle } from './SoundToggle';
 import { NetworkSwitcher } from './NetworkSwitcher';
 import './Header.css';
@@ -37,8 +31,6 @@ export interface HeaderProps {
  * Header component displaying game status information
  */
 export const Header: React.FC<HeaderProps> = ({ level, moves, timeRemaining, onLogout }) => {
-  const { isConnected } = useAccount();
-
   return (
     <header className="game-header" role="banner">
       <div className="header-container">
@@ -71,23 +63,15 @@ export const Header: React.FC<HeaderProps> = ({ level, moves, timeRemaining, onL
 
         {/* Wallet Connection and Identity Display */}
         <div className="header-item wallet-display">
-          {isConnected ? (
-            <Wallet>
-              <ConnectWallet />
-              <WalletDropdown>
-                <IdentityDisplay 
-                  showBalance={true}
-                  hasCopyAddressOnClick={true}
-                  className="px-4 pt-3 pb-2"
-                />
-                <WalletDropdownDisconnect />
-              </WalletDropdown>
-            </Wallet>
-          ) : (
-            <Wallet>
-              <ConnectWallet />
-            </Wallet>
-          )}
+          <ConnectWallet />
+          <WalletDropdown>
+            <Identity hasCopyAddressOnClick>
+              <Avatar />
+              <Name />
+              <Address />
+            </Identity>
+            <WalletDropdownDisconnect />
+          </WalletDropdown>
         </div>
 
         {/* Network Switcher */}

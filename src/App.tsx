@@ -10,6 +10,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { useAccount } from 'wagmi';
+import { Wallet } from '@coinbase/onchainkit/wallet';
 import { LoginScreen } from './components/LoginScreen';
 import { LevelSelect } from './components/LevelSelect';
 import { GameBoard } from './components/GameBoard';
@@ -198,11 +199,12 @@ function App() {
 
   return (
     <Web3ErrorBoundary>
-      <div className="app">
-        {/* Skip link for keyboard navigation */}
-        <a href="#main-content" className="skip-link">
-          Skip to main content
-        </a>
+      <Wallet>
+        <div className="app">
+          {/* Skip link for keyboard navigation */}
+          <a href="#main-content" className="skip-link">
+            Skip to main content
+          </a>
 
         {/* Loading blockchain progress */}
         {isLoadingBlockchainProgress && (
@@ -232,7 +234,8 @@ function App() {
             onLogout={handleBackToMenu}
           />
         )}
-      </div>
+        </div>
+      </Wallet>
     </Web3ErrorBoundary>
   );
 }

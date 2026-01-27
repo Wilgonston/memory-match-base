@@ -1,17 +1,6 @@
 import { useState } from 'react';
 import { useAccount, useSignMessage } from 'wagmi';
-import {
-  ConnectWallet,
-  Wallet,
-  WalletDropdown,
-  WalletDropdownDisconnect,
-} from '@coinbase/onchainkit/wallet';
-import {
-  Avatar,
-  Name,
-  Identity,
-  Address,
-} from '@coinbase/onchainkit/identity';
+import { ConnectWallet } from '@coinbase/onchainkit/wallet';
 import './LoginScreen.css';
 
 interface LoginScreenProps {
@@ -81,17 +70,7 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
                 ✨ No seed phrases • 🔐 Secure with biometrics • ⚡ Gas-free transactions
               </p>
               <div className="login-wallet-button">
-                <Wallet>
-                  <ConnectWallet />
-                  <WalletDropdown>
-                    <Identity hasCopyAddressOnClick>
-                      <Avatar />
-                      <Name />
-                      <Address />
-                    </Identity>
-                    <WalletDropdownDisconnect />
-                  </WalletDropdown>
-                </Wallet>
+                <ConnectWallet />
               </div>
               <p className="login-note">
                 A Smart Wallet will be created automatically for you.
