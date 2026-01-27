@@ -16,15 +16,14 @@ export function NetworkSwitcher() {
 
   useEffect(() => {
     // Auto-switch to preferred network on connect
+    // This is critical - Smart Wallet must be on Base Mainnet
     if (isConnected && chainId !== preferredChainId && !isPending) {
-      console.log('[NetworkSwitcher] Auto-switching from chain', chainId, 'to', preferredNetwork, 'network (chain', preferredChainId, ')');
+      console.log('[NetworkSwitcher] CRITICAL: Wrong network detected!');
+      console.log('[NetworkSwitcher] Current chain:', chainId, 'Expected:', preferredChainId);
+      console.log('[NetworkSwitcher] Force switching to', preferredNetwork, 'network');
       
-      // Add a small delay to ensure wallet is fully connected
-      const timer = setTimeout(() => {
-        switchChain({ chainId: preferredChainId });
-      }, 500);
-      
-      return () => clearTimeout(timer);
+      // Immediate switch without delay
+      switchChain({ chainId: preferredChainId });
     }
   }, [isConnected, chainId, preferredChainId, isPending, switchChain, preferredNetwork]);
 

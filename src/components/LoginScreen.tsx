@@ -30,7 +30,11 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
     // Get Coinbase Wallet connector (Smart Wallet)
     const coinbaseConnector = connectors.find(c => c.id === 'coinbaseWalletSDK');
     if (coinbaseConnector) {
-      connect({ connector: coinbaseConnector });
+      // Connect with Base Mainnet chainId to ensure Smart Wallet is created on correct network
+      connect({ 
+        connector: coinbaseConnector,
+        chainId: base.id, // Force Base Mainnet
+      });
     } else {
       setShowConnectors(true);
     }

@@ -17,6 +17,7 @@ import { GameBoard } from './components/GameBoard';
 import { Web3ErrorBoundary } from './components/Web3ErrorBoundary';
 import { LoadingIndicator } from './components/LoadingIndicator';
 import { SyncIndicator } from './components/SyncIndicator';
+import { NetworkBlocker } from './components/NetworkBlocker';
 import { useProgress } from './hooks/useProgress';
 import { useGameState } from './hooks/useGameState';
 import { useSyncManager } from './hooks/useSyncManager';
@@ -235,6 +236,9 @@ function App() {
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>
+
+        {/* Network blocker - blocks UI if on wrong network */}
+        <NetworkBlocker />
 
         {/* Sync indicator */}
         <SyncIndicator />

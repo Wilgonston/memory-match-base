@@ -30,6 +30,16 @@ vi.mock('wagmi', async () => {
       isConnecting: false,
       isDisconnected: false,
     })),
+    useChainId: vi.fn(() => 8453), // Base Mainnet
+    useSwitchChain: vi.fn(() => ({
+      switchChain: vi.fn(),
+      isPending: false,
+    })),
+    useConnect: vi.fn(() => ({
+      connect: vi.fn(),
+      connectors: [],
+      isPending: false,
+    })),
     useSignMessage: vi.fn(() => ({
       signMessageAsync: vi.fn().mockResolvedValue('0xmockedsignature'),
     })),

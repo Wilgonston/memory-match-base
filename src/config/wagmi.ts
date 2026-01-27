@@ -8,9 +8,10 @@ const walletConnectProjectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || 
 const appUrl = import.meta.env.VITE_APP_URL || window.location.origin;
 
 // Determine which chains to use based on network configuration
+// IMPORTANT: First chain in array is the default chain for Smart Wallet creation
 const chains = isMainnet() 
-  ? [base, baseSepolia] as const
-  : [baseSepolia, base] as const;
+  ? [base, baseSepolia] as const  // Base Mainnet first for production
+  : [baseSepolia, base] as const; // Base Sepolia first for testing
 
 // Create wagmi configuration with all wallet options
 export const wagmiConfig = createConfig({
