@@ -76,6 +76,11 @@ function App() {
    */
   useEffect(() => {
     const loadBlockchainProgress = async () => {
+      // Skip blockchain loading in test environment
+      if (import.meta.env.MODE === 'test') {
+        return;
+      }
+      
       if (isConnected && address && isAuthenticated && !hasLoadedBlockchainProgress) {
         try {
           console.log('[App] Loading progress from blockchain...');
