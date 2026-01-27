@@ -17,8 +17,14 @@ export function NetworkSwitcher() {
   useEffect(() => {
     // Auto-switch to preferred network on connect
     if (isConnected && chainId !== preferredChainId && !isPending) {
-      console.log('[NetworkSwitcher] Auto-switching to', preferredNetwork, 'network');
-      switchChain({ chainId: preferredChainId });
+      console.log('[NetworkSwitcher] Auto-switching from chain', chainId, 'to', preferredNetwork, 'network (chain', preferredChainId, ')');
+      
+      // Add a small delay to ensure wallet is fully connected
+      const timer = setTimeout(() => {
+        switchChain({ chainId: preferredChainId });
+      }, 500);
+      
+      return () => clearTimeout(timer);
     }
   }, [isConnected, chainId, preferredChainId, isPending, switchChain, preferredNetwork]);
 

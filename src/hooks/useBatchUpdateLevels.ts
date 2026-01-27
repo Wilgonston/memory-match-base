@@ -7,7 +7,7 @@
  * Requirements: 19.5
  */
 
-import { useAccount } from 'wagmi';
+import { useAccount, useChainId } from 'wagmi';
 import { useCapabilities, useWriteContracts } from 'wagmi/experimental';
 import { base } from 'wagmi/chains';
 import { useState, useCallback, useMemo } from 'react';
@@ -16,6 +16,7 @@ import {
   getContractAddress,
   type TransactionStatus 
 } from '../types/blockchain';
+import { getChainId } from '../utils/network';
 
 /**
  * Hook return type
@@ -68,6 +69,8 @@ export interface UseBatchUpdateLevelsResult {
  */
 export function useBatchUpdateLevels(): UseBatchUpdateLevelsResult {
   const { address } = useAccount();
+  const chainId = useChainId();
+  const expectedChainId = getChainId();
   const contractAddress = getContractAddress();
   const [localError, setLocalError] = useState<string>();
   const [isSuccess, setIsSuccess] = useState(false);
@@ -140,6 +143,13 @@ export function useBatchUpdateLevels(): UseBatchUpdateLevelsResult {
   // Batch update function
   const batchUpdate = useCallback(
     async (levels: number[], stars: number[]): Promise<void> => {
+      // Check if on correct network
+      if (chainId !== expectedChainId) {
+        const errorMsg = `Wrong network. Please switch to Base ${expectedChainId === 8453 ? 'Mainnet' : 'Sepolia'}`;
+        setLocalError(errorMsg);
+        throw new Error(errorMsg);
+      }
+
       // Validate array lengths match
       if (levels.length !== stars.length) {
         const errorMsg = `Array length mismatch: ${levels.length} levels vs ${stars.length} stars`;
@@ -203,7 +213,7 @@ export function useBatchUpdateLevels(): UseBatchUpdateLevelsResult {
         throw err;
       }
     },
-    [contractAddress, writeContracts, capabilities, hasPaymaster]
+    [contractAddress, writeContracts, capabilities, hasPaymaster, chainId, expectedChainId]
   );
 
   // Reset function

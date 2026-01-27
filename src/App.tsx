@@ -184,7 +184,7 @@ function App() {
       // Save level completion to progress (local storage)
       completeLevel(gameState.level, stars);
 
-      // Automatically sync to blockchain if wallet is connected
+      // Automatically sync to blockchain if wallet is connected and on correct network
       if (isConnected && address && syncStatus.mode === 'blockchain') {
         console.log(`Auto-syncing level ${gameState.level} to blockchain...`);
         
@@ -202,6 +202,7 @@ function App() {
         syncToBlockchain(updatedProgress).catch((error) => {
           console.error('Auto-sync to blockchain failed:', error);
           // User can manually sync later via SaveProgressButton
+          // Don't throw error - just log it and continue
         });
       }
     }
