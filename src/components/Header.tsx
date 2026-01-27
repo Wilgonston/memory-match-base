@@ -18,10 +18,6 @@ import {
   WalletDropdown,
   WalletDropdownDisconnect,
 } from '@coinbase/onchainkit/wallet';
-import {
-  Avatar,
-  Name,
-} from '@coinbase/onchainkit/identity';
 import { SoundToggle } from './SoundToggle';
 import { NetworkSwitcher } from './NetworkSwitcher';
 import './Header.css';
@@ -77,10 +73,7 @@ export const Header: React.FC<HeaderProps> = ({ level, moves, timeRemaining, onL
         <div className="header-item wallet-display">
           {isConnected ? (
             <Wallet>
-              <ConnectWallet>
-                <Avatar className="h-6 w-6" />
-                <Name />
-              </ConnectWallet>
+              <ConnectWallet />
               <WalletDropdown>
                 <IdentityDisplay 
                   showBalance={true}
@@ -92,10 +85,7 @@ export const Header: React.FC<HeaderProps> = ({ level, moves, timeRemaining, onL
             </Wallet>
           ) : (
             <Wallet>
-              <ConnectWallet>
-                <Avatar className="h-6 w-6" />
-                <Name />
-              </ConnectWallet>
+              <ConnectWallet />
             </Wallet>
           )}
         </div>

@@ -35,12 +35,9 @@ import {
 export function WalletComponents() {
   return (
     <Wallet>
-      <ConnectWallet>
-        <Avatar className="h-6 w-6" />
-        <Name />
-      </ConnectWallet>
+      <ConnectWallet />
       <WalletDropdown>
-        <Identity className="px-4 pt-3 pb-2" hasCopyAddressOnClick>
+        <Identity hasCopyAddressOnClick>
           <Avatar />
           <Name />
           <Address />
@@ -61,12 +58,9 @@ export function WalletComponents() {
 export function WalletButton() {
   return (
     <Wallet>
-      <ConnectWallet>
-        <Avatar className="h-6 w-6" />
-        <Name />
-      </ConnectWallet>
+      <ConnectWallet />
       <WalletDropdown>
-        <Identity className="px-4 pt-3 pb-2" hasCopyAddressOnClick>
+        <Identity hasCopyAddressOnClick>
           <Avatar />
           <Name />
           <Address />
