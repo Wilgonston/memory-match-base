@@ -100,6 +100,18 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
     console.log('[LoginScreen] Connecting wallet...');
     console.log('[LoginScreen] Available connectors:', connectors.map(c => c.id));
     
+    // First, disconnect any existing connection
+    if (isConnected) {
+      console.log('[LoginScreen] Disconnecting existing wallet...');
+      disconnect();
+      // Wait a bit before reconnecting
+      setTimeout(() => connectWallet(), 500);
+    } else {
+      connectWallet();
+    }
+  };
+
+  const connectWallet = () => {
     // Get Coinbase Wallet connector (Smart Wallet)
     const coinbaseConnector = connectors.find(c => c.id === 'coinbaseWalletSDK');
     if (coinbaseConnector) {
@@ -204,6 +216,25 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
                 <br />
                 All transactions are free (sponsored by Paymaster).
               </p>
+
+              <div className="login-troubleshooting">
+                <p className="login-troubleshooting-title">⚠️ Troubleshooting:</p>
+                <p className="login-troubleshooting-text">
+                  If you see your existing Coinbase wallet instead of creating a new Smart Wallet:
+                </p>
+                <ol className="login-troubleshooting-list">
+                  <li>Click "Reset Wallet & Start Over" button below</li>
+                  <li>Open Coinbase Wallet app and disconnect this site</li>
+                  <li>Refresh this page (F5)</li>
+                  <li>Click "Connect Wallet" again</li>
+                </ol>
+                <button 
+                  onClick={handleResetWallet}
+                  className="login-reset-button-small"
+                >
+                  🔄 Reset Wallet & Start Over
+                </button>
+              </div>
             </>
           ) : (
             <>
