@@ -10,8 +10,6 @@
 
 import React from 'react';
 import { formatTime } from '../utils/timeFormat';
-import { ConnectWallet, WalletDropdown, WalletDropdownDisconnect } from '@coinbase/onchainkit/wallet';
-import { Identity, Avatar, Name, Address } from '@coinbase/onchainkit/identity';
 import { SoundToggle } from './SoundToggle';
 import { NetworkSwitcher } from './NetworkSwitcher';
 import './Header.css';
@@ -59,19 +57,6 @@ export const Header: React.FC<HeaderProps> = ({ level, moves, timeRemaining, onL
           <span className="header-value" aria-label={`${moves} moves made`}>
             {moves}
           </span>
-        </div>
-
-        {/* Wallet Connection and Identity Display */}
-        <div className="header-item wallet-display">
-          <ConnectWallet />
-          <WalletDropdown>
-            <Identity hasCopyAddressOnClick>
-              <Avatar />
-              <Name />
-              <Address />
-            </Identity>
-            <WalletDropdownDisconnect />
-          </WalletDropdown>
         </div>
 
         {/* Network Switcher */}

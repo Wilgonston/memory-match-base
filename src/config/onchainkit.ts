@@ -1,15 +1,14 @@
 import { base, baseSepolia } from 'wagmi/chains';
+import { getNetwork, getChain } from '../utils/network';
 
 // Get environment variables
 const apiKey = import.meta.env.VITE_ONCHAINKIT_API_KEY || '';
-const network = import.meta.env.VITE_NETWORK || 'sepolia';
 
 // Determine the chain based on network configuration
-export const defaultChain = network === 'mainnet' ? base : baseSepolia;
+export const defaultChain = getChain();
 
 // Build Paymaster URL from API key following ERC-7677 standard
-// Format: https://api.developer.coinbase.com/rpc/v1/base/{API_KEY}
-const paymasterUrl = apiKey && network === 'mainnet'
+const paymasterUrl = apiKey && getNetwork() === 'mainnet'
   ? `https://api.developer.coinbase.com/rpc/v1/base/${apiKey}`
   : undefined;
 

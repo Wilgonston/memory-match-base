@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAccount, useSignMessage } from 'wagmi';
 import { ConnectWallet } from '@coinbase/onchainkit/wallet';
+import { setAuthentication } from '../utils/auth';
 import './LoginScreen.css';
 
 interface LoginScreenProps {
@@ -26,10 +27,8 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
       // Request signature from wallet
       await signMessageAsync({ message });
 
-      // Store authentication in localStorage
-      localStorage.setItem('authenticated', 'true');
-      localStorage.setItem('authenticatedAddress', address);
-      localStorage.setItem('authTimestamp', Date.now().toString());
+      // Store authentication
+      setAuthentication(address);
 
       // Call success callback
       onAuthenticated();

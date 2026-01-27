@@ -8,6 +8,7 @@
  */
 
 import { Address } from 'viem';
+import { getNetwork } from '../utils/network';
 
 /**
  * MemoryMatchProgress contract ABI
@@ -81,8 +82,7 @@ export const CONTRACT_ADDRESSES = {
  * Get contract address for current network
  */
 export function getContractAddress(): Address {
-  const network = import.meta.env.VITE_NETWORK || 'sepolia';
-  return network === 'mainnet' ? CONTRACT_ADDRESSES.mainnet : CONTRACT_ADDRESSES.sepolia;
+  return getNetwork() === 'mainnet' ? CONTRACT_ADDRESSES.mainnet : CONTRACT_ADDRESSES.sepolia;
 }
 
 /**

@@ -22,6 +22,7 @@ import { useSyncManager } from './hooks/useSyncManager';
 import { calculateStars } from './utils/scoring';
 import { getLevelConfig } from './utils/levelConfig';
 import { initializeSounds } from './utils/soundManager';
+import { getAuthentication, clearAuthentication, isAuthenticatedForAddress } from './utils/auth';
 import './index.css';
 
 /**
@@ -97,20 +98,13 @@ function App() {
    * Check authentication status on mount and wallet change
    */
   useEffect(() => {
-    const authenticated = localStorage.getItem('authenticated') === 'true';
-    const authenticatedAddress = localStorage.getItem('authenticatedAddress');
-    
-    // Check if authenticated and address matches
-    if (authenticated && authenticatedAddress === address && isConnected) {
+    if (isConnected && isAuthenticatedForAddress(address)) {
       setIsAuthenticated(true);
       setCurrentScreen('level-select');
     } else {
       setIsAuthenticated(false);
       setCurrentScreen('login');
-      // Clear old authentication
-      localStorage.removeItem('authenticated');
-      localStorage.removeItem('authenticatedAddress');
-      localStorage.removeItem('authTimestamp');
+      clearAuthentication();
     }
   }, [address, isConnected]);
 
@@ -126,10 +120,7 @@ function App() {
    * Handle back to main menu (logout)
    */
   const handleBackToMenu = useCallback(() => {
-    // Clear authentication
-    localStorage.removeItem('authenticated');
-    localStorage.removeItem('authenticatedAddress');
-    localStorage.removeItem('authTimestamp');
+    clearAuthentication();
     setIsAuthenticated(false);
     setCurrentScreen('login');
   }, []);
