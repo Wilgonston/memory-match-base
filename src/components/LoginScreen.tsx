@@ -84,7 +84,7 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
                 <Wallet>
                   <ConnectWallet />
                   <WalletDropdown>
-                    <Identity className="px-4 pt-3 pb-2" hasCopyAddressOnClick>
+                    <Identity hasCopyAddressOnClick>
                       <Avatar />
                       <Name />
                       <Address />

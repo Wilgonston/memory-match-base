@@ -27,10 +27,7 @@ export const onchainKitConfig = {
     wallet: {
       display: 'modal' as const,
     },
-    paymaster: paymasterUrl,
   },
-  // Disable analytics to prevent CORS errors
-  schemaId: undefined,
 };
 
 // Export chain for use in components
