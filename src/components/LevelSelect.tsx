@@ -8,7 +8,7 @@
  * Requirements: 5.1, 5.2, 5.4, 5.5, 6.7, 11.4, 15.7
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ProgressData } from '../types';
 import { hapticButtonPress } from '../utils/haptics';
 import './LevelSelect.css';
@@ -38,6 +38,20 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
     highestUnlockedLevel,
     levelStarsCount: levelStars.size,
   });
+
+  // Debug: Check localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem('memory-match-base-progress');
+    console.log('[LevelSelect] localStorage raw:', stored);
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        console.log('[LevelSelect] localStorage parsed:', parsed);
+      } catch (e) {
+        console.error('[LevelSelect] localStorage parse error:', e);
+      }
+    }
+  }, []);
 
   /**
    * Check if a level is unlocked
@@ -184,6 +198,20 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
             Logout
           </button>
         )}
+        
+        {/* Debug button to clear localStorage */}
+        <button 
+          className="back-to-menu-button"
+          onClick={() => {
+            localStorage.removeItem('memory-match-base-progress');
+            window.location.reload();
+          }}
+          style={{ right: 0, left: 'auto' }}
+          aria-label="Clear progress and reload"
+        >
+          Clear Progress
+        </button>
+        
         <h1 className="level-select-title">Select Level</h1>
         <div className="progress-summary">
           <span className="progress-text">
