@@ -199,12 +199,11 @@ function App() {
 
   return (
     <Web3ErrorBoundary>
-      <Wallet>
-        <div className="app">
-          {/* Skip link for keyboard navigation */}
-          <a href="#main-content" className="skip-link">
-            Skip to main content
-          </a>
+      <div className="app">
+        {/* Skip link for keyboard navigation */}
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
 
         {/* Loading blockchain progress */}
         {isLoadingBlockchainProgress && (
@@ -219,23 +218,26 @@ function App() {
         )}
 
         {!isLoadingBlockchainProgress && currentScreen === 'level-select' && isAuthenticated && (
-          <LevelSelect
-            progressData={progress}
-            onLevelSelect={handleLevelSelect}
-            onBackToMenu={handleBackToMenu}
-          />
+          <Wallet>
+            <LevelSelect
+              progressData={progress}
+              onLevelSelect={handleLevelSelect}
+              onBackToMenu={handleBackToMenu}
+            />
+          </Wallet>
         )}
 
         {!isLoadingBlockchainProgress && currentScreen === 'game' && isAuthenticated && (
-          <GameBoard
-            gameState={gameState}
-            onAction={handleGameAction}
-            onLevelSelect={handleBackToLevelSelect}
-            onLogout={handleBackToMenu}
-          />
+          <Wallet>
+            <GameBoard
+              gameState={gameState}
+              onAction={handleGameAction}
+              onLevelSelect={handleBackToLevelSelect}
+              onLogout={handleBackToMenu}
+            />
+          </Wallet>
         )}
-        </div>
-      </Wallet>
+      </div>
     </Web3ErrorBoundary>
   );
 }
