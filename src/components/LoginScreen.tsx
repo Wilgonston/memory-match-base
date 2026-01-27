@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { useAccount, useSignMessage } from 'wagmi';
-import { ConnectWallet } from '@coinbase/onchainkit/wallet';
+import { useAccount, useConnect, useSignMessage } from 'wagmi';
 import { setAuthentication } from '../utils/auth';
 import './LoginScreen.css';
 
@@ -10,9 +9,21 @@ interface LoginScreenProps {
 
 export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
   const { address, isConnected } = useAccount();
+  const { connectors, connect } = useConnect();
   const { signMessageAsync } = useSignMessage();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showConnectors, setShowConnectors] = useState(false);
+
+  const handleConnect = () => {
+    // Get Coinbase Wallet connector (Smart Wallet)
+    const coinbaseConnector = connectors.find(c => c.id === 'coinbaseWalletSDK');
+    if (coinbaseConnector) {
+      connect({ connector: coinbaseConnector });
+    } else {
+      setShowConnectors(true);
+    }
+  };
 
   const handleAuthenticate = async () => {
     if (!address) return;
@@ -21,16 +32,9 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
     setError(null);
 
     try {
-      // Create authentication message
       const message = `Welcome to Memory Match BASE!\n\nSign this message to authenticate your wallet ownership.\n\nWallet: ${address}\nTimestamp: ${new Date().toISOString()}`;
-
-      // Request signature from wallet
       await signMessageAsync({ message });
-
-      // Store authentication
       setAuthentication(address);
-
-      // Call success callback
       onAuthenticated();
     } catch (err) {
       console.error('Authentication failed:', err);
@@ -49,7 +53,6 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
             alt="Memory Match BASE" 
             className="login-logo"
             onError={(e) => {
-              // Fallback to original if improved version fails
               e.currentTarget.src = '/assets/miniapp/hero.svg';
             }}
           />
@@ -68,9 +71,28 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
               <p className="login-subdescription">
                 ✨ No seed phrases • 🔐 Secure with biometrics • ⚡ Gas-free transactions
               </p>
-              <div className="login-wallet-button">
-                <ConnectWallet />
-              </div>
+              
+              {!showConnectors ? (
+                <button 
+                  onClick={handleConnect}
+                  className="login-connect-button"
+                >
+                  Connect Wallet
+                </button>
+              ) : (
+                <div className="login-connectors">
+                  {connectors.map((connector) => (
+                    <button
+                      key={connector.id}
+                      onClick={() => connect({ connector })}
+                      className="login-connector-button"
+                    >
+                      {connector.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+              
               <p className="login-note">
                 A Smart Wallet will be created automatically for you.
                 <br />

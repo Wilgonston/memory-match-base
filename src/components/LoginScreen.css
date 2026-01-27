@@ -64,6 +64,51 @@
   justify-content: center;
 }
 
+.login-connect-button {
+  width: 100%;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #0052FF 0%, #00D4FF 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 16px;
+}
+
+.login-connect-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 82, 255, 0.4);
+}
+
+.login-connectors {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.login-connector-button {
+  width: 100%;
+  padding: 14px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-connector-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(0, 82, 255, 0.5);
+  transform: translateY(-1px);
+}
+
 .login-connected {
   text-align: center;
   padding: 24px;
