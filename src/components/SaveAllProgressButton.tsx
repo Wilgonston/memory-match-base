@@ -55,10 +55,14 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       console.error('[SaveAllProgressButton] Failed to save progress:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to save progress';
       
-      // Don't show error if it's just a capability check
-      if (!errorMessage.includes('wallet_getCapabilities') && 
-          !errorMessage.includes('wallet_sendCalls')) {
-        onError?.(errorMessage);
+      // User-friendly error messages
+      if (errorMessage.includes('User rejected') || errorMessage.includes('User denied')) {
+        onError?.('Transaction cancelled');
+      } else if (errorMessage.includes('insufficient funds')) {
+        onError?.('Insufficient funds for gas');
+      } else if (!errorMessage.includes('wallet_getCapabilities') && 
+                 !errorMessage.includes('wallet_sendCalls')) {
+        onError?.('Transaction failed. Please try again.');
       }
     } finally {
       setIsSaving(false);
@@ -75,7 +79,14 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
   // Handle error
   useEffect(() => {
     if (error && !error.includes('wallet_getCapabilities') && !error.includes('wallet_sendCalls')) {
-      onError?.(error);
+      // User-friendly error messages
+      if (error.includes('User rejected') || error.includes('User denied')) {
+        onError?.('Transaction cancelled');
+      } else if (error.includes('insufficient funds')) {
+        onError?.('Insufficient funds for gas');
+      } else {
+        onError?.('Transaction failed. Please try again.');
+      }
     }
   }, [error, onError]);
 
@@ -107,7 +118,11 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
 
       {error && !error.includes('wallet_getCapabilities') && !error.includes('wallet_sendCalls') && (
         <p className="save-all-error">
-          ⚠️ {error}
+          ⚠️ {error.includes('User rejected') || error.includes('User denied')
+            ? 'Transaction cancelled'
+            : error.includes('insufficient funds')
+            ? 'Insufficient funds for gas'
+            : 'Transaction failed. Please try again.'}
         </p>
       )}
 

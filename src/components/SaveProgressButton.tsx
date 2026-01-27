@@ -50,7 +50,17 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
     } catch (err) {
       console.error('[SaveProgressButton] Transaction error:', err);
       const errorMessage = err instanceof Error ? err.message : 'Transaction failed';
-      onError?.(errorMessage);
+      
+      // User-friendly error messages
+      if (errorMessage.includes('User rejected') || errorMessage.includes('User denied')) {
+        onError?.('Transaction cancelled');
+      } else if (errorMessage.includes('insufficient funds')) {
+        onError?.('Insufficient funds for gas');
+      } else if (!errorMessage.includes('wallet_getCapabilities') && 
+                 !errorMessage.includes('wallet_sendCalls')) {
+        onError?.('Transaction failed. Please try again.');
+      }
+      
       setIsSaving(false);
     }
   };
@@ -71,11 +81,16 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
       console.error('[SaveProgressButton] Write error:', writeError);
       const errorMessage = writeError.message || 'Transaction failed';
       
-      // Don't show error if it's just a capability check
-      if (!errorMessage.includes('wallet_getCapabilities') && 
-          !errorMessage.includes('wallet_sendCalls')) {
-        onError?.(errorMessage);
+      // User-friendly error messages
+      if (errorMessage.includes('User rejected') || errorMessage.includes('User denied')) {
+        onError?.('Transaction cancelled');
+      } else if (errorMessage.includes('insufficient funds')) {
+        onError?.('Insufficient funds for gas');
+      } else if (!errorMessage.includes('wallet_getCapabilities') && 
+                 !errorMessage.includes('wallet_sendCalls')) {
+        onError?.('Transaction failed. Please try again.');
       }
+      
       setIsSaving(false);
     }
   }, [writeError, onError]);
@@ -102,9 +117,13 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
         )}
       </button>
 
-      {writeError && !writeError.message.includes('wallet_getCapabilities') && (
+      {writeError && !writeError.message.includes('wallet_getCapabilities') && !writeError.message.includes('wallet_sendCalls') && (
         <p className="save-progress-error">
-          ⚠️ {writeError.message}
+          ⚠️ {writeError.message.includes('User rejected') || writeError.message.includes('User denied')
+            ? 'Transaction cancelled'
+            : writeError.message.includes('insufficient funds')
+            ? 'Insufficient funds for gas'
+            : 'Transaction failed. Please try again.'}
         </p>
       )}
 
