@@ -72,10 +72,12 @@ export function onChainToLocal(onChainProgress: OnChainProgress): ProgressData {
     }
   });
 
-  // Calculate highest completed level
+  // Calculate highest unlocked level
+  // If no levels completed, level 1 should be unlocked
+  // Otherwise, unlock the next level after the highest completed
   const highestUnlockedLevel = completedLevels.size > 0 
-    ? Math.max(...Array.from(completedLevels))
-    : 0;
+    ? Math.min(Math.max(...Array.from(completedLevels)) + 1, 100)
+    : 1;
 
   return {
     completedLevels,
@@ -127,15 +129,17 @@ export function mergeProgress(
     }
   });
 
-  // Calculate total stars and highest level
+  // Calculate total stars and highest unlocked level
   let totalStars = 0;
   levelStars.forEach(stars => {
     totalStars += stars;
   });
 
+  // If no levels completed, level 1 should be unlocked
+  // Otherwise, unlock the next level after the highest completed
   const highestUnlockedLevel = completedLevels.size > 0
-    ? Math.max(...Array.from(completedLevels))
-    : 0;
+    ? Math.min(Math.max(...Array.from(completedLevels)) + 1, 100)
+    : 1;
 
   return {
     completedLevels,

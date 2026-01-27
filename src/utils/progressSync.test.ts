@@ -75,8 +75,21 @@ describe('progressSync utilities', () => {
       expect(local.levelStars.get(1)).toBe(3);
       expect(local.levelStars.get(2)).toBe(2);
       expect(local.levelStars.get(3)).toBe(1);
-      expect(local.highestUnlockedLevel).toBe(3);
+      expect(local.highestUnlockedLevel).toBe(4); // Next level after highest completed
       expect(local.soundEnabled).toBe(true);
+    });
+
+    it('should unlock level 1 when no levels are completed', () => {
+      const onChain: OnChainProgress = {
+        total: 0,
+        updated: 0,
+        levelStars: new Map(),
+      };
+
+      const local = onChainToLocal(onChain);
+
+      expect(local.completedLevels.size).toBe(0);
+      expect(local.highestUnlockedLevel).toBe(1); // Level 1 always unlocked
     });
   });
 
@@ -88,7 +101,7 @@ describe('progressSync utilities', () => {
           [1, 2],
           [2, 3],
         ]),
-        highestUnlockedLevel: 2,
+        highestUnlockedLevel: 3,
         soundEnabled: true,
       };
 
@@ -106,7 +119,26 @@ describe('progressSync utilities', () => {
       expect(merged.levelStars.get(1)).toBe(3); // Max of 2 and 3
       expect(merged.levelStars.get(2)).toBe(3); // Only in local
       expect(merged.levelStars.get(3)).toBe(2); // Only in onChain
-      expect(merged.highestUnlockedLevel).toBe(3);
+      expect(merged.highestUnlockedLevel).toBe(4); // Next level after highest completed (3)
+    });
+
+    it('should unlock level 1 when no levels are completed', () => {
+      const local: ProgressData = {
+        completedLevels: new Set(),
+        levelStars: new Map(),
+        highestUnlockedLevel: 1,
+        soundEnabled: true,
+      };
+
+      const onChain: OnChainProgress = {
+        total: 0,
+        updated: 0,
+        levelStars: new Map(),
+      };
+
+      const merged = mergeProgress(local, onChain);
+
+      expect(merged.highestUnlockedLevel).toBe(1); // Level 1 always unlocked
     });
   });
 

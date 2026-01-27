@@ -45,19 +45,14 @@ export default defineConfig({
   // Development server configuration
   server: {
     port: 3000,
-    headers: {
-      'Cross-Origin-Opener-Policy': 'same-origin',
-      'Cross-Origin-Embedder-Policy': 'require-corp'
-    }
+    // Note: COOP/COEP headers removed to allow Coinbase Wallet SDK and Base Account SDK to work
+    // These SDKs require COOP to NOT be 'same-origin'
   },
   
   // Preview server configuration
   preview: {
     port: 4173,
-    headers: {
-      'Cross-Origin-Opener-Policy': 'same-origin',
-      'Cross-Origin-Embedder-Policy': 'require-corp'
-    }
+    // Note: COOP/COEP headers removed to allow Coinbase Wallet SDK and Base Account SDK to work
   },
   
   // Test configuration
