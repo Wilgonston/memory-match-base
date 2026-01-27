@@ -57,9 +57,13 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
       <div className="login-container">
         <div className="login-header">
           <img 
-            src="/assets/miniapp/hero.svg" 
+            src="/assets/miniapp/logo-improved.svg" 
             alt="Memory Match BASE" 
             className="login-logo"
+            onError={(e) => {
+              // Fallback to original if improved version fails
+              e.currentTarget.src = '/assets/miniapp/hero.svg';
+            }}
           />
           <h1 className="login-title">Memory Match BASE</h1>
           <p className="login-subtitle">

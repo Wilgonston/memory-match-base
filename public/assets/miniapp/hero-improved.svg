@@ -1,0 +1,112 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  
+  <!-- Gradient Definitions -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#000D1F"/>
+      <stop offset="50%" stop-color="#001a3d"/>
+      <stop offset="100%" stop-color="#0052FF"/>
+    </linearGradient>
+    <linearGradient id="cardGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.05"/>
+    </linearGradient>
+    <linearGradient id="textGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#00D4FF"/>
+      <stop offset="100%" stop-color="#FFFFFF"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Decorative Circles -->
+  <circle cx="100" cy="100" r="150" fill="#0052FF" opacity="0.1"/>
+  <circle cx="1100" cy="530" r="200" fill="#00D4FF" opacity="0.1"/>
+  <circle cx="900" cy="100" r="100" fill="#FFFFFF" opacity="0.05"/>
+  
+  <!-- Left Side - Memory Cards -->
+  <g transform="translate(80, 150)">
+    <!-- Card 1 -->
+    <rect x="0" y="0" width="120" height="120" rx="16" fill="url(#cardGradient)" stroke="#FFFFFF" stroke-width="2" opacity="0.8"/>
+    <circle cx="60" cy="60" r="35" fill="#0052FF" opacity="0.6"/>
+    
+    <!-- Card 2 -->
+    <rect x="0" y="140" width="120" height="120" rx="16" fill="#FFFFFF" opacity="0.1" stroke="#FFFFFF" stroke-width="2"/>
+    <text x="60" y="215" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="#FFFFFF" text-anchor="middle" opacity="0.4">?</text>
+    
+    <!-- Card 3 -->
+    <rect x="140" y="0" width="120" height="120" rx="16" fill="#FFFFFF" opacity="0.1" stroke="#FFFFFF" stroke-width="2"/>
+    <text x="200" y="75" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="#FFFFFF" text-anchor="middle" opacity="0.4">?</text>
+    
+    <!-- Card 4 -->
+    <rect x="140" y="140" width="120" height="120" rx="16" fill="url(#cardGradient)" stroke="#FFFFFF" stroke-width="2" opacity="0.8"/>
+    <rect x="165" y="165" width="70" height="70" rx="10" fill="#00D4FF" opacity="0.6"/>
+  </g>
+  
+  <!-- Center - Title and Description -->
+  <g transform="translate(600, 315)">
+    <!-- Title -->
+    <text x="0" y="-80" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="url(#textGradient)" text-anchor="middle">
+      Memory Match BASE
+    </text>
+    
+    <!-- Subtitle -->
+    <text x="0" y="-20" font-family="Arial, sans-serif" font-size="32" fill="#FFFFFF" text-anchor="middle" opacity="0.9">
+      Web3 Memory Card Game
+    </text>
+    
+    <!-- Features -->
+    <g transform="translate(0, 40)">
+      <!-- Feature 1 -->
+      <g transform="translate(-200, 0)">
+        <circle cx="0" cy="0" r="30" fill="#FFFFFF" opacity="0.1"/>
+        <text x="0" y="8" font-size="32" text-anchor="middle">🎮</text>
+        <text x="0" y="50" font-family="Arial, sans-serif" font-size="18" fill="#FFFFFF" text-anchor="middle" opacity="0.8">100 Levels</text>
+      </g>
+      
+      <!-- Feature 2 -->
+      <g transform="translate(-70, 0)">
+        <circle cx="0" cy="0" r="30" fill="#FFFFFF" opacity="0.1"/>
+        <text x="0" y="8" font-size="32" text-anchor="middle">⛓️</text>
+        <text x="0" y="50" font-family="Arial, sans-serif" font-size="18" fill="#FFFFFF" text-anchor="middle" opacity="0.8">On-Chain</text>
+      </g>
+      
+      <!-- Feature 3 -->
+      <g transform="translate(70, 0)">
+        <circle cx="0" cy="0" r="30" fill="#FFFFFF" opacity="0.1"/>
+        <text x="0" y="8" font-size="32" text-anchor="middle">⚡</text>
+        <text x="0" y="50" font-family="Arial, sans-serif" font-size="18" fill="#FFFFFF" text-anchor="middle" opacity="0.8">Gas-Free</text>
+      </g>
+      
+      <!-- Feature 4 -->
+      <g transform="translate(200, 0)">
+        <circle cx="0" cy="0" r="30" fill="#FFFFFF" opacity="0.1"/>
+        <text x="0" y="8" font-size="32" text-anchor="middle">🏆</text>
+        <text x="0" y="50" font-family="Arial, sans-serif" font-size="18" fill="#FFFFFF" text-anchor="middle" opacity="0.8">Earn Stars</text>
+      </g>
+    </g>
+  </g>
+  
+  <!-- Right Side - More Cards -->
+  <g transform="translate(1000, 150)">
+    <!-- Card 5 -->
+    <rect x="0" y="0" width="120" height="120" rx="16" fill="url(#cardGradient)" stroke="#FFFFFF" stroke-width="2" opacity="0.8"/>
+    <polygon points="60,40 80,80 40,80" fill="#0052FF" opacity="0.6"/>
+    
+    <!-- Card 6 -->
+    <rect x="0" y="140" width="120" height="120" rx="16" fill="#FFFFFF" opacity="0.1" stroke="#FFFFFF" stroke-width="2"/>
+    <text x="60" y="215" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="#FFFFFF" text-anchor="middle" opacity="0.4">?</text>
+  </g>
+  
+  <!-- Sparkles -->
+  <circle cx="300" cy="80" r="4" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="900" cy="550" r="4" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="500" cy="500" r="3" fill="#00D4FF" opacity="0.6"/>
+  <circle cx="700" cy="100" r="3" fill="#00D4FF" opacity="0.6"/>
+  
+  <!-- Base Logo (small) -->
+  <g transform="translate(1100, 50)">
+    <circle cx="0" cy="0" r="25" fill="#0052FF"/>
+    <text x="0" y="8" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#FFFFFF" text-anchor="middle">B</text>
+  </g>
+</svg>

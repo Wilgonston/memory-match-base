@@ -1,0 +1,93 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Modern gradient background -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0052FF;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#0066FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00D4FF;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Card gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.25" />
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0.1" />
+    </linearGradient>
+    
+    <!-- Glow effect -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Shadow -->
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+  
+  <!-- Decorative circles -->
+  <circle cx="100" cy="100" r="150" fill="white" opacity="0.05"/>
+  <circle cx="1100" cy="530" r="120" fill="white" opacity="0.05"/>
+  <circle cx="950" cy="80" r="80" fill="white" opacity="0.08"/>
+  
+  <!-- Card grid (3x2) -->
+  <g filter="url(#shadow)">
+    <!-- Row 1 -->
+    <rect x="150" y="140" width="180" height="180" rx="20" fill="url(#cardGrad)" stroke="white" stroke-width="2" opacity="0.9"/>
+    <rect x="360" y="140" width="180" height="180" rx="20" fill="url(#cardGrad)" stroke="white" stroke-width="2" opacity="0.9"/>
+    <rect x="570" y="140" width="180" height="180" rx="20" fill="url(#cardGrad)" stroke="white" stroke-width="2" opacity="0.9"/>
+    
+    <!-- Row 2 -->
+    <rect x="150" y="340" width="180" height="180" rx="20" fill="url(#cardGrad)" stroke="white" stroke-width="2" opacity="0.9"/>
+    <rect x="360" y="340" width="180" height="180" rx="20" fill="url(#cardGrad)" stroke="white" stroke-width="2" opacity="0.9"/>
+    <rect x="570" y="340" width="180" height="180" rx="20" fill="url(#cardGrad)" stroke="white" stroke-width="2" opacity="0.9"/>
+  </g>
+  
+  <!-- Card icons (simplified) -->
+  <g opacity="0.6">
+    <circle cx="240" cy="230" r="30" fill="white"/>
+    <circle cx="450" cy="230" r="30" fill="white"/>
+    <circle cx="660" cy="230" r="30" fill="white"/>
+    <circle cx="240" cy="430" r="30" fill="white"/>
+    <circle cx="450" cy="430" r="30" fill="white"/>
+    <circle cx="660" cy="430" r="30" fill="white"/>
+  </g>
+  
+  <!-- Title section -->
+  <g filter="url(#glow)">
+    <text x="850" y="200" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="900" fill="white" text-anchor="start">
+      Memory
+    </text>
+    <text x="850" y="280" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="900" fill="white" text-anchor="start">
+      Match
+    </text>
+    <text x="850" y="360" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="900" fill="#00D4FF" text-anchor="start">
+      BASE
+    </text>
+  </g>
+  
+  <!-- Features -->
+  <g opacity="0.9">
+    <text x="850" y="420" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="white" text-anchor="start">
+      🎮 100 Levels
+    </text>
+    <text x="850" y="460" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="white" text-anchor="start">
+      ⛓️ On-Chain Progress
+    </text>
+    <text x="850" y="500" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="white" text-anchor="start">
+      ⚡ Gas-Free Gaming
+    </text>
+  </g>
+  
+  <!-- Sparkles -->
+  <circle cx="820" cy="180" r="4" fill="white" opacity="0.8"/>
+  <circle cx="1050" cy="250" r="3" fill="white" opacity="0.6"/>
+  <circle cx="900" cy="380" r="5" fill="#00D4FF" opacity="0.8"/>
+  <circle cx="1100" cy="420" r="3" fill="white" opacity="0.7"/>
+</svg>

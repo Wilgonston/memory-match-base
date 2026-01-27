@@ -61,10 +61,11 @@ export const Card: React.FC<CardProps> = ({ card, onClick, disabled }) => {
         {/* Card Back */}
         <div className="card-face card-back">
           <img 
-            src="/assets/projects/card-back.svg" 
+            src="/assets/projects/card-back-improved.svg" 
             alt="Card back"
             onError={(e) => {
-              e.currentTarget.src = '/assets/projects/fallback.svg';
+              // Fallback to original if improved version fails
+              e.currentTarget.src = '/assets/projects/card-back.svg';
             }}
           />
         </div>

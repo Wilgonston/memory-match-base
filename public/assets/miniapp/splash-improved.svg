@@ -1,0 +1,104 @@
+<svg width="1080" height="1920" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Vibrant gradient -->
+    <linearGradient id="splashBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#001F5C;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#0052FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00D4FF;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Card gradient -->
+    <linearGradient id="cardGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0.1" />
+    </linearGradient>
+    
+    <!-- Glow filter -->
+    <filter id="textGlow">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Shadow -->
+    <filter id="cardShadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1080" height="1920" fill="url(#splashBg)"/>
+  
+  <!-- Decorative elements -->
+  <circle cx="200" cy="300" r="200" fill="white" opacity="0.03"/>
+  <circle cx="880" cy="500" r="150" fill="white" opacity="0.04"/>
+  <circle cx="540" cy="1600" r="250" fill="white" opacity="0.03"/>
+  <circle cx="100" cy="1400" r="100" fill="white" opacity="0.05"/>
+  <circle cx="950" cy="1700" r="120" fill="white" opacity="0.04"/>
+  
+  <!-- Main card grid (4x4) -->
+  <g transform="translate(190, 600)" filter="url(#cardShadow)">
+    <!-- Row 1 -->
+    <rect x="0" y="0" width="150" height="150" rx="20" fill="url(#cardGlow)" stroke="white" stroke-width="2"/>
+    <rect x="170" y="0" width="150" height="150" rx="20" fill="url(#cardGlow)" stroke="white" stroke-width="2"/>
+    <rect x="340" y="0" width="150" height="150" rx="20" fill="url(#cardGlow)" stroke="white" stroke-width="2"/>
+    <rect x="510" y="0" width="150" height="150" rx="20" fill="url(#cardGlow)" stroke="white" stroke-width="2"/>
+    
+    <!-- Row 2 -->
+    <rect x="0" y="170" width="150" height="150" rx="20" fill="url(#cardGlow)" stroke="white" stroke-width="2"/>
+    <rect x="170" y="170" width="150" height="150" rx="20" fill="url(#cardGlow)" stroke="white" stroke-width="2"/>
+    <rect x="340" y="170" width="150" height="150" rx="20" fill="url(#cardGlow)" stroke="white" stroke-width="2"/>
+    <rect x="510" y="170" width="150" height="150" rx="20" fill="url(#cardGlow)" stroke="white" stroke-width="2"/>
+    
+    <!-- Row 3 -->
+    <rect x="0" y="340" width="150" height="150" rx="20" fill="url(#cardGlow)" stroke="white" stroke-width="2"/>
+    <rect x="170" y="340" width="150" height="150" rx="20" fill="url(#cardGlow)" stroke="white" stroke-width="2"/>
+    <rect x="340" y="340" width="150" height="150" rx="20" fill="url(#cardGlow)" stroke="white" stroke-width="2"/>
+    <rect x="510" y="340" width="150" height="150" rx="20" fill="url(#cardGlow)" stroke="white" stroke-width="2"/>
+    
+    <!-- Row 4 -->
+    <rect x="0" y="510" width="150" height="150" rx="20" fill="url(#cardGlow)" stroke="white" stroke-width="2"/>
+    <rect x="170" y="510" width="150" height="150" rx="20" fill="url(#cardGlow)" stroke="white" stroke-width="2"/>
+    <rect x="340" y="510" width="150" height="150" rx="20" fill="url(#cardGlow)" stroke="white" stroke-width="2"/>
+    <rect x="510" y="510" width="150" height="150" rx="20" fill="url(#cardGlow)" stroke="white" stroke-width="2"/>
+  </g>
+  
+  <!-- Card icons -->
+  <g opacity="0.5">
+    <circle cx="265" cy="675" r="25" fill="white"/>
+    <circle cx="435" cy="675" r="25" fill="white"/>
+    <circle cx="605" cy="675" r="25" fill="white"/>
+    <circle cx="775" cy="675" r="25" fill="white"/>
+    
+    <circle cx="265" cy="845" r="25" fill="white"/>
+    <circle cx="435" cy="845" r="25" fill="white"/>
+    <circle cx="605" cy="845" r="25" fill="white"/>
+    <circle cx="775" cy="845" r="25" fill="white"/>
+  </g>
+  
+  <!-- Title -->
+  <g filter="url(#textGlow)">
+    <text x="540" y="1380" font-family="system-ui, -apple-system, sans-serif" font-size="96" font-weight="900" fill="white" text-anchor="middle">
+      Memory Match
+    </text>
+    <text x="540" y="1500" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="700" fill="#00D4FF" text-anchor="middle">
+      BASE
+    </text>
+  </g>
+  
+  <!-- Subtitle -->
+  <text x="540" y="1580" font-family="system-ui, -apple-system, sans-serif" font-size="36" fill="white" text-anchor="middle" opacity="0.8">
+    Web3 Memory Game
+  </text>
+  
+  <!-- Sparkles -->
+  <circle cx="300" cy="1350" r="6" fill="white" opacity="0.8"/>
+  <circle cx="780" cy="1380" r="5" fill="white" opacity="0.6"/>
+  <circle cx="400" cy="1480" r="4" fill="#00D4FF" opacity="0.9"/>
+  <circle cx="680" cy="1520" r="5" fill="white" opacity="0.7"/>
+  <circle cx="540" cy="450" r="6" fill="white" opacity="0.5"/>
+  <circle cx="200" cy="1200" r="4" fill="white" opacity="0.6"/>
+  <circle cx="880" cy="1250" r="5" fill="white" opacity="0.5"/>
+</svg>
