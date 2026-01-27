@@ -99,12 +99,24 @@ export const GameBoard: React.FC<GameBoardProps> = ({
     }
   }, [flippedCards, cards, onAction]);
 
+  // Play victory sound when level is won
+  useEffect(() => {
+    if (gameStatus === 'won') {
+      playSound('victory');
+      hapticLevelComplete();
+    }
+  }, [gameStatus]);
+
   // Handle card click (Requirement 2.1)
   const handleCardClick = useCallback((cardId: string) => {
-    playSound('flip');
-    hapticCardFlip();
+    // Only play sound if card can be flipped
+    const card = cards.find(c => c.id === cardId);
+    if (card && !card.isFlipped && !card.isMatched && flippedCards.length < 2) {
+      playSound('flip');
+      hapticCardFlip();
+    }
     onAction({ type: 'FLIP_CARD', cardId });
-  }, [onAction]);
+  }, [onAction, cards, flippedCards]);
 
   // Handle pause button click (Requirement 11.2)
   const handlePause = useCallback(() => {
@@ -195,19 +207,15 @@ export const GameBoard: React.FC<GameBoardProps> = ({
 
       {/* Result screen (Requirement 11.6) */}
       {gameStatus === 'won' && (
-        <>
-          {playSound('victory')}
-          {hapticLevelComplete()}
-          <ResultScreen
-            level={level}
-            moves={moves}
-            timeElapsed={timeElapsed}
-            stars={stars}
-            onNextLevel={handleNextLevel}
-            onRetry={handleRetry}
-            onLevelSelect={onLevelSelect}
-          />
-        </>
+        <ResultScreen
+          level={level}
+          moves={moves}
+          timeElapsed={timeElapsed}
+          stars={stars}
+          onNextLevel={handleNextLevel}
+          onRetry={handleRetry}
+          onLevelSelect={onLevelSelect}
+        />
       )}
 
       {/* Failure screen (time ran out) */}

@@ -10,9 +10,17 @@ export function NetworkSwitcher() {
   const [isOpen, setIsOpen] = useState(false);
   const [showWrongNetworkPrompt, setShowWrongNetworkPrompt] = useState(false);
 
-  // Get preferred network from localStorage
-  const preferredNetwork = localStorage.getItem('preferredNetwork') || 'sepolia';
+  // Get preferred network from environment variable
+  const preferredNetwork = import.meta.env.VITE_NETWORK || 'mainnet';
   const preferredChainId = preferredNetwork === 'mainnet' ? base.id : baseSepolia.id;
+
+  useEffect(() => {
+    // Auto-switch to preferred network on connect
+    if (isConnected && chainId !== preferredChainId && !isPending) {
+      console.log('[NetworkSwitcher] Auto-switching to', preferredNetwork, 'network');
+      switchChain({ chainId: preferredChainId });
+    }
+  }, [isConnected, chainId, preferredChainId, isPending, switchChain, preferredNetwork]);
 
   useEffect(() => {
     // Check if user is on wrong network
@@ -36,8 +44,6 @@ export function NetworkSwitcher() {
   const handleNetworkSwitch = (targetChainId: number) => {
     if (targetChainId !== chainId) {
       switchChain({ chainId: targetChainId });
-      // Persist network preference
-      localStorage.setItem('preferredNetwork', targetChainId === base.id ? 'mainnet' : 'sepolia');
     }
     setIsOpen(false);
     setShowWrongNetworkPrompt(false);
