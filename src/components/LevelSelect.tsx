@@ -35,6 +35,7 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
   const { completedLevels, levelStars, highestUnlockedLevel } = progressData;
   const { disconnect } = useDisconnect();
   const [isResetting, setIsResetting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Debug logging
   console.log('[LevelSelect] Progress data:', {
@@ -165,7 +166,7 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
 
     } catch (error) {
       console.error('[LevelSelect] Failed to reset wallet:', error);
-      alert('Failed to reset wallet. Please try again or clear your browser cache manually.');
+      setErrorMessage('Failed to reset wallet. Please try again or clear your browser cache manually.');
       setIsResetting(false);
     }
   };
@@ -307,6 +308,14 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
         </button>
         
         <h1 className="level-select-title">Select Level</h1>
+        
+        {/* Error message display */}
+        {errorMessage && (
+          <div className="level-select-error">
+            ⚠️ {errorMessage}
+          </div>
+        )}
+        
         <div className="progress-summary">
           <span className="progress-text">
             Progress: {completedLevels.size}/100 levels completed
@@ -321,10 +330,12 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
           progressData={progressData}
           onSuccess={() => {
             console.log('[LevelSelect] All progress saved to blockchain successfully!');
+            setErrorMessage(null);
           }}
           onError={(error) => {
             console.error('[LevelSelect] Failed to save progress:', error);
-            alert(`Failed to save progress: ${error}`);
+            // Error is already shown in SaveAllProgressButton component
+            // No need to show alert here
           }}
         />
       </div>
