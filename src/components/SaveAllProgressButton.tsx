@@ -24,7 +24,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
   className = '',
 }) => {
   const { isConnected } = useAccount();
-  const { batchUpdate, isPending, error } = useBatchUpdateLevels();
+  const { batchUpdate, isPending, error, hasPaymaster } = useBatchUpdateLevels();
   const [isSaving, setIsSaving] = useState(false);
 
   if (!isConnected) {
@@ -55,7 +55,11 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
     } catch (err) {
       console.error('[SaveAllProgressButton] Failed to save progress:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to save progress';
-      onError?.(errorMessage);
+      
+      // Don't show error if it's just a Paymaster capability check
+      if (!errorMessage.includes('wallet_getCapabilities')) {
+        onError?.(errorMessage);
+      }
     } finally {
       setIsSaving(false);
     }
@@ -81,14 +85,16 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
         )}
       </button>
 
-      {error && (
+      {error && !error.includes('wallet_getCapabilities') && (
         <p className="save-all-error">
           ⚠️ {error}
         </p>
       )}
 
       <p className="save-all-info">
-        ✨ Gas-free • Saves all {completedCount} completed level{completedCount > 1 ? 's' : ''}
+        {hasPaymaster 
+          ? `✨ Gas-free • Saves all ${completedCount} completed level${completedCount > 1 ? 's' : ''}`
+          : `⚡ You will pay gas • Saves all ${completedCount} completed level${completedCount > 1 ? 's' : ''}`}
       </p>
     </div>
   );

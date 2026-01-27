@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAccount } from 'wagmi';
 import { Address } from 'viem';
 import {
@@ -31,6 +31,7 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
 }) => {
   const { address, isConnected } = useAccount();
   const contractAddress = getContractAddress();
+  const [hasPaymaster, setHasPaymaster] = useState(true);
 
   if (!isConnected || !address) {
     return null;
@@ -46,20 +47,36 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
   ];
 
   const handleOnStatus = (status: LifecycleStatus) => {
+    console.log('[SaveProgressButton] Transaction status:', status.statusName);
+    
     if (status.statusName === 'transactionPending') {
       playSound('transaction-submitted');
     } else if (status.statusName === 'success') {
       playSound('transaction-confirmed');
       onSuccess?.();
     } else if (status.statusName === 'error') {
-      onError?.(status.statusData?.message || 'Transaction failed');
+      const errorMessage = status.statusData?.message || status.statusData?.error || 'Transaction failed';
+      console.error('[SaveProgressButton] Transaction error:', errorMessage);
+      
+      // Check if error is related to Paymaster
+      if (errorMessage.includes('wallet_getCapabilities') || 
+          errorMessage.includes('not supported') ||
+          errorMessage.includes('paymaster')) {
+        console.log('[SaveProgressButton] Paymaster not available, user will pay gas');
+        setHasPaymaster(false);
+      }
+      
+      // Don't show error to user if it's just a Paymaster capability check
+      if (!errorMessage.includes('wallet_getCapabilities')) {
+        onError?.(errorMessage);
+      }
     }
   };
 
   return (
     <div className={`save-progress-button-container ${className}`}>
       <Transaction
-        contracts={contracts}
+        calls={contracts}
         onStatus={handleOnStatus}
         chainId={getChainId()}
       >
@@ -74,7 +91,9 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
       </Transaction>
 
       <p className="gas-free-info">
-        ✨ Gas-free transaction (sponsored by Paymaster)
+        {hasPaymaster 
+          ? '✨ Gas-free transaction (sponsored by Paymaster)' 
+          : '⚡ You will pay gas for this transaction'}
       </p>
     </div>
   );
