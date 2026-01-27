@@ -18,9 +18,10 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  gap: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .header-item {
@@ -87,6 +88,20 @@
 
 .wallet-display .wallet-button-container {
   width: 100%;
+}
+
+/* Network display styling */
+.network-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Sound display styling */
+.sound-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Mobile Responsive (320px - 767px) */

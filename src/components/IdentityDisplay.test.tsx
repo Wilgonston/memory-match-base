@@ -60,9 +60,9 @@ describe('IdentityDisplay', () => {
     );
     
     // Should render empty (no address provided and not connected)
-    // The wrapper div exists, but IdentityDisplay returns null
-    const identityElement = container.querySelector('[class*="identity"]');
-    expect(identityElement).toBeNull();
+    // The component returns null, so no identity-info should exist
+    const identityInfo = container.querySelector('.identity-info');
+    expect(identityInfo).toBeNull();
   });
 
   it('should render with showBadge prop', () => {

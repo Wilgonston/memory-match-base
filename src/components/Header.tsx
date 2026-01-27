@@ -3,14 +3,27 @@
  * 
  * Displays game information: level number, timer, and move counter.
  * Provides responsive layout for different screen sizes.
- * Includes wallet connection button for blockchain features.
+ * Includes wallet connection button and identity display for blockchain features.
  * 
- * Requirements: 4.7, 5.4, 6.1, 11.1, 15.6, 16.4
+ * Requirements: 4.7, 5.3, 5.4, 5.5, 5.6, 6.1, 11.1, 15.6, 16.4
  */
 
 import React from 'react';
+import { useAccount } from 'wagmi';
 import { formatTime } from '../utils/timeFormat';
-import { WalletComponents } from './WalletComponents';
+import { IdentityDisplay } from './IdentityDisplay';
+import {
+  ConnectWallet,
+  Wallet,
+  WalletDropdown,
+  WalletDropdownDisconnect,
+} from '@coinbase/onchainkit/wallet';
+import {
+  Avatar,
+  Name,
+} from '@coinbase/onchainkit/identity';
+import { SoundToggle } from './SoundToggle';
+import { NetworkSwitcher } from './NetworkSwitcher';
 import './Header.css';
 
 export interface HeaderProps {
@@ -28,6 +41,8 @@ export interface HeaderProps {
  * Header component displaying game status information
  */
 export const Header: React.FC<HeaderProps> = ({ level, moves, timeRemaining, onLogout }) => {
+  const { isConnected } = useAccount();
+
   return (
     <header className="game-header" role="banner">
       <div className="header-container">
@@ -58,9 +73,41 @@ export const Header: React.FC<HeaderProps> = ({ level, moves, timeRemaining, onL
           </span>
         </div>
 
-        {/* Wallet Connection Button */}
+        {/* Wallet Connection and Identity Display */}
         <div className="header-item wallet-display">
-          <WalletComponents />
+          {isConnected ? (
+            <Wallet>
+              <ConnectWallet>
+                <Avatar className="h-6 w-6" />
+                <Name />
+              </ConnectWallet>
+              <WalletDropdown>
+                <IdentityDisplay 
+                  showBalance={true}
+                  hasCopyAddressOnClick={true}
+                  className="px-4 pt-3 pb-2"
+                />
+                <WalletDropdownDisconnect />
+              </WalletDropdown>
+            </Wallet>
+          ) : (
+            <Wallet>
+              <ConnectWallet>
+                <Avatar className="h-6 w-6" />
+                <Name />
+              </ConnectWallet>
+            </Wallet>
+          )}
+        </div>
+
+        {/* Network Switcher */}
+        <div className="header-item network-display">
+          <NetworkSwitcher />
+        </div>
+
+        {/* Sound Toggle */}
+        <div className="header-item sound-display">
+          <SoundToggle />
         </div>
 
         {/* Logout Button */}

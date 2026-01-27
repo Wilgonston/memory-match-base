@@ -28,3 +28,10 @@ export type { UseBatchUpdateLevelsResult } from './useBatchUpdateLevels';
 
 export { useSyncManager } from './useSyncManager';
 export type { UseSyncManagerResult } from './useSyncManager';
+
+export { useSpendPermissions } from './useSpendPermissions';
+export type { UseSpendPermissionsReturn } from './useSpendPermissions';
+
+export { useMagicSpend } from './useMagicSpend';
+
+export { useBatchTransactions } from './useBatchTransactions';

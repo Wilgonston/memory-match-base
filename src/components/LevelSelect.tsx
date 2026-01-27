@@ -5,11 +5,12 @@
  * Shows star ratings for completed levels.
  * Provides level selection functionality.
  * 
- * Requirements: 5.1, 5.2, 5.4, 5.5, 6.7, 11.4
+ * Requirements: 5.1, 5.2, 5.4, 5.5, 6.7, 11.4, 15.7
  */
 
 import React from 'react';
 import { ProgressData } from '../types';
+import { hapticButtonPress } from '../utils/haptics';
 import './LevelSelect.css';
 
 export interface LevelSelectProps {
@@ -57,6 +58,7 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
    */
   const handleLevelClick = (level: number) => {
     if (isLevelUnlocked(level)) {
+      hapticButtonPress();
       onLevelSelect(level);
     }
   };
@@ -148,7 +150,10 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
         {onBackToMenu && (
           <button 
             className="back-to-menu-button"
-            onClick={onBackToMenu}
+            onClick={() => {
+              hapticButtonPress();
+              onBackToMenu();
+            }}
             aria-label="Logout and return to login screen"
           >
             <svg 

@@ -4,12 +4,13 @@
  * Displays a single memory card with flip animation.
  * Shows project logo when flipped, back design when face-down.
  * 
- * Requirements: 2.1, 2.2, 2.4, 2.5, 9.1
+ * Requirements: 2.1, 2.2, 2.4, 2.5, 9.1, 15.7
  */
 
 import React from 'react';
 import { Card as CardType } from '../types';
 import { getProjectById } from '../data/projects';
+import { hapticCardFlip } from '../utils/haptics';
 import './Card.css';
 
 export interface CardProps {
@@ -29,6 +30,7 @@ export const Card: React.FC<CardProps> = ({ card, onClick, disabled }) => {
   
   const handleClick = () => {
     if (!disabled && !card.isFlipped) {
+      hapticCardFlip();
       onClick(card.id);
     }
   };
@@ -50,6 +52,7 @@ export const Card: React.FC<CardProps> = ({ card, onClick, disabled }) => {
       onKeyDown={(e) => {
         if ((e.key === 'Enter' || e.key === ' ') && !disabled && !card.isFlipped) {
           e.preventDefault();
+          hapticCardFlip();
           onClick(card.id);
         }
       }}

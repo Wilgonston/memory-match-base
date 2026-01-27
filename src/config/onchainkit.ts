@@ -7,8 +7,9 @@ const network = import.meta.env.VITE_NETWORK || 'sepolia';
 // Determine the chain based on network configuration
 export const defaultChain = network === 'mainnet' ? base : baseSepolia;
 
-// Build Paymaster URL from API key
-// Format: https://api.developer.coinbase.com/rpc/v1/base/YOUR_API_KEY
+// Build Paymaster URL from API key following ERC-7677 standard
+// Format: https://api.developer.coinbase.com/rpc/v1/base/{API_KEY}
+// The same API key is used for both OnchainKit features and Paymaster sponsorship
 const paymasterUrl = apiKey 
   ? `https://api.developer.coinbase.com/rpc/v1/base/${apiKey}`
   : undefined;

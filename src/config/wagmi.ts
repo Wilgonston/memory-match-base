@@ -15,13 +15,13 @@ const chains = network === 'mainnet'
 export const wagmiConfig = createConfig({
   chains,
   connectors: [
-    // Coinbase Wallet with Smart Wallet preference (but allow all types)
-    // Using 'all' instead of 'smartWalletOnly' to give users choice between wallet types
-    // This ensures compatibility if one wallet type has issues
+    // Coinbase Wallet with Smart Wallet preference
+    // Smart Wallet provides gasless transactions and enhanced security
+    // Following Base documentation best practices
     coinbaseWallet({
       appName: 'Memory Match BASE',
       appLogoUrl: `${window.location.origin}/assets/miniapp/icon-512.svg`,
-      preference: 'all', // Allow users to choose between Smart Wallet and EOA
+      preference: 'smartWalletOnly', // Prefer Smart Wallet for best UX
     }),
     // Injected wallets (MetaMask, Zerion, etc.)
     injected(),

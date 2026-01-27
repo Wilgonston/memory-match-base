@@ -21,30 +21,69 @@
 .identity-container {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  width: 100%;
 }
 
 .identity-avatar {
-  width: 2rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
   flex-shrink: 0;
 }
 
-.identity-name {
+.identity-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.identity-name-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.identity-name,
+.identity-basename {
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   color: #ffffff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 150px;
+}
+
+.identity-basename {
+  color: #0052ff; /* Base blue color for Basename */
+  cursor: help;
+}
+
+.identity-name-loading {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
 }
 
 .identity-address {
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.6);
   font-family: 'Courier New', monospace;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.identity-address:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.identity-balance {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  margin-top: 0.125rem;
 }
 
 /* Responsive styles */
@@ -54,27 +93,36 @@
   }
 
   .identity-avatar {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 2rem;
+    height: 2rem;
   }
 
-  .identity-name {
+  .identity-info {
+    gap: 0.125rem;
+  }
+
+  .identity-name,
+  .identity-basename {
     font-size: 0.75rem;
-    max-width: 100px;
   }
 
   .identity-address {
-    display: none; /* Hide full address on mobile */
+    font-size: 0.625rem;
+  }
+
+  .identity-balance {
+    font-size: 0.625rem;
   }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
-  .identity-name {
-    max-width: 120px;
+  .identity-avatar {
+    width: 2.25rem;
+    height: 2.25rem;
   }
 }
 
 /* Tooltip styles for full address on hover */
 .identity-display [title] {
-  cursor: pointer;
+  cursor: help;
 }

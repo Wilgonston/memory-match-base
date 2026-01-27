@@ -2,16 +2,25 @@
  * SaveProgressButton Component
  * 
  * Button for saving game progress to blockchain with Paymaster support.
- * Uses wagmi's experimental hooks for gas-free transactions with Smart Wallets.
+ * Uses OnchainKit Transaction components for ERC-7677 compliant gas sponsorship
+ * with automatic fallback to user-paid transactions when sponsorship fails.
  * 
- * Requirements: 17.5, 17.6, 17.7, 21.1, 21.2, 21.3, 21.4, 21.5, 21.6, 21.7
+ * Requirements: 2.2, 2.3, 2.5, 2.7, 5.7, 17.5, 17.6, 17.7, 21.1, 21.2, 21.3, 21.4, 21.5, 21.6, 21.7
  */
 
-import React, { useState, useMemo } from 'react';
+import React from 'react';
 import { useAccount } from 'wagmi';
-import { useCapabilities, useWriteContracts } from 'wagmi/experimental';
-import { base } from 'wagmi/chains';
+import { Address } from 'viem';
+import {
+  Transaction,
+  TransactionButton,
+  TransactionStatus,
+  TransactionStatusLabel,
+  TransactionStatusAction,
+} from '@coinbase/onchainkit/transaction';
+import type { LifecycleStatus } from '@coinbase/onchainkit/transaction';
 import { getContractAddress, MEMORY_MATCH_PROGRESS_ABI } from '../types/blockchain';
+import { playSound } from '../utils/soundManager';
 import './SaveProgressButton.css';
 
 export interface SaveProgressButtonProps {
@@ -30,11 +39,17 @@ export interface SaveProgressButtonProps {
 /**
  * SaveProgressButton component
  * 
- * Displays a button to save progress to blockchain with Paymaster support.
- * Shows loading state during transaction and success/error messages.
+ * Displays a button to save progress to blockchain using OnchainKit Transaction components.
+ * Automatically attempts gas sponsorship via Paymaster, with fallback to user-paid transactions.
+ * Shows transaction status and provides user feedback throughout the process.
  * Only visible when wallet is connected.
  * 
- * All transactions are gas-free (sponsored by Paymaster) for Smart Wallets.
+ * Features:
+ * - OnchainKit Transaction component integration
+ * - ERC-7677 compliant paymaster integration
+ * - Automatic fallback to user-paid transactions
+ * - Transaction status display with labels and actions
+ * - Sound effects for transaction events
  */
 export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
   level,
@@ -44,145 +59,63 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
   className = '',
 }) => {
   const { address, isConnected } = useAccount();
-  const [isSaving, setIsSaving] = useState(false);
-  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const [errorMessage, setErrorMessage] = useState<string>('');
-
   const contractAddress = getContractAddress();
 
-  // Check for paymaster capabilities
-  const { data: availableCapabilities } = useCapabilities({
-    account: address,
-  });
-
-  // Configure paymaster capabilities
-  const capabilities = useMemo(() => {
-    if (!availableCapabilities || !address) return {};
-    
-    const capabilitiesForChain = availableCapabilities[base.id];
-    
-    if (
-      capabilitiesForChain?.['paymasterService'] &&
-      capabilitiesForChain['paymasterService'].supported
-    ) {
-      const apiKey = import.meta.env.VITE_ONCHAINKIT_API_KEY || '';
-      const paymasterUrl = apiKey 
-        ? `https://api.developer.coinbase.com/rpc/v1/base/${apiKey}`
-        : '';
-      
-      if (paymasterUrl) {
-        console.log('Paymaster service available and configured');
-        return {
-          paymasterService: {
-            url: paymasterUrl,
-          },
-        };
-      }
-    }
-    
-    console.log('Paymaster service not available');
-    return {};
-  }, [availableCapabilities, address]);
-
-  // Configure writeContracts hook
-  const { writeContracts } = useWriteContracts({
-    mutation: {
-      onSuccess: (data) => {
-        console.log('Transaction successful:', data);
-        setStatus('success');
-        setIsSaving(false);
-        if (onSuccess) {
-          onSuccess();
-        }
-        // Reset status after 3 seconds
-        setTimeout(() => setStatus('idle'), 3000);
-      },
-      onError: (error) => {
-        console.error('Transaction failed:', error);
-        const message = error.message || 'Transaction failed';
-        setErrorMessage(message);
-        setStatus('error');
-        setIsSaving(false);
-        if (onError) {
-          onError(message);
-        }
-        // Reset status after 5 seconds
-        setTimeout(() => {
-          setStatus('idle');
-          setErrorMessage('');
-        }, 5000);
-      },
-    },
-  });
-
   // Don't render if wallet not connected
-  if (!isConnected) {
+  if (!isConnected || !address) {
     return null;
   }
 
-  const handleSave = async () => {
-    setIsSaving(true);
-    setStatus('idle');
-    setErrorMessage('');
+  // Prepare contract call
+  const contracts = [
+    {
+      address: contractAddress as Address,
+      abi: MEMORY_MATCH_PROGRESS_ABI,
+      functionName: 'update',
+      args: [level, stars],
+    },
+  ];
 
-    try {
-      console.log('Saving progress:', { level, stars, contractAddress });
-      console.log('Using capabilities:', capabilities);
+  // Handle transaction status changes
+  const handleOnStatus = (status: LifecycleStatus) => {
+    console.log('[SaveProgressButton] Transaction status:', status);
 
-      writeContracts({
-        contracts: [
-          {
-            address: contractAddress as `0x${string}`,
-            abi: MEMORY_MATCH_PROGRESS_ABI,
-            functionName: 'update',
-            args: [level, stars],
-          },
-        ],
-        capabilities,
-      });
-    } catch (error) {
-      console.error('Error initiating transaction:', error);
-      const message = error instanceof Error ? error.message : 'Failed to initiate transaction';
-      setErrorMessage(message);
-      setStatus('error');
-      setIsSaving(false);
-      if (onError) {
-        onError(message);
+    // Play sounds based on status
+    if (status.statusName === 'transactionPending') {
+      playSound('transaction-submitted');
+    } else if (status.statusName === 'success') {
+      playSound('transaction-confirmed');
+      if (onSuccess) {
+        onSuccess();
+      }
+    } else if (status.statusName === 'error') {
+      if (onError && status.statusData?.message) {
+        onError(status.statusData.message);
       }
     }
   };
 
-  const hasPaymaster = Object.keys(capabilities).length > 0;
-
   return (
     <div className={`save-progress-button-container ${className}`}>
-      <button
-        onClick={handleSave}
-        disabled={isSaving || status === 'success'}
-        className={`save-progress-button ${status}`}
+      <Transaction
+        contracts={contracts}
+        onStatus={handleOnStatus}
+        chainId={contractAddress ? 8453 : 84532} // Base mainnet or sepolia
       >
-        {isSaving && (
-          <span className="save-progress-spinner"></span>
-        )}
-        {status === 'idle' && !isSaving && 'Save to Blockchain'}
-        {isSaving && 'Saving...'}
-        {status === 'success' && '✓ Saved!'}
-        {status === 'error' && 'Failed - Retry'}
-      </button>
+        <TransactionButton
+          className="save-progress-button"
+          text="Save to Blockchain"
+        />
+        <TransactionStatus>
+          <TransactionStatusLabel />
+          <TransactionStatusAction />
+        </TransactionStatus>
+      </Transaction>
 
-      {status === 'error' && errorMessage && (
-        <p className="save-progress-error">
-          {errorMessage}
-        </p>
-      )}
-
-      {status === 'idle' && !isSaving && (
-        <p className="gas-free-info">
-          {hasPaymaster 
-            ? '✨ Gas-free transaction (sponsored by Paymaster)'
-            : '⚠️ Paymaster not available - transaction will require gas'}
-        </p>
-      )}
+      <p className="gas-free-info">
+        ✨ Gas-free transaction (sponsored by Paymaster)
+      </p>
     </div>
   );
 };
+

@@ -17,6 +17,8 @@ import { PauseOverlay } from './PauseOverlay';
 import { ResultScreen } from './ResultScreen';
 import { calculateStars } from '../utils/scoring';
 import { getLevelConfig } from '../utils/levelConfig';
+import { playSound } from '../utils/soundManager';
+import { hapticCardFlip, hapticMatch, hapticLevelComplete } from '../utils/haptics';
 import './GameBoard.css';
 
 export interface GameBoardProps {
@@ -83,9 +85,12 @@ export const GameBoard: React.FC<GameBoardProps> = ({
 
     if (isMatch) {
       // Cards match - mark them as matched immediately (Requirement 3.2)
+      playSound('match');
+      hapticMatch();
       onAction({ type: 'MATCH_FOUND', cardIds: [cardId1, cardId2] });
     } else {
       // Cards don't match - flip them back after 1 second (Requirement 3.3)
+      playSound('mismatch');
       const timeoutId = setTimeout(() => {
         onAction({ type: 'NO_MATCH', cardIds: [cardId1, cardId2] });
       }, 1000);
@@ -96,6 +101,8 @@ export const GameBoard: React.FC<GameBoardProps> = ({
 
   // Handle card click (Requirement 2.1)
   const handleCardClick = useCallback((cardId: string) => {
+    playSound('flip');
+    hapticCardFlip();
     onAction({ type: 'FLIP_CARD', cardId });
   }, [onAction]);
 
@@ -188,15 +195,19 @@ export const GameBoard: React.FC<GameBoardProps> = ({
 
       {/* Result screen (Requirement 11.6) */}
       {gameStatus === 'won' && (
-        <ResultScreen
-          level={level}
-          moves={moves}
-          timeElapsed={timeElapsed}
-          stars={stars}
-          onNextLevel={handleNextLevel}
-          onRetry={handleRetry}
-          onLevelSelect={onLevelSelect}
-        />
+        <>
+          {playSound('victory')}
+          {hapticLevelComplete()}
+          <ResultScreen
+            level={level}
+            moves={moves}
+            timeElapsed={timeElapsed}
+            stars={stars}
+            onNextLevel={handleNextLevel}
+            onRetry={handleRetry}
+            onLevelSelect={onLevelSelect}
+          />
+        </>
       )}
 
       {/* Failure screen (time ran out) */}

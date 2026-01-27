@@ -13,11 +13,14 @@ import { useAccount } from 'wagmi';
 import { LoginScreen } from './components/LoginScreen';
 import { LevelSelect } from './components/LevelSelect';
 import { GameBoard } from './components/GameBoard';
+import { Web3ErrorBoundary } from './components/Web3ErrorBoundary';
+import { LoadingIndicator } from './components/LoadingIndicator';
 import { useProgress } from './hooks/useProgress';
 import { useGameState } from './hooks/useGameState';
 import { useSyncManager } from './hooks/useSyncManager';
 import { calculateStars } from './utils/scoring';
 import { getLevelConfig } from './utils/levelConfig';
+import { initializeSounds } from './utils/soundManager';
 import './index.css';
 
 /**
@@ -44,6 +47,16 @@ function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('login');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [hasLoadedBlockchainProgress, setHasLoadedBlockchainProgress] = useState(false);
+  const [isLoadingBlockchainProgress, setIsLoadingBlockchainProgress] = useState(false);
+
+  /**
+   * Initialize sound manager on mount
+   */
+  useEffect(() => {
+    initializeSounds().catch((error) => {
+      console.error('Failed to initialize sounds:', error);
+    });
+  }, []);
 
   /**
    * Load progress from blockchain when wallet connects
@@ -53,6 +66,7 @@ function App() {
       if (isConnected && address && isAuthenticated && !hasLoadedBlockchainProgress) {
         try {
           console.log('Loading progress from blockchain...');
+          setIsLoadingBlockchainProgress(true);
           const mergedProgress = await mergeFromBlockchain(progress);
           updateProgress(() => mergedProgress);
           setHasLoadedBlockchainProgress(true);
@@ -60,6 +74,8 @@ function App() {
         } catch (error) {
           console.error('Failed to load blockchain progress:', error);
           // Continue with local progress on error
+        } finally {
+          setIsLoadingBlockchainProgress(false);
         }
       }
     };
@@ -181,33 +197,43 @@ function App() {
   }, [gameState.gameStatus, gameState.isPlaying, gameState.level, gameState.moves, completeLevel, isConnected, address, syncStatus.mode, syncToBlockchain, progress]);
 
   return (
-    <div className="app">
-      {/* Skip link for keyboard navigation */}
-      <a href="#main-content" className="skip-link">
-        Skip to main content
-      </a>
+    <Web3ErrorBoundary>
+      <div className="app">
+        {/* Skip link for keyboard navigation */}
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
 
-      {currentScreen === 'login' && (
-        <LoginScreen onAuthenticated={handleAuthenticated} />
-      )}
+        {/* Loading blockchain progress */}
+        {isLoadingBlockchainProgress && (
+          <LoadingIndicator
+            operation="Loading progress from blockchain"
+            estimatedTime={3}
+          />
+        )}
 
-      {currentScreen === 'level-select' && isAuthenticated && (
-        <LevelSelect
-          progressData={progress}
-          onLevelSelect={handleLevelSelect}
-          onBackToMenu={handleBackToMenu}
-        />
-      )}
+        {!isLoadingBlockchainProgress && currentScreen === 'login' && (
+          <LoginScreen onAuthenticated={handleAuthenticated} />
+        )}
 
-      {currentScreen === 'game' && isAuthenticated && (
-        <GameBoard
-          gameState={gameState}
-          onAction={handleGameAction}
-          onLevelSelect={handleBackToLevelSelect}
-          onLogout={handleBackToMenu}
-        />
-      )}
-    </div>
+        {!isLoadingBlockchainProgress && currentScreen === 'level-select' && isAuthenticated && (
+          <LevelSelect
+            progressData={progress}
+            onLevelSelect={handleLevelSelect}
+            onBackToMenu={handleBackToMenu}
+          />
+        )}
+
+        {!isLoadingBlockchainProgress && currentScreen === 'game' && isAuthenticated && (
+          <GameBoard
+            gameState={gameState}
+            onAction={handleGameAction}
+            onLevelSelect={handleBackToLevelSelect}
+            onLogout={handleBackToMenu}
+          />
+        )}
+      </div>
+    </Web3ErrorBoundary>
   );
 }
 

@@ -3,10 +3,11 @@
  * 
  * Renders a restart button with icon for restarting the current level.
  * 
- * Requirements: 11.3
+ * Requirements: 11.3, 15.7
  */
 
 import React from 'react';
+import { hapticButtonPress } from '../utils/haptics';
 import './RestartButton.css';
 
 export interface RestartButtonProps {
@@ -18,10 +19,15 @@ export interface RestartButtonProps {
  * RestartButton component for restarting the current level
  */
 export const RestartButton: React.FC<RestartButtonProps> = ({ onRestart }) => {
+  const handleClick = () => {
+    hapticButtonPress();
+    onRestart();
+  };
+
   return (
     <button
       className="restart-button"
-      onClick={onRestart}
+      onClick={handleClick}
       aria-label="Restart level"
       type="button"
     >

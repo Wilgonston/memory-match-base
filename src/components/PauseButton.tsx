@@ -3,10 +3,11 @@
  * 
  * Renders a pause button with icon for pausing the game.
  * 
- * Requirements: 11.2
+ * Requirements: 11.2, 15.7
  */
 
 import React from 'react';
+import { hapticButtonPress } from '../utils/haptics';
 import './PauseButton.css';
 
 export interface PauseButtonProps {
@@ -18,10 +19,15 @@ export interface PauseButtonProps {
  * PauseButton component for pausing the game
  */
 export const PauseButton: React.FC<PauseButtonProps> = ({ onPause }) => {
+  const handleClick = () => {
+    hapticButtonPress();
+    onPause();
+  };
+
   return (
     <button
       className="pause-button"
-      onClick={onPause}
+      onClick={handleClick}
       aria-label="Pause game"
       type="button"
     >

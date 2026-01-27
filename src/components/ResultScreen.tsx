@@ -6,12 +6,13 @@
  * Shows celebration animation on level completion.
  * Implements focus trapping and keyboard navigation.
  * 
- * Requirements: 5.2, 6.2, 6.3, 9.4, 11.6
+ * Requirements: 5.2, 6.2, 6.3, 9.4, 11.6, 15.7
  */
 
 import React, { useEffect, useRef } from 'react';
 import { formatTime } from '../utils/timeFormat';
 import { trapFocus, storeFocus, announceToScreenReader } from '../utils/accessibility';
+import { hapticButtonPress } from '../utils/haptics';
 import { SaveProgressButton } from './SaveProgressButton';
 import './ResultScreen.css';
 
@@ -155,7 +156,10 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
           {!isFinalLevel && (
             <button
               className="action-button primary-button"
-              onClick={onNextLevel}
+              onClick={() => {
+                hapticButtonPress();
+                onNextLevel();
+              }}
               aria-label="Continue to next level"
               type="button"
               autoFocus
@@ -181,7 +185,10 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
 
           <button
             className="action-button secondary-button"
-            onClick={onRetry}
+            onClick={() => {
+              hapticButtonPress();
+              onRetry();
+            }}
             aria-label="Retry current level"
             type="button"
             autoFocus={isFinalLevel}
@@ -213,7 +220,10 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
 
           <button
             className="action-button secondary-button"
-            onClick={onLevelSelect}
+            onClick={() => {
+              hapticButtonPress();
+              onLevelSelect();
+            }}
             aria-label="Return to level selection"
             type="button"
           >

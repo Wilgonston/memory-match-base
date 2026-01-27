@@ -2,13 +2,15 @@
  * useBatchUpdateLevels Hook
  * 
  * Custom hook for updating multiple levels' progress in a single transaction.
- * Uses wagmi's useWriteContract for batch transaction submission.
+ * Uses wagmi's experimental hooks for batch transactions with Paymaster support.
  * 
  * Requirements: 19.5
  */
 
-import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { useState, useCallback, useEffect } from 'react';
+import { useAccount } from 'wagmi';
+import { useCapabilities, useWriteContracts } from 'wagmi/experimental';
+import { base } from 'wagmi/chains';
+import { useState, useCallback, useMemo } from 'react';
 import { 
   MEMORY_MATCH_PROGRESS_ABI, 
   getContractAddress,
@@ -21,8 +23,8 @@ import {
 export interface UseBatchUpdateLevelsResult {
   /** Function to batch update multiple levels */
   batchUpdate: (levels: number[], stars: number[]) => Promise<void>;
-  /** Transaction hash if submitted */
-  hash?: `0x${string}`;
+  /** Transaction ID if submitted */
+  id?: string;
   /** Current transaction status */
   status: TransactionStatus;
   /** Error message if transaction failed */
@@ -31,6 +33,8 @@ export interface UseBatchUpdateLevelsResult {
   isPending: boolean;
   /** Whether transaction succeeded */
   isSuccess: boolean;
+  /** Whether Paymaster is available for gas-free transactions */
+  hasPaymaster: boolean;
   /** Reset function to clear state */
   reset: () => void;
 }
@@ -42,7 +46,7 @@ export interface UseBatchUpdateLevelsResult {
  * - Submits single transaction to update multiple levels
  * - More gas-efficient than multiple single updates
  * - Tracks transaction status (pending, success, error)
- * - Waits for transaction confirmation
+ * - Supports Paymaster for gas-free transactions
  * - Validates inputs before submission
  * - Handles errors gracefully with user-friendly messages
  * 
@@ -50,7 +54,7 @@ export interface UseBatchUpdateLevelsResult {
  * 
  * @example
  * ```tsx
- * const { batchUpdate, status, isPending } = useBatchUpdateLevels();
+ * const { batchUpdate, status, isPending, hasPaymaster } = useBatchUpdateLevels();
  * 
  * const handleBatchSave = async () => {
  *   try {
@@ -63,41 +67,75 @@ export interface UseBatchUpdateLevelsResult {
  * ```
  */
 export function useBatchUpdateLevels(): UseBatchUpdateLevelsResult {
+  const { address } = useAccount();
   const contractAddress = getContractAddress();
   const [localError, setLocalError] = useState<string>();
+  const [isSuccess, setIsSuccess] = useState(false);
 
-  // Write contract hook
-  const {
-    data: hash,
-    writeContract,
-    isPending: isWritePending,
-    error: writeError,
-    reset: resetWrite,
-  } = useWriteContract();
-
-  // Wait for transaction receipt
-  const {
-    isLoading: isConfirming,
-    isSuccess,
-    error: receiptError,
-  } = useWaitForTransactionReceipt({
-    hash,
+  // Check for paymaster capabilities
+  const { data: availableCapabilities } = useCapabilities({
+    account: address,
   });
 
-  // Combined pending state
-  const isPending = isWritePending || isConfirming;
+  // Configure paymaster capabilities
+  const capabilities = useMemo(() => {
+    if (!availableCapabilities || !address) return {};
+    
+    const capabilitiesForChain = availableCapabilities[base.id];
+    
+    if (
+      capabilitiesForChain?.['paymasterService'] &&
+      capabilitiesForChain['paymasterService'].supported
+    ) {
+      const apiKey = import.meta.env.VITE_ONCHAINKIT_API_KEY || '';
+      const paymasterUrl = apiKey 
+        ? `https://api.developer.coinbase.com/rpc/v1/base/${apiKey}`
+        : '';
+      
+      if (paymasterUrl) {
+        console.log('Paymaster service available for batch update');
+        return {
+          paymasterService: {
+            url: paymasterUrl,
+          },
+        };
+      }
+    }
+    
+    console.log('Paymaster service not available for batch update');
+    return {};
+  }, [availableCapabilities, address]);
+
+  const hasPaymaster = Object.keys(capabilities).length > 0;
+
+  // Configure writeContracts hook
+  const { writeContracts, isPending, data: id, error: writeError } = useWriteContracts({
+    mutation: {
+      onSuccess: (data) => {
+        console.log('Batch transaction successful:', data);
+        setIsSuccess(true);
+        setLocalError(undefined);
+      },
+      onError: (error) => {
+        console.error('Batch transaction failed:', error);
+        const message = error.message || 'Batch transaction failed';
+        setLocalError(message);
+        setIsSuccess(false);
+      },
+    },
+  });
 
   // Determine transaction status
   const status: TransactionStatus = isPending
     ? 'pending'
     : isSuccess
     ? 'success'
-    : writeError || receiptError || localError
+    : writeError || localError
     ? 'error'
     : 'idle';
 
   // Combined error message
-  const error = localError || writeError?.message || receiptError?.message;
+  const error = localError || writeError?.message;
 
   // Batch update function
   const batchUpdate = useCallback(
@@ -140,16 +178,24 @@ export function useBatchUpdateLevels(): UseBatchUpdateLevelsResult {
         }
       }
 
-      // Clear previous error
+      // Clear previous state
       setLocalError(undefined);
+      setIsSuccess(false);
 
       try {
-        // Submit batch transaction
-        writeContract({
-          address: contractAddress,
-          abi: MEMORY_MATCH_PROGRESS_ABI,
-          functionName: 'batchUpdate',
-          args: [levels, stars],
+        console.log(`Batch updating ${levels.length} levels with Paymaster:`, hasPaymaster);
+        
+        // Submit batch transaction with capabilities
+        writeContracts({
+          contracts: [
+            {
+              address: contractAddress as `0x${string}`,
+              abi: MEMORY_MATCH_PROGRESS_ABI,
+              functionName: 'batchUpdate',
+              args: [levels, stars],
+            },
+          ],
+          capabilities,
         });
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to submit batch transaction';
@@ -157,29 +203,23 @@ export function useBatchUpdateLevels(): UseBatchUpdateLevelsResult {
         throw err;
       }
     },
-    [contractAddress, writeContract]
+    [contractAddress, writeContracts, capabilities, hasPaymaster]
   );
 
   // Reset function
   const reset = useCallback(() => {
-    resetWrite();
     setLocalError(undefined);
-  }, [resetWrite]);
-
-  // Clear local error when write error changes
-  useEffect(() => {
-    if (writeError) {
-      setLocalError(undefined);
-    }
-  }, [writeError]);
+    setIsSuccess(false);
+  }, []);
 
   return {
     batchUpdate,
-    hash,
+    id,
     status,
     error,
     isPending,
     isSuccess,
+    hasPaymaster,
     reset,
   };
 }

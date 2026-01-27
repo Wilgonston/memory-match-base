@@ -7,9 +7,38 @@ import './index.css'
 import App from './App.tsx'
 import { wagmiConfig } from './config/wagmi'
 import { onchainKitConfig } from './config/onchainkit'
+import { BaseAccountProvider } from './components/BaseAccountProvider'
+import { initBaseApp } from './utils/baseApp'
 
-// Create a client for React Query
-const queryClient = new QueryClient()
+// Initialize Base App detection and optimizations
+initBaseApp()
+
+// Create a client for React Query with optimized defaults
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // Cache data for 30 seconds before considering it stale
+      staleTime: 30_000,
+      // Keep unused data in cache for 5 minutes
+      gcTime: 5 * 60 * 1000,
+      // Retry failed queries twice before giving up
+      retry: 2,
+      // Don't automatically refetch when window regains focus
+      // (prevents unnecessary refetches during gameplay)
+      refetchOnWindowFocus: false,
+      // Don't refetch on reconnect (we have manual refetch where needed)
+      refetchOnReconnect: false,
+    },
+  },
+})
+
+function AppWithWalletModal() {
+  return (
+    <BaseAccountProvider>
+      <App />
+    </BaseAccountProvider>
+  );
+}
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -20,7 +49,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           chain={onchainKitConfig.chain}
           config={onchainKitConfig.config}
         >
-          <App />
+          <AppWithWalletModal />
         </OnchainKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

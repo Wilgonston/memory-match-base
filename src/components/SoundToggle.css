@@ -1,0 +1,48 @@
+.sound-toggle {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.sound-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.05);
+}
+
+.sound-toggle:active {
+  transform: scale(0.95);
+}
+
+.sound-toggle svg {
+  width: 20px;
+  height: 20px;
+  color: white;
+}
+
+.sound-toggle:focus {
+  outline: 2px solid #4299e1;
+  outline-offset: 2px;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .sound-toggle {
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+  }
+
+  .sound-toggle svg {
+    width: 18px;
+    height: 18px;
+  }
+}

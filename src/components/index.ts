@@ -38,3 +38,21 @@ export { SaveProgressButton } from './SaveProgressButton';
 export type { SaveProgressButtonProps } from './SaveProgressButton';
 
 export { LoginScreen } from './LoginScreen';
+
+export { SpendPermissionStatus } from './SpendPermissionStatus';
+export type { SpendPermissionStatusProps } from './SpendPermissionStatus';
+
+export { MagicSpendStatus } from './MagicSpendStatus';
+
+export { BatchTransactionPreview } from './BatchTransactionPreview';
+export type { BatchTransactionPreviewProps } from './BatchTransactionPreview';
+
+export { NetworkSwitcher } from './NetworkSwitcher';
+
+export { SoundToggle } from './SoundToggle';
+
+export { LoadingIndicator } from './LoadingIndicator';
+
+export { TransactionNotification } from './TransactionNotification';
+
+export { Web3ErrorBoundary } from './Web3ErrorBoundary';
