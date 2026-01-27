@@ -5,6 +5,7 @@ import { isMainnet } from '../utils/network';
 
 // Get environment variables
 const walletConnectProjectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || '';
+const appUrl = import.meta.env.VITE_APP_URL || window.location.origin;
 
 // Determine which chains to use based on network configuration
 const chains = isMainnet() 
@@ -18,7 +19,7 @@ export const wagmiConfig = createConfig({
     // Coinbase Wallet with Smart Wallet preference
     coinbaseWallet({
       appName: 'Memory Match BASE',
-      appLogoUrl: 'https://memory-match-base.vercel.app/assets/miniapp/icon-512-improved.svg',
+      appLogoUrl: `${appUrl}/assets/miniapp/icon-512-improved.svg`,
       preference: 'smartWalletOnly',
     }),
     // WalletConnect
@@ -27,8 +28,8 @@ export const wagmiConfig = createConfig({
       metadata: {
         name: 'Memory Match BASE',
         description: 'Web3 Memory Card Game on Base Blockchain',
-        url: 'https://memory-match-base.vercel.app',
-        icons: ['https://memory-match-base.vercel.app/assets/miniapp/icon-512-improved.svg'],
+        url: appUrl,
+        icons: [`${appUrl}/assets/miniapp/icon-512-improved.svg`],
       },
     }),
   ],

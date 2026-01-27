@@ -77,40 +77,51 @@ class SoundManager {
     }
 
     try {
-      // Check if we're in a test environment (jsdom doesn't support HTMLMediaElement.load)
       const isTestEnvironment = typeof process !== 'undefined' && process.env.NODE_ENV === 'test';
       
       if (isTestEnvironment) {
-        // In test environment, just mark as initialized without loading audio
         this.initialized = true;
         console.log('Sound Manager initialized in test mode (audio disabled)');
         return;
       }
 
-      // Preload all sounds
       const loadPromises = Object.entries(SOUND_CONFIGS).map(
         async ([type, config]) => {
-          const audio = new Audio(config.path);
-          audio.volume = config.volume;
-          audio.preload = 'auto';
-          
-          // Wait for audio to be loaded
-          await new Promise<void>((resolve, reject) => {
-            audio.addEventListener('canplaythrough', () => resolve(), { once: true });
-            audio.addEventListener('error', reject, { once: true });
-            audio.load();
-          });
-          
-          this.sounds.set(type as SoundType, audio);
+          try {
+            const audio = new Audio(config.path);
+            audio.volume = config.volume;
+            audio.preload = 'auto';
+            
+            await new Promise<void>((resolve, reject) => {
+              const timeout = setTimeout(() => {
+                reject(new Error('Audio load timeout'));
+              }, 5000);
+
+              audio.addEventListener('canplaythrough', () => {
+                clearTimeout(timeout);
+                resolve();
+              }, { once: true });
+              
+              audio.addEventListener('error', (e) => {
+                clearTimeout(timeout);
+                reject(e);
+              }, { once: true });
+              
+              audio.load();
+            });
+            
+            this.sounds.set(type as SoundType, audio);
+          } catch (error) {
+            console.warn(`Failed to load sound ${type}:`, error);
+          }
         }
       );
 
-      await Promise.all(loadPromises);
+      await Promise.allSettled(loadPromises);
       this.initialized = true;
-      console.log('Sound Manager initialized successfully');
+      console.log(`Sound Manager initialized (${this.sounds.size}/${Object.keys(SOUND_CONFIGS).length} sounds loaded)`);
     } catch (error) {
       console.error('Failed to initialize Sound Manager:', error);
-      // Continue without sounds if loading fails
       this.initialized = true;
     }
   }
