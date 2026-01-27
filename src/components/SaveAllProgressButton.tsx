@@ -4,9 +4,9 @@
  * Button to save all completed levels to blockchain in a single batch transaction
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAccount } from 'wagmi';
-import { useBatchUpdateLevels } from '../hooks/useBatchUpdateLevels';
+import { useSequentialUpdateLevels } from '../hooks/useSequentialUpdateLevels';
 import { ProgressData } from '../types';
 import './SaveAllProgressButton.css';
 
@@ -24,7 +24,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
   className = '',
 }) => {
   const { isConnected } = useAccount();
-  const { batchUpdate, isPending, error, hasPaymaster } = useBatchUpdateLevels();
+  const { updateLevels, isPending, error, isSuccess, progress } = useSequentialUpdateLevels();
   const [isSaving, setIsSaving] = useState(false);
 
   if (!isConnected) {
@@ -49,15 +49,15 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       console.log('[SaveAllProgressButton] Levels:', levels);
       console.log('[SaveAllProgressButton] Stars:', stars);
       
-      await batchUpdate(levels, stars);
+      await updateLevels(levels, stars);
       console.log('[SaveAllProgressButton] All progress saved successfully!');
-      onSuccess?.();
     } catch (err) {
       console.error('[SaveAllProgressButton] Failed to save progress:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to save progress';
       
-      // Don't show error if it's just a Paymaster capability check
-      if (!errorMessage.includes('wallet_getCapabilities')) {
+      // Don't show error if it's just a capability check
+      if (!errorMessage.includes('wallet_getCapabilities') && 
+          !errorMessage.includes('wallet_sendCalls')) {
         onError?.(errorMessage);
       }
     } finally {
@@ -65,19 +65,39 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
     }
   };
 
+  // Handle success
+  useEffect(() => {
+    if (isSuccess && !isSaving) {
+      onSuccess?.();
+    }
+  }, [isSuccess, isSaving, onSuccess]);
+
+  // Handle error
+  useEffect(() => {
+    if (error && !error.includes('wallet_getCapabilities') && !error.includes('wallet_sendCalls')) {
+      onError?.(error);
+    }
+  }, [error, onError]);
+
+  const isLoading = isSaving || isPending;
+
   return (
     <div className={`save-all-progress-container ${className}`}>
       <button
         onClick={handleSave}
-        disabled={isSaving || isPending}
+        disabled={isLoading || isSuccess}
         className="save-all-progress-button"
         title={`Save ${completedCount} completed level${completedCount > 1 ? 's' : ''} to blockchain`}
       >
-        {isSaving || isPending ? (
+        {isLoading ? (
           <>
             <span className="save-all-spinner"></span>
-            Saving...
+            {progress.total > 0 
+              ? `Saving ${progress.current}/${progress.total}...` 
+              : 'Saving...'}
           </>
+        ) : isSuccess ? (
+          <>✓ All Saved!</>
         ) : (
           <>
             💾 Save to Blockchain ({completedCount})
@@ -85,16 +105,14 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
         )}
       </button>
 
-      {error && !error.includes('wallet_getCapabilities') && (
+      {error && !error.includes('wallet_getCapabilities') && !error.includes('wallet_sendCalls') && (
         <p className="save-all-error">
           ⚠️ {error}
         </p>
       )}
 
       <p className="save-all-info">
-        {hasPaymaster 
-          ? `✨ Gas-free • Saves all ${completedCount} completed level${completedCount > 1 ? 's' : ''}`
-          : `⚡ You will pay gas • Saves all ${completedCount} completed level${completedCount > 1 ? 's' : ''}`}
+        ⚡ You will pay gas • Saves all {completedCount} completed level{completedCount > 1 ? 's' : ''}
       </p>
     </div>
   );
