@@ -12,6 +12,7 @@ import React, { useEffect, useState } from 'react';
 import { useDisconnect } from 'wagmi';
 import { ProgressData } from '../types';
 import { hapticButtonPress } from '../utils/haptics';
+import { SaveAllProgressButton } from './SaveAllProgressButton';
 import './LevelSelect.css';
 
 export interface LevelSelectProps {
@@ -314,6 +315,18 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
             Total Stars: {Array.from(levelStars.values()).reduce((sum, stars) => sum + stars, 0)}/300
           </span>
         </div>
+
+        {/* Save all progress to blockchain button */}
+        <SaveAllProgressButton 
+          progressData={progressData}
+          onSuccess={() => {
+            console.log('[LevelSelect] All progress saved to blockchain successfully!');
+          }}
+          onError={(error) => {
+            console.error('[LevelSelect] Failed to save progress:', error);
+            alert(`Failed to save progress: ${error}`);
+          }}
+        />
       </div>
 
       <div className="level-grid" role="grid" aria-label="Level selection grid">

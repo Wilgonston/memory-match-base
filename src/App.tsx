@@ -97,19 +97,8 @@ function App() {
           updateProgress(() => mergedProgress);
           setHasLoadedBlockchainProgress(true);
           
-          // If we have local progress but blockchain is empty, sync to blockchain
-          if (progress.completedLevels.size > 0 && mergedProgress.completedLevels.size === progress.completedLevels.size) {
-            console.log('[App] Local progress exists but not in blockchain. Auto-syncing...');
-            // Small delay to ensure wallet is ready
-            setTimeout(() => {
-              syncToBlockchain(mergedProgress).catch((error) => {
-                console.error('[App] Auto-sync failed:', error);
-                // Don't throw - user can manually sync later
-              });
-            }, 1000);
-          }
-          
           console.log('[App] Progress loaded from blockchain successfully');
+          console.log('[App] Use "Save to Blockchain" button to sync local progress to blockchain');
         } catch (error) {
           console.error('Failed to load blockchain progress:', error);
           // Continue with local progress on error
@@ -190,8 +179,8 @@ function App() {
 
   /**
    * Effect to handle level completion
-   * When a level is won, save progress and update completion status
-   * Also automatically sync to blockchain if wallet is connected
+   * When a level is won, save progress locally
+   * User can manually sync to blockchain via SaveProgressButton
    */
   useEffect(() => {
     if (gameState.gameStatus === 'won' && gameState.isPlaying === false) {
@@ -199,35 +188,12 @@ function App() {
       const config = getLevelConfig(gameState.level);
       const stars = calculateStars(gameState.moves, config);
       
-      // Save level completion to progress (local storage)
+      // Save level completion to progress (local storage only)
       completeLevel(gameState.level, stars);
-
-      // Automatically sync to blockchain if wallet is connected and on correct network
-      if (isConnected && address && syncStatus.mode === 'blockchain') {
-        console.log(`[App] Level ${gameState.level} completed! Auto-syncing to blockchain...`);
-        
-        // Create updated progress with the new level
-        const updatedProgress = {
-          ...progress,
-          completedLevels: new Set([...progress.completedLevels, gameState.level]),
-          levelStars: new Map([...progress.levelStars, [gameState.level, stars]]),
-          highestUnlockedLevel: gameState.level === progress.highestUnlockedLevel
-            ? Math.min(gameState.level + 1, 100)
-            : progress.highestUnlockedLevel,
-        };
-
-        // Sync to blockchain with Paymaster (gas-free)
-        // Small delay to ensure UI updates first
-        setTimeout(() => {
-          syncToBlockchain(updatedProgress).catch((error) => {
-            console.error('[App] Auto-sync to blockchain failed:', error);
-            // Don't throw error - just log it and continue
-            // User can manually sync later via SaveProgressButton
-          });
-        }, 500);
-      }
+      
+      console.log(`[App] Level ${gameState.level} completed! Saved locally. Use "Save to Blockchain" button to sync.`);
     }
-  }, [gameState.gameStatus, gameState.isPlaying, gameState.level, gameState.moves, completeLevel, isConnected, address, syncStatus.mode, syncToBlockchain, progress]);
+  }, [gameState.gameStatus, gameState.isPlaying, gameState.level, gameState.moves, completeLevel]);
 
   return (
     <Web3ErrorBoundary>

@@ -1,0 +1,87 @@
+/**
+ * SaveAllProgressButton Component
+ * 
+ * Button to save all completed levels to blockchain in a single batch transaction
+ */
+
+import React, { useState } from 'react';
+import { useAccount } from 'wagmi';
+import { useBatchUpdateLevels } from '../hooks/useBatchUpdateLevels';
+import { ProgressData } from '../types';
+import './SaveAllProgressButton.css';
+
+export interface SaveAllProgressButtonProps {
+  progressData: ProgressData;
+  onSuccess?: () => void;
+  onError?: (error: string) => void;
+  className?: string;
+}
+
+export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
+  progressData,
+  onSuccess,
+  onError,
+  className = '',
+}) => {
+  const { isConnected } = useAccount();
+  const { batchUpdate, isLoading, error } = useBatchUpdateLevels();
+  const [isSaving, setIsSaving] = useState(false);
+
+  if (!isConnected) {
+    return null;
+  }
+
+  const completedCount = progressData.completedLevels.size;
+
+  if (completedCount === 0) {
+    return null;
+  }
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      console.log('[SaveAllProgressButton] Saving all progress to blockchain...');
+      await batchUpdate(progressData);
+      console.log('[SaveAllProgressButton] All progress saved successfully!');
+      onSuccess?.();
+    } catch (err) {
+      console.error('[SaveAllProgressButton] Failed to save progress:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to save progress';
+      onError?.(errorMessage);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <div className={`save-all-progress-container ${className}`}>
+      <button
+        onClick={handleSave}
+        disabled={isSaving || isLoading}
+        className="save-all-progress-button"
+        title={`Save ${completedCount} completed level${completedCount > 1 ? 's' : ''} to blockchain`}
+      >
+        {isSaving || isLoading ? (
+          <>
+            <span className="save-all-spinner"></span>
+            Saving...
+          </>
+        ) : (
+          <>
+            💾 Save to Blockchain ({completedCount})
+          </>
+        )}
+      </button>
+
+      {error && (
+        <p className="save-all-error">
+          ⚠️ {error}
+        </p>
+      )}
+
+      <p className="save-all-info">
+        ✨ Gas-free • Saves all {completedCount} completed level{completedCount > 1 ? 's' : ''}
+      </p>
+    </div>
+  );
+};
