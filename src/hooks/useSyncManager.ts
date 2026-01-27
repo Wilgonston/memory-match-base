@@ -9,7 +9,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { useAccount } from 'wagmi';
-import { usePlayerProgress } from './usePlayerProgress';
+import { useLoadBlockchainProgress } from './useLoadBlockchainProgress';
 import { useBatchUpdateLevels } from './useBatchUpdateLevels';
 import { 
   mergeProgress, 
@@ -58,7 +58,7 @@ export interface UseSyncManagerResult {
  */
 export function useSyncManager(): UseSyncManagerResult {
   const { address, isConnected } = useAccount();
-  const { progress: onChainProgress } = usePlayerProgress();
+  const { progress: onChainProgress, isLoading: isLoadingProgress } = useLoadBlockchainProgress();
   const { batchUpdate, isPending: isSyncing } = useBatchUpdateLevels();
 
   const [syncStatus, setSyncStatus] = useState<SyncStatus>({
@@ -75,10 +75,10 @@ export function useSyncManager(): UseSyncManagerResult {
     }
   }, [isConnected, address]);
 
-  // Update syncing state
+  // Update syncing state (include loading progress from blockchain)
   useEffect(() => {
-    setSyncStatus(prev => ({ ...prev, isSyncing }));
-  }, [isSyncing]);
+    setSyncStatus(prev => ({ ...prev, isSyncing: isSyncing || isLoadingProgress }));
+  }, [isSyncing, isLoadingProgress]);
 
   /**
    * Sync local progress to blockchain
