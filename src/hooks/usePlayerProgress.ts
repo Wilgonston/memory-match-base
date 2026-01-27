@@ -34,6 +34,7 @@ export interface UsePlayerProgressResult {
  * 
  * Features:
  * - Fetches total stars and last update timestamp
+ * - Fetches individual level stars for completed levels
  * - Caches data for 30 seconds to reduce RPC calls
  * - Automatically refetches when wallet changes
  * - Returns null when no wallet is connected
@@ -68,8 +69,8 @@ export function usePlayerProgress(): UsePlayerProgressResult {
     args: address ? [address] : undefined,
     query: {
       enabled: isConnected && !!address,
-      staleTime: 30_000, // Cache for 30 seconds
-      gcTime: 60_000, // Keep in cache for 1 minute
+      staleTime: 10_000, // Cache for 10 seconds (shorter for better sync)
+      gcTime: 30_000, // Keep in cache for 30 seconds
     },
   });
 
@@ -86,8 +87,8 @@ export function usePlayerProgress(): UsePlayerProgressResult {
     args: address ? [address] : undefined,
     query: {
       enabled: isConnected && !!address,
-      staleTime: 30_000, // Cache for 30 seconds
-      gcTime: 60_000, // Keep in cache for 1 minute
+      staleTime: 10_000, // Cache for 10 seconds
+      gcTime: 30_000, // Keep in cache for 30 seconds
     },
   });
 

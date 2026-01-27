@@ -24,10 +24,11 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
   className = '',
 }) => {
   const { isConnected } = useAccount();
-  const { updateLevels, isPending, error, isSuccess, progress, reset } = useSequentialUpdateLevels();
+  const { updateLevels, isPending, error, isSuccess, progress, reset, hash } = useSequentialUpdateLevels();
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState<string | null>(null);
+  const [savedHash, setSavedHash] = useState<string | null>(null);
 
   if (!isConnected) {
     return null;
@@ -76,19 +77,23 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
 
   // Handle success - only when transaction is confirmed on blockchain
   useEffect(() => {
-    if (isSuccess && !isPending) {
-      console.log('[SaveAllProgressButton] ✅ Transaction confirmed on blockchain');
+    if (isSuccess && !isPending && hash) {
+      console.log('[SaveAllProgressButton] ✅ Transaction confirmed on blockchain:', hash);
       setShowSuccess(true);
       setShowError(null);
       setIsSaving(false);
+      setSavedHash(hash); // Save hash to prevent re-showing button
       onSuccess?.();
       
-      // Hide success message after 3 seconds
-      setTimeout(() => {
+      // Auto-hide after 10 seconds
+      const timer = setTimeout(() => {
         setShowSuccess(false);
-      }, 3000);
+        setSavedHash(null); // Reset to allow saving new progress
+      }, 10000);
+      
+      return () => clearTimeout(timer);
     }
-  }, [isSuccess, isPending, onSuccess]);
+  }, [isSuccess, isPending, hash, onSuccess]);
 
   // Handle error
   useEffect(() => {
@@ -110,6 +115,25 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
   }, [error, onError]);
 
   const isLoading = isSaving || isPending;
+  
+  // Hide button if transaction was successful (data is on blockchain)
+  if (savedHash && showSuccess) {
+    return (
+      <div className={`save-all-progress-container ${className}`}>
+        <div className="save-all-success-message">
+          ✅ Progress saved to blockchain!
+          <a 
+            href={`https://basescan.org/tx/${savedHash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="tx-link"
+          >
+            View transaction
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`save-all-progress-container ${className}`}>
