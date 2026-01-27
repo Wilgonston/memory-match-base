@@ -24,7 +24,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
   className = '',
 }) => {
   const { isConnected } = useAccount();
-  const { batchUpdate, isLoading, error } = useBatchUpdateLevels();
+  const { batchUpdate, isPending, error } = useBatchUpdateLevels();
   const [isSaving, setIsSaving] = useState(false);
 
   if (!isConnected) {
@@ -41,7 +41,15 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
     setIsSaving(true);
     try {
       console.log('[SaveAllProgressButton] Saving all progress to blockchain...');
-      await batchUpdate(progressData);
+      
+      // Convert progressData to arrays
+      const levels = Array.from(progressData.completedLevels).sort((a, b) => a - b);
+      const stars = levels.map(level => progressData.levelStars.get(level) || 1);
+      
+      console.log('[SaveAllProgressButton] Levels:', levels);
+      console.log('[SaveAllProgressButton] Stars:', stars);
+      
+      await batchUpdate(levels, stars);
       console.log('[SaveAllProgressButton] All progress saved successfully!');
       onSuccess?.();
     } catch (err) {
@@ -57,11 +65,11 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
     <div className={`save-all-progress-container ${className}`}>
       <button
         onClick={handleSave}
-        disabled={isSaving || isLoading}
+        disabled={isSaving || isPending}
         className="save-all-progress-button"
         title={`Save ${completedCount} completed level${completedCount > 1 ? 's' : ''} to blockchain`}
       >
-        {isSaving || isLoading ? (
+        {isSaving || isPending ? (
           <>
             <span className="save-all-spinner"></span>
             Saving...
