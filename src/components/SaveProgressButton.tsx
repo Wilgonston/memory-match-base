@@ -1,17 +1,8 @@
 import React, { useState } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { Address } from 'viem';
-import {
-  Transaction,
-  TransactionButton,
-  TransactionStatus,
-  TransactionStatusLabel,
-  TransactionStatusAction,
-} from '@coinbase/onchainkit/transaction';
-import type { LifecycleStatus } from '@coinbase/onchainkit/transaction';
 import { getContractAddress, MEMORY_MATCH_PROGRESS_ABI } from '../types/blockchain';
 import { playSound } from '../utils/soundManager';
-import { getChainId } from '../utils/network';
 import './SaveProgressButton.css';
 
 export interface SaveProgressButtonProps {
@@ -31,69 +22,94 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
 }) => {
   const { address, isConnected } = useAccount();
   const contractAddress = getContractAddress();
-  const [hasPaymaster, setHasPaymaster] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const { writeContract, data: hash, isPending, error: writeError } = useWriteContract();
+  
+  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
+    hash,
+  });
 
   if (!isConnected || !address) {
     return null;
   }
 
-  const contracts = [
-    {
-      address: contractAddress as Address,
-      abi: MEMORY_MATCH_PROGRESS_ABI,
-      functionName: 'update',
-      args: [level, stars],
-    },
-  ];
-
-  const handleOnStatus = (status: LifecycleStatus) => {
-    console.log('[SaveProgressButton] Transaction status:', status.statusName);
-    
-    if (status.statusName === 'transactionPending') {
+  const handleSave = async () => {
+    try {
+      setIsSaving(true);
+      console.log('[SaveProgressButton] Saving level', level, 'with', stars, 'stars');
+      
       playSound('transaction-submitted');
-    } else if (status.statusName === 'success') {
-      playSound('transaction-confirmed');
-      onSuccess?.();
-    } else if (status.statusName === 'error') {
-      const errorMessage = status.statusData?.message || status.statusData?.error || 'Transaction failed';
-      console.error('[SaveProgressButton] Transaction error:', errorMessage);
       
-      // Check if error is related to Paymaster
-      if (errorMessage.includes('wallet_getCapabilities') || 
-          errorMessage.includes('not supported') ||
-          errorMessage.includes('paymaster')) {
-        console.log('[SaveProgressButton] Paymaster not available, user will pay gas');
-        setHasPaymaster(false);
-      }
-      
-      // Don't show error to user if it's just a Paymaster capability check
-      if (!errorMessage.includes('wallet_getCapabilities')) {
-        onError?.(errorMessage);
-      }
+      writeContract({
+        address: contractAddress as Address,
+        abi: MEMORY_MATCH_PROGRESS_ABI,
+        functionName: 'update',
+        args: [level, stars],
+      });
+    } catch (err) {
+      console.error('[SaveProgressButton] Transaction error:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Transaction failed';
+      onError?.(errorMessage);
+      setIsSaving(false);
     }
   };
 
+  // Handle transaction success
+  React.useEffect(() => {
+    if (isSuccess) {
+      console.log('[SaveProgressButton] Transaction confirmed!');
+      playSound('transaction-confirmed');
+      onSuccess?.();
+      setIsSaving(false);
+    }
+  }, [isSuccess, onSuccess]);
+
+  // Handle transaction error
+  React.useEffect(() => {
+    if (writeError) {
+      console.error('[SaveProgressButton] Write error:', writeError);
+      const errorMessage = writeError.message || 'Transaction failed';
+      
+      // Don't show error if it's just a capability check
+      if (!errorMessage.includes('wallet_getCapabilities') && 
+          !errorMessage.includes('wallet_sendCalls')) {
+        onError?.(errorMessage);
+      }
+      setIsSaving(false);
+    }
+  }, [writeError, onError]);
+
+  const isLoading = isPending || isConfirming || isSaving;
+
   return (
     <div className={`save-progress-button-container ${className}`}>
-      <Transaction
-        calls={contracts}
-        onStatus={handleOnStatus}
-        chainId={getChainId()}
+      <button
+        onClick={handleSave}
+        disabled={isLoading || isSuccess}
+        className="save-progress-button"
+        title="Save progress to blockchain"
       >
-        <TransactionButton
-          className="save-progress-button"
-          text="Save to Blockchain"
-        />
-        <TransactionStatus>
-          <TransactionStatusLabel />
-          <TransactionStatusAction />
-        </TransactionStatus>
-      </Transaction>
+        {isLoading ? (
+          <>
+            <span className="save-progress-spinner"></span>
+            {isConfirming ? 'Confirming...' : 'Saving...'}
+          </>
+        ) : isSuccess ? (
+          <>✓ Saved!</>
+        ) : (
+          'Save to Blockchain'
+        )}
+      </button>
+
+      {writeError && !writeError.message.includes('wallet_getCapabilities') && (
+        <p className="save-progress-error">
+          ⚠️ {writeError.message}
+        </p>
+      )}
 
       <p className="gas-free-info">
-        {hasPaymaster 
-          ? '✨ Gas-free transaction (sponsored by Paymaster)' 
-          : '⚡ You will pay gas for this transaction'}
+        ⚡ You will pay gas for this transaction
       </p>
     </div>
   );
