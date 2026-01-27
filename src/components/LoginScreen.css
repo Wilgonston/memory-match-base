@@ -142,7 +142,17 @@
   font-size: 14px;
   color: rgba(255, 255, 255, 0.6);
   font-family: 'Courier New', monospace;
-  margin: 0;
+  margin: 0 0 8px 0;
+}
+
+.login-network-info {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 8px 0 0 0;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  font-weight: 500;
 }
 
 .login-network-warning {

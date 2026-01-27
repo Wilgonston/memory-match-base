@@ -70,15 +70,21 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
   };
 
   const handleConnect = () => {
+    console.log('[LoginScreen] Connecting wallet...');
+    console.log('[LoginScreen] Available connectors:', connectors.map(c => c.id));
+    
     // Get Coinbase Wallet connector (Smart Wallet)
     const coinbaseConnector = connectors.find(c => c.id === 'coinbaseWalletSDK');
     if (coinbaseConnector) {
+      console.log('[LoginScreen] Using Coinbase Wallet connector');
+      console.log('[LoginScreen] Forcing chainId:', base.id);
       // Connect with Base Mainnet chainId to ensure Smart Wallet is created on correct network
       connect({ 
         connector: coinbaseConnector,
         chainId: base.id, // Force Base Mainnet
       });
     } else {
+      console.log('[LoginScreen] Coinbase connector not found, showing all connectors');
       setShowConnectors(true);
     }
   };
@@ -182,13 +188,21 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
                 <p className="login-address">
                   {address?.slice(0, 6)}...{address?.slice(-4)}
                 </p>
+                <p className="login-network-info">
+                  Current Network: {chainId === 8453 ? 'Base Mainnet ✅' : 
+                                   chainId === 137 ? 'Polygon ⚠️' : 
+                                   chainId === 1 ? 'Ethereum ⚠️' :
+                                   `Chain ${chainId} ⚠️`}
+                </p>
                 {chainId !== base.id && (
                   <>
                     <p className="login-network-warning">
-                      ⚠️ Wrong Network: {chainId === 137 ? 'Polygon' : `Chain ${chainId}`}
+                      ⚠️ Wrong Network Detected!
                     </p>
                     <p className="login-network-warning">
-                      Your Smart Wallet was created on the wrong network.
+                      Your Smart Wallet was created on {chainId === 137 ? 'Polygon' : 'wrong network'}.
+                      <br />
+                      You need to reset and create a new wallet on Base Mainnet.
                     </p>
                   </>
                 )}
@@ -197,7 +211,10 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
               {chainId !== base.id ? (
                 <>
                   <button
-                    onClick={() => switchChain({ chainId: base.id })}
+                    onClick={() => {
+                      console.log('[LoginScreen] Attempting to switch to Base Mainnet...');
+                      switchChain({ chainId: base.id });
+                    }}
                     className="login-auth-button"
                   >
                     Try Switch to Base Mainnet
@@ -207,13 +224,22 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
                     onClick={handleResetWallet}
                     className="login-reset-button"
                   >
-                    Reset Wallet & Start Over
+                    🔄 Reset Wallet & Start Over
                   </button>
                   
                   <p className="login-info login-warning">
-                    ⚠️ Your Smart Wallet was created on {chainId === 137 ? 'Polygon' : 'wrong network'}.
+                    ⚠️ <strong>Important:</strong> Your Smart Wallet is on the wrong network.
                     <br />
-                    Click "Reset Wallet" to disconnect and clear cache, then refresh page and reconnect.
+                    <br />
+                    <strong>Steps to fix:</strong>
+                    <br />
+                    1. Click "Reset Wallet & Start Over" button above
+                    <br />
+                    2. Refresh this page (press F5)
+                    <br />
+                    3. Click "Connect Wallet" again
+                    <br />
+                    4. New Smart Wallet will be created on Base Mainnet
                   </p>
                 </>
               ) : (
