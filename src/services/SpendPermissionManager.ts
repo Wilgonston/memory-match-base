@@ -8,6 +8,8 @@
  */
 
 import { Address, Hex } from 'viem';
+import { generateRandomSalt } from '../utils/cryptoUtils';
+import { logServiceOperation, logServiceWarning } from '../utils/errorHandler';
 
 /**
  * Spend permission structure
@@ -52,23 +54,6 @@ export class SpendPermissionManager {
   }
 
   /**
-   * Generate random salt for permission
-   */
-  private generateSalt(): bigint {
-    // Generate random 32-byte value
-    const randomBytes = new Uint8Array(32);
-    crypto.getRandomValues(randomBytes);
-    
-    // Convert to bigint
-    let salt = 0n;
-    for (let i = 0; i < randomBytes.length; i++) {
-      salt = (salt << 8n) | BigInt(randomBytes[i]);
-    }
-    
-    return salt;
-  }
-
-  /**
    * Request spend permission
    * 
    * @param request - Permission request without salt and extraData
@@ -100,22 +85,19 @@ export class SpendPermissionManager {
       throw new Error('End timestamp must be after start timestamp');
     }
 
-    // Generate salt and extraData
-    const salt = this.generateSalt();
+    const salt = generateRandomSalt();
     const extraData: Hex = '0x';
 
-    // Create complete permission
     const permission: SpendPermission = {
       ...request,
       salt,
       extraData,
     };
 
-    // Store permission
     const key = this.getPermissionKey(request.spender, request.token);
     this.permissions.set(key, permission);
 
-    console.log('[SpendPermissionManager] Permission requested:', {
+    logServiceOperation('SpendPermissionManager', 'Permission requested', {
       spender: request.spender,
       token: request.token,
       allowance: request.allowance.toString(),
@@ -143,10 +125,8 @@ export class SpendPermissionManager {
       return null;
     }
 
-    // Check if permission is still valid (not expired)
     const now = Math.floor(Date.now() / 1000);
     if (now > permission.end) {
-      // Permission expired, remove it
       this.permissions.delete(key);
       return null;
     }
@@ -165,7 +145,7 @@ export class SpendPermissionManager {
     const permission = this.permissions.get(key);
 
     if (!permission) {
-      console.warn('[SpendPermissionManager] No permission to revoke:', {
+      logServiceWarning('SpendPermissionManager', 'No permission to revoke', {
         spender,
         token,
       });
@@ -174,7 +154,7 @@ export class SpendPermissionManager {
 
     this.permissions.delete(key);
 
-    console.log('[SpendPermissionManager] Permission revoked:', {
+    logServiceOperation('SpendPermissionManager', 'Permission revoked', {
       spender,
       token,
     });
@@ -240,7 +220,7 @@ export class SpendPermissionManager {
    */
   async clearAllPermissions(): Promise<void> {
     this.permissions.clear();
-    console.log('[SpendPermissionManager] All permissions cleared');
+    logServiceOperation('SpendPermissionManager', 'All permissions cleared');
   }
 
   /**
@@ -270,7 +250,7 @@ export class SpendPermissionManager {
     const key = this.getPermissionKey(spender, token);
     this.permissions.set(key, permission);
 
-    console.log('[SpendPermissionManager] Allowance updated:', {
+    logServiceOperation('SpendPermissionManager', 'Allowance updated', {
       spender,
       token,
       newAllowance: newAllowance.toString(),
@@ -278,5 +258,4 @@ export class SpendPermissionManager {
   }
 }
 
-// Export singleton instance
 export const spendPermissionManager = new SpendPermissionManager();

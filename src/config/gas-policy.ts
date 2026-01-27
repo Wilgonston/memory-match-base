@@ -92,43 +92,51 @@ export function createGasPolicy(overrides: Partial<GasPolicy>): GasPolicy {
  * Validate a gas policy configuration
  * 
  * @param policy - The gas policy to validate
- * @throws Error if the policy is invalid
+ * @returns true if valid, false otherwise
  */
-export function validateGasPolicy(policy: GasPolicy): void {
-  if (!policy.allowedContracts || policy.allowedContracts.length === 0) {
-    throw new Error('Gas policy must have at least one allowed contract');
-  }
-
-  if (policy.maxGasPerTransaction <= 0n) {
-    throw new Error('Max gas per transaction must be greater than 0');
-  }
-
-  if (policy.maxTransactionsPerDay <= 0) {
-    throw new Error('Max transactions per day must be greater than 0');
-  }
-
-  // Validate contract addresses
-  for (const contract of policy.allowedContracts) {
-    if (!contract.startsWith('0x') || contract.length !== 42) {
-      throw new Error(`Invalid contract address: ${contract}`);
+export function validateGasPolicy(policy: GasPolicy): boolean {
+  try {
+    if (!policy.allowedContracts || policy.allowedContracts.length === 0) {
+      throw new Error('Gas policy must have at least one allowed contract');
     }
-  }
 
-  // Validate function selectors if present
-  if (policy.allowedFunctions) {
-    for (const [contract, selectors] of Object.entries(policy.allowedFunctions)) {
+    if (policy.maxGasPerTransaction <= 0n) {
+      throw new Error('Max gas per transaction must be greater than 0');
+    }
+
+    if (policy.maxTransactionsPerDay <= 0) {
+      throw new Error('Max transactions per day must be greater than 0');
+    }
+
+    for (const contract of policy.allowedContracts) {
       if (!contract.startsWith('0x') || contract.length !== 42) {
-        throw new Error(`Invalid contract address in allowedFunctions: ${contract}`);
+        throw new Error(`Invalid contract address: ${contract}`);
       }
+    }
 
-      for (const selector of selectors) {
-        if (!selector.startsWith('0x') || selector.length !== 10) {
-          throw new Error(`Invalid function selector: ${selector} (must be 4 bytes with 0x prefix)`);
+    if (policy.allowedFunctions) {
+      for (const [contract, selectors] of Object.entries(policy.allowedFunctions)) {
+        if (!contract.startsWith('0x') || contract.length !== 42) {
+          throw new Error(`Invalid contract address in allowedFunctions: ${contract}`);
+        }
+
+        for (const selector of selectors) {
+          if (!selector.startsWith('0x') || selector.length !== 10) {
+            throw new Error(`Invalid function selector: ${selector} (must be 4 bytes with 0x prefix)`);
+          }
         }
       }
     }
+
+    return true;
+  } catch (error) {
+    console.error('[GasPolicy] Validation failed:', error);
+    return false;
   }
 }
 
-// Validate the default policy on module load
-validateGasPolicy(memoryMatchGasPolicy);
+try {
+  validateGasPolicy(memoryMatchGasPolicy);
+} catch (error) {
+  console.error('[GasPolicy] Default policy validation failed:', error);
+}

@@ -1,4 +1,5 @@
 import { Address, Hex } from 'viem';
+import { generateRandomHash } from '../utils/cryptoUtils';
 
 /**
  * Represents a single operation in a batch transaction
@@ -157,13 +158,10 @@ export class BatchTransactionService {
       // 4. Wait for confirmation
       // 5. Parse results to identify failed operations
       
-      // Simulate transaction execution
-      const transactionHash = this.generateTransactionHash();
+      const transactionHash = generateRandomHash();
       
-      // Simulate success (in production, some operations might fail)
       const failedOperations: number[] = [];
       
-      // Clear batch after successful execution
       this.clearBatch();
       
       return {
@@ -192,18 +190,6 @@ export class BatchTransactionService {
     }
     this.operations.splice(index, 1);
   }
-
-  /**
-   * Generate a random transaction hash for simulation
-   */
-  private generateTransactionHash(): string {
-    const randomBytes = new Uint8Array(32);
-    crypto.getRandomValues(randomBytes);
-    return `0x${Array.from(randomBytes)
-      .map((b) => b.toString(16).padStart(2, '0'))
-      .join('')}`;
-  }
 }
 
-// Export singleton instance
 export const batchTransactionService = new BatchTransactionService();

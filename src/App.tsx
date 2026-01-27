@@ -23,6 +23,7 @@ import { calculateStars } from './utils/scoring';
 import { getLevelConfig } from './utils/levelConfig';
 import { initializeSounds } from './utils/soundManager';
 import { getAuthentication, clearAuthentication, isAuthenticatedForAddress } from './utils/auth';
+import { validateAppConfig, logValidationResults } from './config/validation';
 import './index.css';
 
 /**
@@ -50,6 +51,14 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [hasLoadedBlockchainProgress, setHasLoadedBlockchainProgress] = useState(false);
   const [isLoadingBlockchainProgress, setIsLoadingBlockchainProgress] = useState(false);
+
+  /**
+   * Validate configuration on mount
+   */
+  useEffect(() => {
+    const validationResult = validateAppConfig();
+    logValidationResults(validationResult);
+  }, []);
 
   /**
    * Initialize sound manager on mount

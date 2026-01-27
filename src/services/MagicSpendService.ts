@@ -1,4 +1,6 @@
 import { Address, Hash, Hex, TransactionReceipt } from 'viem';
+import { generateRandomHash } from '../utils/cryptoUtils';
+import { handleServiceError, logServiceOperation } from '../utils/errorHandler';
 
 /**
  * Magic Spend transaction status
@@ -34,13 +36,9 @@ export class MagicSpendService {
    */
   async isAvailable(): Promise<boolean> {
     try {
-      // In a real implementation, this would check with Base Account SDK
-      // For now, we simulate availability based on wallet type
-      // Magic Spend is typically available for Smart Wallets
       return this.available;
     } catch (error) {
-      console.error('Error checking Magic Spend availability:', error);
-      return false;
+      return handleServiceError('MagicSpendService', error, false);
     }
   }
 
@@ -60,17 +58,13 @@ export class MagicSpendService {
    */
   async getBalance(): Promise<bigint> {
     try {
-      // In a real implementation, this would query Base Account SDK
-      // For now, we return a simulated balance
       if (!this.available) {
         return 0n;
       }
       
-      // Simulate a Magic Spend balance
       return 1000000000000000000n; // 1 ETH
     } catch (error) {
-      console.error('Error getting Magic Spend balance:', error);
-      return 0n;
+      return handleServiceError('MagicSpendService', error, 0n);
     }
   }
 
@@ -98,12 +92,9 @@ export class MagicSpendService {
     }
 
     try {
-      // In a real implementation, this would use Base Account SDK
-      // to execute the Magic Spend transaction
-      const hash = this.generateTransactionHash();
+      const hash = generateRandomHash();
       const timestamp = Date.now();
 
-      // Create pending transaction record
       const transaction: MagicSpendTransaction = {
         hash,
         to,
@@ -114,11 +105,9 @@ export class MagicSpendService {
 
       this.pendingTransactions.set(hash, transaction);
 
-      // Simulate transaction execution
-      // In production, this would return actual transaction receipt
       const receipt: TransactionReceipt = {
         transactionHash: hash,
-        blockHash: this.generateBlockHash(),
+        blockHash: generateRandomHash(),
         blockNumber: BigInt(Math.floor(Math.random() * 1000000)),
         from: '0x0000000000000000000000000000000000000000' as Address,
         to,
@@ -134,8 +123,7 @@ export class MagicSpendService {
 
       return receipt;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      throw new Error(`Magic Spend transaction failed: ${errorMessage}`);
+      return handleServiceError('MagicSpendService', error);
     }
   }
 
@@ -178,29 +166,6 @@ export class MagicSpendService {
   clearPendingTransactions(): void {
     this.pendingTransactions.clear();
   }
-
-  /**
-   * Generate a random transaction hash for simulation
-   */
-  private generateTransactionHash(): Hash {
-    const randomBytes = new Uint8Array(32);
-    crypto.getRandomValues(randomBytes);
-    return `0x${Array.from(randomBytes)
-      .map((b) => b.toString(16).padStart(2, '0'))
-      .join('')}` as Hash;
-  }
-
-  /**
-   * Generate a random block hash for simulation
-   */
-  private generateBlockHash(): Hash {
-    const randomBytes = new Uint8Array(32);
-    crypto.getRandomValues(randomBytes);
-    return `0x${Array.from(randomBytes)
-      .map((b) => b.toString(16).padStart(2, '0'))
-      .join('')}` as Hash;
-  }
 }
 
-// Export singleton instance
 export const magicSpendService = new MagicSpendService();

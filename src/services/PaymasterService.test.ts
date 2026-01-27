@@ -233,7 +233,7 @@ describe('PaymasterService', () => {
       await service.getPaymasterData(mockUserOp, mockEntrypoint, mockChainId);
 
       expect(consoleSpy).toHaveBeenCalledWith(
-        '[PaymasterService] Usage logged:',
+        '[PaymasterService] Usage logged',
         expect.objectContaining({
           sender: mockUserOp.sender,
           sponsored: true,
@@ -333,7 +333,7 @@ describe('PaymasterService', () => {
 
       expect(result).toBe(false);
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        '[PaymasterService] Error checking eligibility:',
+        '[PaymasterService]',
         expect.any(Error)
       );
     });
@@ -440,8 +440,8 @@ describe('PaymasterService', () => {
       await service.isEligibleForSponsorship(disallowedUserOp);
 
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        '[PaymasterService] Contract not in allowed list:',
-        expect.any(String)
+        '[PaymasterService] Contract not in allowed list',
+        expect.any(Object)
       );
     });
   });

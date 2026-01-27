@@ -11,6 +11,7 @@
 
 import { Address, Hex } from 'viem';
 import { GasPolicy, memoryMatchGasPolicy } from '../config/gas-policy';
+import { handleServiceError, logServiceOperation, logServiceWarning } from '../utils/errorHandler';
 
 /**
  * User operation structure for ERC-4337 account abstraction
@@ -114,19 +115,17 @@ export class PaymasterService {
     context?: PaymasterContext
   ): Promise<PaymasterStubData> {
     try {
-      console.log('[PaymasterService] Requesting stub data for gas estimation', {
+      logServiceOperation('PaymasterService', 'Requesting stub data for gas estimation', {
         sender: userOp.sender,
         chainId,
         entrypoint,
       });
 
-      // Check eligibility before making RPC call
       const isEligible = await this.isEligibleForSponsorship(userOp);
       if (!isEligible) {
         throw new Error('Transaction not eligible for gas sponsorship');
       }
 
-      // Call pm_getPaymasterStubData RPC method
       const response = await this.callPaymasterRPC<PaymasterRPCResponse>(
         'pm_getPaymasterStubData',
         [userOp, entrypoint, chainId.toString(16), context]
@@ -139,7 +138,7 @@ export class PaymasterService {
         paymasterPostOpGasLimit: BigInt(response.paymasterPostOpGasLimit),
       };
 
-      console.log('[PaymasterService] Stub data received', {
+      logServiceOperation('PaymasterService', 'Stub data received', {
         paymaster: stubData.paymaster,
         verificationGas: stubData.paymasterVerificationGasLimit.toString(),
         postOpGas: stubData.paymasterPostOpGasLimit.toString(),
@@ -147,7 +146,7 @@ export class PaymasterService {
 
       return stubData;
     } catch (error) {
-      console.error('[PaymasterService] Failed to get stub data:', error);
+      console.error('[PaymasterService]', error);
       throw new Error(
         `Failed to get paymaster stub data: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
@@ -175,19 +174,17 @@ export class PaymasterService {
     context?: PaymasterContext
   ): Promise<PaymasterData> {
     try {
-      console.log('[PaymasterService] Requesting paymaster data for sponsorship', {
+      logServiceOperation('PaymasterService', 'Requesting paymaster data for sponsorship', {
         sender: userOp.sender,
         chainId,
         entrypoint,
       });
 
-      // Check eligibility before making RPC call
       const isEligible = await this.isEligibleForSponsorship(userOp);
       if (!isEligible) {
         throw new Error('Transaction not eligible for gas sponsorship');
       }
 
-      // Call pm_getPaymasterData RPC method
       const response = await this.callPaymasterRPC<PaymasterRPCResponse & { paymasterAndData: Hex }>(
         'pm_getPaymasterData',
         [userOp, entrypoint, chainId.toString(16), context]
@@ -201,17 +198,16 @@ export class PaymasterService {
         paymasterAndData: response.paymasterAndData,
       };
 
-      console.log('[PaymasterService] Paymaster data received', {
+      logServiceOperation('PaymasterService', 'Paymaster data received', {
         paymaster: paymasterData.paymaster,
         sponsored: true,
       });
 
-      // Log paymaster usage for monitoring
       this.logPaymasterUsage(userOp, paymasterData);
 
       return paymasterData;
     } catch (error) {
-      console.error('[PaymasterService] Failed to get paymaster data:', error);
+      console.error('[PaymasterService]', error);
       throw new Error(
         `Failed to get paymaster data: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
@@ -243,14 +239,13 @@ export class PaymasterService {
       );
 
       if (!isAllowedContract) {
-        console.warn('[PaymasterService] Contract not in allowed list:', targetContract);
+        logServiceWarning('PaymasterService', 'Contract not in allowed list', { targetContract });
         return false;
       }
 
-      // Check gas limits
       const totalGas = userOp.callGasLimit + userOp.verificationGasLimit + userOp.preVerificationGas;
       if (totalGas > this.gasPolicy.maxGasPerTransaction) {
-        console.warn('[PaymasterService] Gas limit exceeds policy:', {
+        logServiceWarning('PaymasterService', 'Gas limit exceeds policy', {
           requested: totalGas.toString(),
           max: this.gasPolicy.maxGasPerTransaction.toString(),
         });
@@ -272,20 +267,20 @@ export class PaymasterService {
           );
 
           if (!isAllowedFunction) {
-            console.warn('[PaymasterService] Function not in allowed list:', functionSelector);
+            logServiceWarning('PaymasterService', 'Function not in allowed list', { functionSelector });
             return false;
           }
         }
       }
 
-      console.log('[PaymasterService] Transaction eligible for sponsorship', {
+      logServiceOperation('PaymasterService', 'Transaction eligible for sponsorship', {
         contract: targetContract,
         gas: totalGas.toString(),
       });
 
       return true;
     } catch (error) {
-      console.error('[PaymasterService] Error checking eligibility:', error);
+      console.error('[PaymasterService]', error);
       return false;
     }
   }
@@ -413,10 +408,7 @@ export class PaymasterService {
       sponsored: true,
     };
 
-    console.log('[PaymasterService] Usage logged:', usage);
-
-    // In production, this would send to a monitoring service
-    // For now, we just log to console
+    logServiceOperation('PaymasterService', 'Usage logged', usage);
   }
 }
 
