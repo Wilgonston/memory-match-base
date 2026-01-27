@@ -56,12 +56,23 @@ export class StorageManager {
       const parsed = JSON.parse(stored);
       
       // Deserialize arrays back to Sets and Maps
-      return {
+      const progress: ProgressData = {
         completedLevels: new Set(parsed.completedLevels),
         levelStars: new Map(parsed.levelStars),
         highestUnlockedLevel: parsed.highestUnlockedLevel,
         soundEnabled: parsed.soundEnabled ?? true, // Default to true if not present
       };
+
+      // Migration: Fix ONLY critically broken old data where highestUnlockedLevel is 0
+      // This handles legacy data from before the fix
+      // We only fix data that is definitely wrong (highestUnlockedLevel < 1)
+      if (progress.highestUnlockedLevel < 1) {
+        console.log('[StorageManager] Migrating old data: setting highestUnlockedLevel to 1 (was', progress.highestUnlockedLevel, ')');
+        progress.highestUnlockedLevel = 1;
+        this.saveProgress(progress);
+      }
+
+      return progress;
     } catch (error) {
       // Gracefully handle LocalStorage errors or corrupted data
       console.error('Failed to load progress:', error);
