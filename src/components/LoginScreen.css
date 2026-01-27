@@ -145,6 +145,16 @@
   margin: 0;
 }
 
+.login-network-warning {
+  font-size: 13px;
+  color: #FFA500;
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: rgba(255, 165, 0, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 165, 0, 0.3);
+}
+
 .login-auth-button {
   width: 100%;
   padding: 16px 24px;

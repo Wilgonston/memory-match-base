@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { useAccount, useConnect, useSignMessage } from 'wagmi';
+import { useState, useEffect } from 'react';
+import { useAccount, useConnect, useSignMessage, useSwitchChain, useChainId } from 'wagmi';
+import { base } from 'wagmi/chains';
 import { setAuthentication } from '../utils/auth';
 import './LoginScreen.css';
 
@@ -9,11 +10,21 @@ interface LoginScreenProps {
 
 export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
   const { address, isConnected } = useAccount();
+  const chainId = useChainId();
   const { connectors, connect } = useConnect();
   const { signMessageAsync } = useSignMessage();
+  const { switchChain } = useSwitchChain();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showConnectors, setShowConnectors] = useState(false);
+
+  // Auto-switch to Base Mainnet when wallet connects
+  useEffect(() => {
+    if (isConnected && chainId !== base.id) {
+      console.log('[LoginScreen] Wallet connected on wrong network. Switching to Base Mainnet...');
+      switchChain({ chainId: base.id });
+    }
+  }, [isConnected, chainId, switchChain]);
 
   const handleConnect = () => {
     // Get Coinbase Wallet connector (Smart Wallet)
@@ -28,6 +39,12 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
   const handleAuthenticate = async () => {
     if (!address) return;
 
+    // Check if on correct network
+    if (chainId !== base.id) {
+      setError('Please wait for network switch to complete');
+      return;
+    }
+
     setIsAuthenticating(true);
     setError(null);
 
@@ -38,7 +55,16 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
       onAuthenticated();
     } catch (err) {
       console.error('Authentication failed:', err);
-      setError('Authentication failed. Please try again.');
+      const errorMessage = err instanceof Error ? err.message : 'Authentication failed';
+      
+      // Handle specific errors
+      if (errorMessage.includes('User rejected') || errorMessage.includes('User denied')) {
+        setError('You rejected the signature request. Please try again.');
+      } else if (errorMessage.includes('pending') || errorMessage.includes('владельца')) {
+        setError('There is a pending transaction. Please wait or cancel it in your wallet.');
+      } else {
+        setError('Authentication failed. Please try again.');
+      }
     } finally {
       setIsAuthenticating(false);
     }
@@ -109,14 +135,24 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
                 <p className="login-address">
                   {address?.slice(0, 6)}...{address?.slice(-4)}
                 </p>
+                {chainId !== base.id && (
+                  <p className="login-network-warning">
+                    ⚠️ Switching to Base Mainnet...
+                  </p>
+                )}
               </div>
 
               <button
                 onClick={handleAuthenticate}
-                disabled={isAuthenticating}
+                disabled={isAuthenticating || chainId !== base.id}
                 className="login-auth-button"
               >
-                {isAuthenticating ? (
+                {chainId !== base.id ? (
+                  <>
+                    <span className="login-spinner"></span>
+                    Switching Network...
+                  </>
+                ) : isAuthenticating ? (
                   <>
                     <span className="login-spinner"></span>
                     Authenticating...
