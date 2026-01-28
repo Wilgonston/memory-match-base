@@ -212,6 +212,34 @@
   margin: 0 0 8px 0;
 }
 
+.login-identity {
+  display: flex;
+  justify-content: center;
+  margin: 12px 0;
+}
+
+.login-identity-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.login-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.login-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
 .login-network-info {
   font-size: 13px;
   color: rgba(255, 255, 255, 0.7);
