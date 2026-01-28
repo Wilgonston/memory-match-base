@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAccount, useConnect, useDisconnect, useSignMessage, useSwitchChain, useChainId } from 'wagmi';
 import { base } from 'wagmi/chains';
+import { Identity, Avatar, Name } from '@coinbase/onchainkit/identity';
 import { setAuthentication } from '../utils/auth';
 import './LoginScreen.css';
 
@@ -283,9 +284,12 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
                 <p className="login-connected-text">
                   Smart Wallet Connected
                 </p>
-                <p className="login-address">
-                  {address?.slice(0, 6)}...{address?.slice(-4)}
-                </p>
+                <div className="login-identity">
+                  <Identity address={address} className="login-identity-container">
+                    <Avatar className="login-avatar" />
+                    <Name className="login-name" />
+                  </Identity>
+                </div>
                 <p className="login-network-info">
                   Current Network: {chainId === 8453 ? 'Base Mainnet ✅' : 
                                    chainId === 137 ? 'Polygon ⚠️' : 
