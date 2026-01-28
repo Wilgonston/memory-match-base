@@ -11,7 +11,8 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
-    "generate-account-association": "tsx scripts/generate-account-association.ts"
+    "generate-account-association": "tsx scripts/generate-account-association.ts",
+    "convert-images": "node scripts/convert-images.js"
   },
   "dependencies": {
     "@base-org/account": "^2.5.1",
@@ -36,6 +37,7 @@
     "fast-check": "^3.15.0",
     "jsdom": "^23.0.1",
     "postcss": "^8.4.32",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.4.0",
     "terser": "^5.46.0",
     "tsx": "^4.7.0",

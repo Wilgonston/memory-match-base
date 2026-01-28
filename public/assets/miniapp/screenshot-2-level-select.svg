@@ -1,0 +1,109 @@
+<svg width="1284" height="2778" viewBox="0 0 1284 2778" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1284" height="2778" fill="#1a1a2e"/>
+  
+  <!-- Header -->
+  <rect width="1284" height="250" fill="#16213e"/>
+  <text x="642" y="100" font-family="Arial, sans-serif" font-size="64" font-weight="bold" fill="white" text-anchor="middle">Select Level</text>
+  <text x="642" y="180" font-family="Arial, sans-serif" font-size="36" fill="rgba(255,255,255,0.8)" text-anchor="middle">Choose your challenge</text>
+  
+  <!-- Level grid -->
+  <g transform="translate(92, 320)">
+    <!-- Row 1 -->
+    <g>
+      <rect x="0" y="0" width="240" height="240" rx="20" fill="#0052FF"/>
+      <text x="120" y="100" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="white" text-anchor="middle">1</text>
+      <text x="120" y="160" font-family="Arial, sans-serif" font-size="48" fill="rgba(255,255,255,0.9)" text-anchor="middle">⭐⭐⭐</text>
+      <rect x="10" y="190" width="220" height="8" rx="4" fill="rgba(255,255,255,0.3)"/>
+      <rect x="10" y="190" width="220" height="8" rx="4" fill="#00FF88"/>
+    </g>
+    
+    <g transform="translate(280, 0)">
+      <rect x="0" y="0" width="240" height="240" rx="20" fill="#0052FF"/>
+      <text x="120" y="100" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="white" text-anchor="middle">2</text>
+      <text x="120" y="160" font-family="Arial, sans-serif" font-size="48" fill="rgba(255,255,255,0.9)" text-anchor="middle">⭐⭐⭐</text>
+      <rect x="10" y="190" width="220" height="8" rx="4" fill="rgba(255,255,255,0.3)"/>
+      <rect x="10" y="190" width="220" height="8" rx="4" fill="#00FF88"/>
+    </g>
+    
+    <g transform="translate(560, 0)">
+      <rect x="0" y="0" width="240" height="240" rx="20" fill="#0052FF"/>
+      <text x="120" y="100" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="white" text-anchor="middle">3</text>
+      <text x="120" y="160" font-family="Arial, sans-serif" font-size="48" fill="rgba(255,255,255,0.9)" text-anchor="middle">⭐⭐</text>
+      <rect x="10" y="190" width="220" height="8" rx="4" fill="rgba(255,255,255,0.3)"/>
+      <rect x="10" y="190" width="146" height="8" rx="4" fill="#FFD700"/>
+    </g>
+    
+    <g transform="translate(840, 0)">
+      <rect x="0" y="0" width="240" height="240" rx="20" fill="#0066FF"/>
+      <text x="120" y="100" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="white" text-anchor="middle">4</text>
+      <text x="120" y="160" font-family="Arial, sans-serif" font-size="48" fill="rgba(255,255,255,0.6)" text-anchor="middle">⭐⭐⭐</text>
+      <rect x="10" y="190" width="220" height="8" rx="4" fill="rgba(255,255,255,0.3)"/>
+    </g>
+    
+    <!-- Row 2 -->
+    <g transform="translate(0, 280)">
+      <rect x="0" y="0" width="240" height="240" rx="20" fill="#0066FF"/>
+      <text x="120" y="100" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="white" text-anchor="middle">5</text>
+      <text x="120" y="160" font-family="Arial, sans-serif" font-size="48" fill="rgba(255,255,255,0.6)" text-anchor="middle">⭐⭐⭐</text>
+      <rect x="10" y="190" width="220" height="8" rx="4" fill="rgba(255,255,255,0.3)"/>
+    </g>
+    
+    <g transform="translate(280, 280)">
+      <rect x="0" y="0" width="240" height="240" rx="20" fill="rgba(0, 82, 255, 0.3)"/>
+      <text x="120" y="100" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="rgba(255,255,255,0.5)" text-anchor="middle">6</text>
+      <circle cx="200" cy="40" r="30" fill="rgba(255,255,255,0.2)"/>
+      <text x="200" y="55" font-family="Arial, sans-serif" font-size="36" fill="rgba(255,255,255,0.5)" text-anchor="middle">🔒</text>
+    </g>
+    
+    <g transform="translate(560, 280)">
+      <rect x="0" y="0" width="240" height="240" rx="20" fill="rgba(0, 82, 255, 0.3)"/>
+      <text x="120" y="100" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="rgba(255,255,255,0.5)" text-anchor="middle">7</text>
+      <circle cx="200" cy="40" r="30" fill="rgba(255,255,255,0.2)"/>
+      <text x="200" y="55" font-family="Arial, sans-serif" font-size="36" fill="rgba(255,255,255,0.5)" text-anchor="middle">🔒</text>
+    </g>
+    
+    <g transform="translate(840, 280)">
+      <rect x="0" y="0" width="240" height="240" rx="20" fill="rgba(0, 82, 255, 0.3)"/>
+      <text x="120" y="100" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="rgba(255,255,255,0.5)" text-anchor="middle">8</text>
+      <circle cx="200" cy="40" r="30" fill="rgba(255,255,255,0.2)"/>
+      <text x="200" y="55" font-family="Arial, sans-serif" font-size="36" fill="rgba(255,255,255,0.5)" text-anchor="middle">🔒</text>
+    </g>
+    
+    <!-- Row 3 -->
+    <g transform="translate(0, 560)">
+      <rect x="0" y="0" width="240" height="240" rx="20" fill="rgba(0, 82, 255, 0.3)"/>
+      <text x="120" y="100" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="rgba(255,255,255,0.5)" text-anchor="middle">9</text>
+      <circle cx="200" cy="40" r="30" fill="rgba(255,255,255,0.2)"/>
+      <text x="200" y="55" font-family="Arial, sans-serif" font-size="36" fill="rgba(255,255,255,0.5)" text-anchor="middle">🔒</text>
+    </g>
+    
+    <g transform="translate(280, 560)">
+      <rect x="0" y="0" width="240" height="240" rx="20" fill="rgba(0, 82, 255, 0.3)"/>
+      <text x="120" y="100" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="rgba(255,255,255,0.5)" text-anchor="middle">10</text>
+      <circle cx="200" cy="40" r="30" fill="rgba(255,255,255,0.2)"/>
+      <text x="200" y="55" font-family="Arial, sans-serif" font-size="36" fill="rgba(255,255,255,0.5)" text-anchor="middle">🔒</text>
+    </g>
+  </g>
+  
+  <!-- Stats section -->
+  <g transform="translate(0, 1600)">
+    <rect x="92" y="0" width="1100" height="200" rx="20" fill="#16213e"/>
+    <text x="642" y="70" font-family="Arial, sans-serif" font-size="48" font-weight="600" fill="white" text-anchor="middle">Your Progress</text>
+    <text x="642" y="130" font-family="Arial, sans-serif" font-size="36" fill="rgba(255,255,255,0.8)" text-anchor="middle">5 levels completed • 13 stars earned</text>
+  </g>
+  
+  <!-- Bottom buttons -->
+  <g transform="translate(0, 2400)">
+    <rect x="92" y="0" width="1100" height="120" rx="60" fill="#0052FF"/>
+    <text x="642" y="75" font-family="Arial, sans-serif" font-size="48" font-weight="600" fill="white" text-anchor="middle">Save Progress to Blockchain</text>
+  </g>
+  
+  <g transform="translate(0, 2560)">
+    <rect x="92" y="0" width="520" height="100" rx="50" fill="rgba(255,255,255,0.1)"/>
+    <text x="352" y="65" font-family="Arial, sans-serif" font-size="36" fill="white" text-anchor="middle">Settings</text>
+    
+    <rect x="672" y="0" width="520" height="100" rx="50" fill="rgba(255,255,255,0.1)"/>
+    <text x="932" y="65" font-family="Arial, sans-serif" font-size="36" fill="white" text-anchor="middle">Logout</text>
+  </g>
+</svg>

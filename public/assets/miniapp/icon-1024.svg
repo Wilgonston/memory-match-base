@@ -1,0 +1,28 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with gradient -->
+  <rect width="1024" height="1024" fill="#0052FF"/>
+  <rect width="1024" height="1024" fill="url(#gradient)"/>
+  
+  <defs>
+    <linearGradient id="gradient" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0052FF"/>
+      <stop offset="100%" stop-color="#0066FF"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Memory card icon - left card -->
+  <rect x="280" y="320" width="200" height="280" rx="20" fill="white" opacity="0.95"/>
+  <rect x="300" y="340" width="160" height="160" rx="10" fill="#0052FF"/>
+  <circle cx="380" cy="420" r="40" fill="white"/>
+  <path d="M380 400 L380 440 M360 420 L400 420" stroke="#0052FF" stroke-width="8" stroke-linecap="round"/>
+  
+  <!-- Memory card icon - right card -->
+  <rect x="544" y="320" width="200" height="280" rx="20" fill="white" opacity="0.95"/>
+  <rect x="564" y="340" width="160" height="160" rx="10" fill="#0052FF"/>
+  <circle cx="644" cy="420" r="40" fill="white"/>
+  <path d="M644 400 L644 440 M624 420 L664 420" stroke="#0052FF" stroke-width="8" stroke-linecap="round"/>
+  
+  <!-- BASE text -->
+  <text x="512" y="720" font-family="Arial, sans-serif" font-size="80" font-weight="bold" fill="white" text-anchor="middle">MEMORY</text>
+  <text x="512" y="800" font-family="Arial, sans-serif" font-size="60" font-weight="600" fill="rgba(255,255,255,0.9)" text-anchor="middle">MATCH</text>
+</svg>

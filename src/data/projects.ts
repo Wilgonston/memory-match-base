@@ -568,7 +568,6 @@ export const projects: ProjectImage[] = [
   { id: 'walletconnect', name: 'WalletConnect', imagePath: '/assets/projects/walletconnect.webp' },
   { id: 'walletretail', name: 'Wallet Retail', imagePath: '/assets/projects/wallet-retail.webp' },
   { id: 'warden', name: 'Warden', imagePath: '/assets/projects/warden.png' },
-  { id: 'warpcast', name: 'Warpcast', imagePath: '/assets/projects/warpcast.png' },
   { id: 'welcomeonchain', name: 'Welcome Onchain', imagePath: '/assets/projects/welcomeonchain.png' },
   { id: 'wert', name: 'Wert', imagePath: '/assets/projects/wert.png' },
   { id: 'wildcard', name: 'Wildcard', imagePath: '/assets/projects/wildcard.jpeg' },

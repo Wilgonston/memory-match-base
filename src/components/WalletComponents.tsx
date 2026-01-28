@@ -7,7 +7,6 @@ import {
   Identity,
   Avatar,
   Name,
-  Address,
   EthBalance,
 } from '@coinbase/onchainkit/identity';
 
@@ -19,7 +18,6 @@ export function WalletComponents() {
         <Identity hasCopyAddressOnClick>
           <Avatar />
           <Name />
-          <Address />
           <EthBalance />
         </Identity>
         <WalletDropdownDisconnect />

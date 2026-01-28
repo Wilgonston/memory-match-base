@@ -1,0 +1,69 @@
+<svg width="1284" height="2778" viewBox="0 0 1284 2778" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1284" height="2778" fill="#1a1a2e"/>
+  
+  <!-- Celebration overlay -->
+  <rect width="1284" height="2778" fill="rgba(0, 82, 255, 0.1)"/>
+  
+  <!-- Victory card -->
+  <g transform="translate(142, 600)">
+    <rect x="0" y="0" width="1000" height="1400" rx="30" fill="#16213e"/>
+    <rect x="0" y="0" width="1000" height="1400" rx="30" fill="url(#victoryGradient)" opacity="0.3"/>
+    
+    <defs>
+      <linearGradient id="victoryGradient" x1="0" y1="0" x2="1000" y2="1400" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#0052FF"/>
+        <stop offset="100%" stop-color="#00D4FF"/>
+      </linearGradient>
+    </defs>
+    
+    <!-- Trophy icon -->
+    <circle cx="500" cy="200" r="100" fill="#FFD700" opacity="0.2"/>
+    <text x="500" y="250" font-family="Arial, sans-serif" font-size="120" text-anchor="middle">🏆</text>
+    
+    <!-- Victory text -->
+    <text x="500" y="400" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="white" text-anchor="middle">Level Complete!</text>
+    
+    <!-- Stars -->
+    <g transform="translate(250, 450)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="120">⭐</text>
+      <text x="200" y="0" font-family="Arial, sans-serif" font-size="120">⭐</text>
+      <text x="400" y="0" font-family="Arial, sans-serif" font-size="120">⭐</text>
+    </g>
+    
+    <!-- Stats -->
+    <g transform="translate(0, 650)">
+      <rect x="50" y="0" width="900" height="120" rx="15" fill="rgba(0, 82, 255, 0.2)"/>
+      <text x="500" y="45" font-family="Arial, sans-serif" font-size="36" fill="rgba(255,255,255,0.7)" text-anchor="middle">Time</text>
+      <text x="500" y="95" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">0:42</text>
+      
+      <rect x="50" y="150" width="900" height="120" rx="15" fill="rgba(0, 82, 255, 0.2)"/>
+      <text x="500" y="195" font-family="Arial, sans-serif" font-size="36" fill="rgba(255,255,255,0.7)" text-anchor="middle">Moves</text>
+      <text x="500" y="245" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">18</text>
+      
+      <rect x="50" y="300" width="900" height="120" rx="15" fill="rgba(0, 82, 255, 0.2)"/>
+      <text x="500" y="345" font-family="Arial, sans-serif" font-size="36" fill="rgba(255,255,255,0.7)" text-anchor="middle">Best Time</text>
+      <text x="500" y="395" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#00FF88" text-anchor="middle">New Record!</text>
+    </g>
+    
+    <!-- Buttons -->
+    <g transform="translate(0, 1100)">
+      <rect x="50" y="0" width="900" height="120" rx="60" fill="#0052FF"/>
+      <text x="500" y="75" font-family="Arial, sans-serif" font-size="48" font-weight="600" fill="white" text-anchor="middle">Next Level</text>
+      
+      <rect x="50" y="150" width="430" height="100" rx="50" fill="rgba(255,255,255,0.1)"/>
+      <text x="265" y="70" font-family="Arial, sans-serif" font-size="36" fill="white" text-anchor="middle">Retry</text>
+      
+      <rect x="520" y="150" width="430" height="100" rx="50" fill="rgba(255,255,255,0.1)"/>
+      <text x="735" y="70" font-family="Arial, sans-serif" font-size="36" fill="white" text-anchor="middle">Menu</text>
+    </g>
+  </g>
+  
+  <!-- Confetti decoration -->
+  <circle cx="200" cy="400" r="15" fill="#FFD700" opacity="0.6"/>
+  <circle cx="1084" cy="500" r="20" fill="#00D4FF" opacity="0.6"/>
+  <circle cx="300" cy="2200" r="18" fill="#FF6B6B" opacity="0.6"/>
+  <circle cx="984" cy="2100" r="15" fill="#4ECDC4" opacity="0.6"/>
+  <circle cx="150" cy="1400" r="12" fill="#FFD700" opacity="0.6"/>
+  <circle cx="1134" cy="1500" r="16" fill="#00D4FF" opacity="0.6"/>
+</svg>

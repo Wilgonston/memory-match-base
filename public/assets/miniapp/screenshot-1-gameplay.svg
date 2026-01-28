@@ -1,0 +1,82 @@
+<svg width="1284" height="2778" viewBox="0 0 1284 2778" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1284" height="2778" fill="#1a1a2e"/>
+  
+  <!-- Header area -->
+  <rect width="1284" height="200" fill="#16213e"/>
+  
+  <!-- Header content -->
+  <text x="642" y="80" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">Level 15</text>
+  <text x="642" y="140" font-family="Arial, sans-serif" font-size="36" fill="rgba(255,255,255,0.8)" text-anchor="middle">Moves: 12 | Time: 0:45</text>
+  
+  <!-- Game grid (4x4) -->
+  <g transform="translate(142, 300)">
+    <!-- Row 1 -->
+    <rect x="0" y="0" width="230" height="320" rx="15" fill="white" opacity="0.95"/>
+    <rect x="15" y="15" width="200" height="200" rx="10" fill="#0052FF"/>
+    <circle cx="115" cy="115" r="50" fill="white"/>
+    
+    <rect x="270" y="0" width="230" height="320" rx="15" fill="white" opacity="0.95"/>
+    <rect x="285" y="15" width="200" height="200" rx="10" fill="#00D4FF"/>
+    <circle cx="385" cy="115" r="50" fill="white"/>
+    
+    <rect x="540" y="0" width="230" height="320" rx="15" fill="#0052FF" opacity="0.3"/>
+    <text x="655" y="180" font-family="Arial, sans-serif" font-size="120" fill="white" text-anchor="middle">?</text>
+    
+    <rect x="810" y="0" width="230" height="320" rx="15" fill="#0052FF" opacity="0.3"/>
+    <text x="925" y="180" font-family="Arial, sans-serif" font-size="120" fill="white" text-anchor="middle">?</text>
+    
+    <!-- Row 2 -->
+    <rect x="0" y="360" width="230" height="320" rx="15" fill="#0052FF" opacity="0.3"/>
+    <text x="115" y="540" font-family="Arial, sans-serif" font-size="120" fill="white" text-anchor="middle">?</text>
+    
+    <rect x="270" y="360" width="230" height="320" rx="15" fill="white" opacity="0.95"/>
+    <rect x="285" y="375" width="200" height="200" rx="10" fill="#0052FF"/>
+    <circle cx="385" cy="475" r="50" fill="white"/>
+    
+    <rect x="540" y="360" width="230" height="320" rx="15" fill="white" opacity="0.95"/>
+    <rect x="555" y="375" width="200" height="200" rx="10" fill="#00D4FF"/>
+    <circle cx="655" cy="475" r="50" fill="white"/>
+    
+    <rect x="810" y="360" width="230" height="320" rx="15" fill="#0052FF" opacity="0.3"/>
+    <text x="925" y="540" font-family="Arial, sans-serif" font-size="120" fill="white" text-anchor="middle">?</text>
+    
+    <!-- Row 3 -->
+    <rect x="0" y="720" width="230" height="320" rx="15" fill="#0052FF" opacity="0.3"/>
+    <text x="115" y="900" font-family="Arial, sans-serif" font-size="120" fill="white" text-anchor="middle">?</text>
+    
+    <rect x="270" y="720" width="230" height="320" rx="15" fill="#0052FF" opacity="0.3"/>
+    <text x="385" y="900" font-family="Arial, sans-serif" font-size="120" fill="white" text-anchor="middle">?</text>
+    
+    <rect x="540" y="720" width="230" height="320" rx="15" fill="#0052FF" opacity="0.3"/>
+    <text x="655" y="900" font-family="Arial, sans-serif" font-size="120" fill="white" text-anchor="middle">?</text>
+    
+    <rect x="810" y="720" width="230" height="320" rx="15" fill="#0052FF" opacity="0.3"/>
+    <text x="925" y="900" font-family="Arial, sans-serif" font-size="120" fill="white" text-anchor="middle">?</text>
+    
+    <!-- Row 4 -->
+    <rect x="0" y="1080" width="230" height="320" rx="15" fill="#0052FF" opacity="0.3"/>
+    <text x="115" y="1260" font-family="Arial, sans-serif" font-size="120" fill="white" text-anchor="middle">?</text>
+    
+    <rect x="270" y="1080" width="230" height="320" rx="15" fill="#0052FF" opacity="0.3"/>
+    <text x="385" y="1260" font-family="Arial, sans-serif" font-size="120" fill="white" text-anchor="middle">?</text>
+    
+    <rect x="540" y="1080" width="230" height="320" rx="15" fill="#0052FF" opacity="0.3"/>
+    <text x="655" y="1260" font-family="Arial, sans-serif" font-size="120" fill="white" text-anchor="middle">?</text>
+    
+    <rect x="810" y="1080" width="230" height="320" rx="15" fill="#0052FF" opacity="0.3"/>
+    <text x="925" y="1260" font-family="Arial, sans-serif" font-size="120" fill="white" text-anchor="middle">?</text>
+  </g>
+  
+  <!-- Bottom controls -->
+  <g transform="translate(0, 2400)">
+    <rect x="142" y="0" width="400" height="120" rx="60" fill="#0052FF"/>
+    <text x="342" y="75" font-family="Arial, sans-serif" font-size="42" font-weight="600" fill="white" text-anchor="middle">Pause</text>
+    
+    <rect x="742" y="0" width="400" height="120" rx="60" fill="#FF4444"/>
+    <text x="942" y="75" font-family="Arial, sans-serif" font-size="42" font-weight="600" fill="white" text-anchor="middle">Restart</text>
+  </g>
+  
+  <!-- Progress indicator -->
+  <text x="642" y="2650" font-family="Arial, sans-serif" font-size="32" fill="rgba(255,255,255,0.6)" text-anchor="middle">6 of 8 pairs found</text>
+</svg>
