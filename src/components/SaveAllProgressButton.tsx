@@ -2,11 +2,12 @@
  * SaveAllProgressButton Component
  * 
  * Button to save all completed levels to blockchain in a single batch transaction
+ * Uses EIP-5792 writeContracts for batching multiple updates
  */
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAccount } from 'wagmi';
-import { useSequentialUpdateLevels } from '../hooks/useSequentialUpdateLevels';
+import { useBatchUpdateLevels } from '../hooks/useBatchUpdateLevels';
 import { useLoadBlockchainProgress } from '../hooks/useLoadBlockchainProgress';
 import { getUnsavedLevels } from '../utils/unsavedProgress';
 import { ProgressData } from '../types';
@@ -26,7 +27,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
   className = '',
 }) => {
   const { isConnected } = useAccount();
-  const { updateLevels, isPending, error, isSuccess, progress, reset, hash } = useSequentialUpdateLevels();
+  const { batchUpdate, isPending, error, isSuccess, hasPaymaster, reset, id } = useBatchUpdateLevels();
   const { progress: blockchainProgress, isLoading: isLoadingBlockchain } = useLoadBlockchainProgress();
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -58,14 +59,14 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
     );
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setIsSaving(true);
     setShowSuccess(false);
     setShowError(null);
     reset();
     
     try {
-      updateLevels(unsavedData.levels, unsavedData.stars);
+      await batchUpdate(unsavedData.levels, unsavedData.stars);
     } catch (err) {
       console.error('[SaveAllProgressButton] Failed to save progress:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to save progress';
@@ -85,12 +86,12 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
 
   // Handle success - only when transaction is confirmed on blockchain
   useEffect(() => {
-    if (isSuccess && !isPending && hash) {
-      console.log('[SaveAllProgressButton] ✅ Transaction confirmed on blockchain:', hash);
+    if (isSuccess && !isPending && id) {
+      console.log('[SaveAllProgressButton] ✅ Batch transaction confirmed:', id);
       setShowSuccess(true);
       setShowError(null);
       setIsSaving(false);
-      setSavedHash(hash); // Save hash to prevent re-showing button
+      setSavedHash(id); // Save hash to prevent re-showing button
       onSuccess?.();
       
       // Auto-hide after 10 seconds
@@ -101,7 +102,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       
       return () => clearTimeout(timer);
     }
-  }, [isSuccess, isPending, hash, onSuccess]);
+  }, [isSuccess, isPending, id, onSuccess]);
 
   // Handle error
   useEffect(() => {
@@ -149,14 +150,12 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
         onClick={handleSave}
         disabled={isLoading || showSuccess}
         className={`save-all-progress-button ${showSuccess ? 'success' : ''}`}
-        title={`Save ${unsavedData.count} unsaved level${unsavedData.count > 1 ? 's' : ''} to blockchain`}
+        title={`Save ${unsavedData.count} unsaved level${unsavedData.count > 1 ? 's' : ''} to blockchain in a single transaction`}
       >
         {isLoading ? (
           <>
             <span className="save-all-spinner"></span>
-            {progress.total > 0 
-              ? `Saving ${progress.current}/${progress.total}...` 
-              : 'Saving...'}
+            Saving batch...
           </>
         ) : showSuccess ? (
           <>✓ All Saved!</>
@@ -174,7 +173,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       )}
 
       <p className="save-all-info">
-        ⚡ You will pay gas • Saves {unsavedData.count} unsaved level{unsavedData.count > 1 ? 's' : ''}
+        {hasPaymaster ? '⚡ Gas-free' : '⚡ You will pay gas'} • Batch saves {unsavedData.count} level{unsavedData.count > 1 ? 's' : ''} in 1 transaction
       </p>
     </div>
   );
