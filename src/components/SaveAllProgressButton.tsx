@@ -62,16 +62,10 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
     setIsSaving(true);
     setShowSuccess(false);
     setShowError(null);
-    reset(); // Reset previous state
+    reset();
     
     try {
-      console.log('[SaveAllProgressButton] Saving unsaved progress to blockchain...');
-      console.log('[SaveAllProgressButton] Unsaved levels:', unsavedData.levels);
-      console.log('[SaveAllProgressButton] Stars:', unsavedData.stars);
-      
-      // Save only unsaved levels
       updateLevels(unsavedData.levels, unsavedData.stars);
-      console.log('[SaveAllProgressButton] Transaction submitted, waiting for confirmation...');
     } catch (err) {
       console.error('[SaveAllProgressButton] Failed to save progress:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to save progress';

@@ -164,8 +164,8 @@ export function useBatchUpdateLevels(): UseBatchUpdateLevelsResult {
         throw new Error(errorMsg);
       }
 
-      if (levels.length > 300) {
-        const errorMsg = `Too many levels: ${levels.length}. Maximum is 300.`;
+      if (levels.length > 100) {
+        const errorMsg = `Too many levels: ${levels.length}. Maximum is 100.`;
         setLocalError(errorMsg);
         throw new Error(errorMsg);
       }

@@ -1,7 +1,7 @@
 /**
  * useLoadBlockchainProgress Hook
  * 
- * Loads complete progress from blockchain by reading all 300 levels.
+ * Loads complete progress from blockchain by reading all 100 levels.
  * Uses multicall pattern for efficiency.
  */
 
@@ -22,17 +22,17 @@ export interface UseLoadBlockchainProgressResult {
 
 /**
  * Load complete progress from blockchain
- * Reads stars for all 300 levels using multicall for efficiency
+ * Reads stars for all 100 levels using multicall for efficiency
  */
 export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
   const { address, isConnected } = useAccount();
   const contractAddress = getContractAddress();
 
-  // Create array of contracts to read (all 300 levels + total + updated)
+  // Create array of contracts to read (all 100 levels + total + updated)
   const contracts = useMemo(() => {
     if (!address || !isConnected) return [];
 
-    const levelContracts = Array.from({ length: 300 }, (_, i) => ({
+    const levelContracts = Array.from({ length: 100 }, (_, i) => ({
       address: contractAddress,
       abi: MEMORY_MATCH_PROGRESS_ABI,
       functionName: 'getStars' as const,
@@ -91,7 +91,7 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
 
     // Parse level stars from remaining results
     const levelStars = new Map<number, number>();
-    for (let i = 0; i < 300; i++) {
+    for (let i = 0; i < 100; i++) {
       const levelResult = data[i + 2]; // Skip first 2 (total and updated)
       if (levelResult && levelResult.status === 'success') {
         const stars = Number(levelResult.result);

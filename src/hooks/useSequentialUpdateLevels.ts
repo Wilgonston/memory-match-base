@@ -96,8 +96,7 @@ export function useSequentialUpdateLevels(): UseSequentialUpdateLevelsResult {
   // Log transaction confirmation
   useEffect(() => {
     if (isConfirmed && hash) {
-      console.log('[useSequentialUpdateLevels] ✅ Transaction confirmed on blockchain:', hash);
-      console.log('[useSequentialUpdateLevels] Data successfully saved to blockchain');
+      // Transaction confirmed on blockchain
     }
   }, [isConfirmed, hash]);
 

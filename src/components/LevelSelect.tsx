@@ -1,11 +1,9 @@
 /**
  * LevelSelect Component
  * 
- * Displays a grid of level buttons (1-300) with locked/unlocked states.
+ * Displays a grid of level buttons (1-100) with locked/unlocked states.
  * Shows star ratings for completed levels.
  * Provides level selection functionality.
- * 
- * Requirements: 5.1, 5.2, 5.4, 5.5, 6.7, 11.4, 15.7
  */
 
 import React, { useEffect, useState } from 'react';
@@ -224,8 +222,8 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
     );
   };
 
-  // Generate array of level numbers (1-300)
-  const levels = Array.from({ length: 300 }, (_, i) => i + 1);
+  // Generate array of level numbers (1-100)
+  const levels = Array.from({ length: 100 }, (_, i) => i + 1);
 
   return (
     <div className="level-select" role="main" id="main-content">
