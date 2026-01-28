@@ -3,7 +3,6 @@ import {
   Identity,
   Avatar,
   Name,
-  Address,
   EthBalance,
 } from '@coinbase/onchainkit/identity';
 import './IdentityDisplay.css';
@@ -16,7 +15,7 @@ export interface IdentityDisplayProps {
 
 export function IdentityDisplay({
   showBalance = true,
-  hasCopyAddressOnClick = true,
+  hasCopyAddressOnClick = false,
   className = '',
 }: IdentityDisplayProps) {
   const { address } = useAccount();
@@ -35,7 +34,6 @@ export function IdentityDisplay({
         <Avatar className="identity-avatar" />
         <div className="identity-info">
           <Name className="identity-name" />
-          <Address className="identity-address" />
           {showBalance && <EthBalance className="identity-balance" />}
         </div>
       </Identity>

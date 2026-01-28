@@ -115,23 +115,24 @@ export const minikitConfig = {
   miniapp: {
     version: "1",
     name: "Memory Match BASE",
-    subtitle: "Test your memory with BASE projects",
+    subtitle: "Test your memory with BASE ecosystem projects",
     description: "Classic memory card game featuring BASE blockchain ecosystem projects. Match pairs, complete 100 levels, and master the BASE ecosystem!",
     screenshotUrls: [
-      `${ROOT_URL}/screenshots/gameplay-improved.svg`,
-      `${ROOT_URL}/screenshots/level-select-improved.svg`
+      `${ROOT_URL}/assets/miniapp/screenshot-1-gameplay.png`,
+      `${ROOT_URL}/assets/miniapp/screenshot-2-level-select.png`,
+      `${ROOT_URL}/assets/miniapp/screenshot-3-victory.png`
     ],
-    iconUrl: `${ROOT_URL}/assets/miniapp/icon-512-improved.svg`,
+    iconUrl: `${ROOT_URL}/assets/miniapp/icon-1024.png`,
     splashImageUrl: `${ROOT_URL}/assets/miniapp/splash-improved.svg`,
     splashBackgroundColor: "#0052FF", // BASE blue
     homeUrl: ROOT_URL,
     primaryCategory: "games",
     tags: ["memory", "game", "base", "crypto", "puzzle", "blockchain", "web3"],
     heroImageUrl: `${ROOT_URL}/assets/miniapp/hero-improved.svg`,
-    tagline: "Master the BASE ecosystem through memory!",
+    tagline: "Master the BASE ecosystem through memory",
     ogTitle: "Memory Match BASE - Blockchain Memory Game",
     ogDescription: "Test your memory with BASE blockchain projects. 100 levels of crypto fun!",
-    ogImageUrl: `${ROOT_URL}/assets/miniapp/og-image-improved.svg`,
+    ogImageUrl: `${ROOT_URL}/assets/miniapp/cover-1200x630.png`,
     // Webhook URL for Mini App events (optional)
     webhookUrl: `${ROOT_URL}/api/webhook`,
   },

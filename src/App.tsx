@@ -14,6 +14,7 @@ import { Wallet } from '@coinbase/onchainkit/wallet';
 import { LoginScreen } from './components/LoginScreen';
 import { LevelSelect } from './components/LevelSelect';
 import { GameBoard } from './components/GameBoard';
+import { WelcomeScreen } from './components/WelcomeScreen';
 import { Web3ErrorBoundary } from './components/Web3ErrorBoundary';
 import { LoadingIndicator } from './components/LoadingIndicator';
 import { SyncIndicator } from './components/SyncIndicator';
@@ -53,6 +54,25 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [hasLoadedBlockchainProgress, setHasLoadedBlockchainProgress] = useState(false);
   const [isLoadingBlockchainProgress, setIsLoadingBlockchainProgress] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  /**
+   * Check if user has seen welcome screen before
+   */
+  useEffect(() => {
+    const hasSeenWelcome = localStorage.getItem('hasSeenWelcome');
+    if (!hasSeenWelcome) {
+      setShowWelcome(true);
+    }
+  }, []);
+
+  /**
+   * Handle welcome screen dismissal
+   */
+  const handleWelcomeDismiss = useCallback(() => {
+    localStorage.setItem('hasSeenWelcome', 'true');
+    setShowWelcome(false);
+  }, []);
 
   /**
    * Validate configuration on mount
@@ -207,6 +227,9 @@ function App() {
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>
+
+        {/* Welcome screen - shown on first visit */}
+        {showWelcome && <WelcomeScreen onDismiss={handleWelcomeDismiss} />}
 
         {/* Network blocker - blocks UI if on wrong network */}
         <NetworkBlocker />

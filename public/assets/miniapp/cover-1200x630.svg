@@ -1,0 +1,55 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <rect width="1200" height="630" fill="url(#coverGradient)"/>
+  
+  <defs>
+    <linearGradient id="coverGradient" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0052FF"/>
+      <stop offset="50%" stop-color="#0066FF"/>
+      <stop offset="100%" stop-color="#0052FF"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Decorative grid pattern -->
+  <g opacity="0.1">
+    <line x1="0" y1="157.5" x2="1200" y2="157.5" stroke="white" stroke-width="1"/>
+    <line x1="0" y1="315" x2="1200" y2="315" stroke="white" stroke-width="1"/>
+    <line x1="0" y1="472.5" x2="1200" y2="472.5" stroke="white" stroke-width="1"/>
+    <line x1="300" y1="0" x2="300" y2="630" stroke="white" stroke-width="1"/>
+    <line x1="600" y1="0" x2="600" y2="630" stroke="white" stroke-width="1"/>
+    <line x1="900" y1="0" x2="900" y2="630" stroke="white" stroke-width="1"/>
+  </g>
+  
+  <!-- Memory cards showcase -->
+  <g transform="translate(100, 150)">
+    <!-- Card 1 -->
+    <rect x="0" y="0" width="140" height="200" rx="15" fill="white" opacity="0.95"/>
+    <rect x="15" y="15" width="110" height="110" rx="8" fill="#0052FF"/>
+    <circle cx="70" cy="70" r="30" fill="white"/>
+    
+    <!-- Card 2 -->
+    <rect x="180" y="0" width="140" height="200" rx="15" fill="white" opacity="0.95"/>
+    <rect x="195" y="15" width="110" height="110" rx="8" fill="#00D4FF"/>
+    <circle cx="250" cy="70" r="30" fill="white"/>
+    
+    <!-- Card 3 -->
+    <rect x="360" y="0" width="140" height="200" rx="15" fill="white" opacity="0.95"/>
+    <rect x="375" y="15" width="110" height="110" rx="8" fill="#0052FF"/>
+    <circle cx="430" cy="70" r="30" fill="white"/>
+  </g>
+  
+  <!-- Title and tagline -->
+  <text x="650" y="250" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="white">Memory Match</text>
+  <text x="650" y="320" font-family="Arial, sans-serif" font-size="48" font-weight="600" fill="rgba(255,255,255,0.9)">BASE Edition</text>
+  
+  <!-- Subtitle -->
+  <text x="650" y="400" font-family="Arial, sans-serif" font-size="32" fill="rgba(255,255,255,0.85)">Test your memory with</text>
+  <text x="650" y="440" font-family="Arial, sans-serif" font-size="32" fill="rgba(255,255,255,0.85)">BASE ecosystem projects</text>
+  
+  <!-- Features -->
+  <g transform="translate(650, 480)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="24" fill="rgba(255,255,255,0.8)">✓ 100 Challenging Levels</text>
+    <text x="0" y="35" font-family="Arial, sans-serif" font-size="24" fill="rgba(255,255,255,0.8)">✓ Gasless Transactions</text>
+    <text x="0" y="70" font-family="Arial, sans-serif" font-size="24" fill="rgba(255,255,255,0.8)">✓ On-chain Progress</text>
+  </g>
+</svg>
