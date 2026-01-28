@@ -1,6 +1,0 @@
-<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-  <rect width="200" height="200" fill="#059669"/>
-  <circle cx="100" cy="100" r="60" fill="none" stroke="#FFFFFF" stroke-width="8"/>
-  <path d="M 70 100 L 90 120 L 130 80" stroke="#FFFFFF" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="100" y="175" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Backed Finance</text>
-</svg>

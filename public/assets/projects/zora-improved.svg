@@ -1,6 +1,0 @@
-<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-  <rect width="200" height="200" rx="40" fill="#000000"/>
-  <circle cx="100" cy="100" r="60" fill="white"/>
-  <path d="M 70 85 L 100 115 L 130 85" stroke="black" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="100" y="170" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white" text-anchor="middle">ZORA</text>
-</svg>

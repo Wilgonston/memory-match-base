@@ -46,8 +46,8 @@ export interface GameState {
 export interface LevelConfig {
   /** Level number */
   level: number;
-  /** Grid dimensions (4x4, 6x6, 8x8) */
-  gridSize: 4 | 6 | 8;
+  /** Grid dimensions (4x4, 6x6, 8x8, 10x10) */
+  gridSize: 4 | 6 | 8 | 10;
   /** Time limit in seconds */
   timeLimit: number;
   /** Moves for 3 stars */
