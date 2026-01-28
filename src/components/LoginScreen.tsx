@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useAccount, useConnect, useDisconnect, useSignMessage, useSwitchChain, useChainId } from 'wagmi';
 import { base } from 'wagmi/chains';
-import { Identity, Avatar, Name } from '@coinbase/onchainkit/identity';
+import { Avatar } from '@coinbase/onchainkit/identity';
+import { useBasename } from '../hooks/useBasename';
 import { setAuthentication } from '../utils/auth';
 import './LoginScreen.css';
 
@@ -16,6 +17,7 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
   const { disconnect } = useDisconnect();
   const { signMessageAsync } = useSignMessage();
   const { switchChain } = useSwitchChain();
+  const { basename } = useBasename(address);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showConnectors, setShowConnectors] = useState(false);
@@ -285,10 +287,12 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
                   Smart Wallet Connected
                 </p>
                 <div className="login-identity">
-                  <Identity address={address} className="login-identity-container">
-                    <Avatar className="login-avatar" />
-                    <Name className="login-name" />
-                  </Identity>
+                  <div className="login-identity-container">
+                    <Avatar address={address} className="login-avatar" />
+                    <span className="login-name">
+                      {basename || 'User'}
+                    </span>
+                  </div>
                 </div>
                 <p className="login-network-info">
                   Current Network: {chainId === 8453 ? 'Base Mainnet ✅' : 
