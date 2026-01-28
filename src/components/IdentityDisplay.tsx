@@ -1,10 +1,9 @@
 import { useAccount } from 'wagmi';
 import {
-  Identity,
   Avatar,
-  Name,
   EthBalance,
 } from '@coinbase/onchainkit/identity';
+import { useBasename } from '../hooks/useBasename';
 import './IdentityDisplay.css';
 
 export interface IdentityDisplayProps {
@@ -19,6 +18,7 @@ export function IdentityDisplay({
   className = '',
 }: IdentityDisplayProps) {
   const { address } = useAccount();
+  const { basename } = useBasename(address);
 
   if (!address) {
     return null;
@@ -26,17 +26,13 @@ export function IdentityDisplay({
 
   return (
     <div className={`identity-display ${className}`}>
-      <Identity
-        address={address}
-        className="identity-container"
-        hasCopyAddressOnClick={hasCopyAddressOnClick}
-      >
-        <Avatar className="identity-avatar" />
+      <div className="identity-container">
+        <Avatar address={address} className="identity-avatar" />
         <div className="identity-info">
-          <Name className="identity-name" />
-          {showBalance && <EthBalance className="identity-balance" />}
+          <span className="identity-name">{basename || 'User'}</span>
+          {showBalance && <EthBalance address={address} className="identity-balance" />}
         </div>
-      </Identity>
+      </div>
     </div>
   );
 }
