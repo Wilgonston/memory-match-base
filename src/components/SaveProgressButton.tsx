@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { Address } from 'viem';
+import React, { useState, useEffect } from 'react';
+import { useAccount } from 'wagmi';
 import { getContractAddress, MEMORY_MATCH_PROGRESS_ABI } from '../types/blockchain';
 import { useLoadBlockchainProgress } from '../hooks/useLoadBlockchainProgress';
+import { usePaymasterTransaction } from '../hooks/usePaymasterTransaction';
 import { playSound } from '../utils/soundManager';
 import './SaveProgressButton.css';
 
@@ -24,12 +24,37 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
   const { address, isConnected } = useAccount();
   const contractAddress = getContractAddress();
   const { progress: onChainProgress, isLoading: isLoadingBlockchain } = useLoadBlockchainProgress();
-  const [isSaving, setIsSaving] = useState(false);
 
-  const { writeContract, data: hash, isPending, error: writeError } = useWriteContract();
-  
-  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
-    hash,
+  // Use Paymaster transaction hook
+  const {
+    sendTransaction,
+    isPending,
+    isSuccess,
+    error,
+    hasPaymaster,
+  } = usePaymasterTransaction({
+    address: contractAddress,
+    abi: MEMORY_MATCH_PROGRESS_ABI,
+    functionName: 'update',
+    args: [level, stars],
+    onSuccess: (hash) => {
+      console.log('[SaveProgressButton] Transaction confirmed:', hash);
+      playSound('transaction-confirmed');
+      onSuccess?.();
+    },
+    onError: (errorMsg) => {
+      console.error('[SaveProgressButton] Transaction error:', errorMsg);
+      
+      // User-friendly error messages
+      if (errorMsg.includes('User rejected') || errorMsg.includes('User denied')) {
+        onError?.('Transaction cancelled');
+      } else if (errorMsg.includes('insufficient funds')) {
+        onError?.('Insufficient funds for gas');
+      } else if (!errorMsg.includes('wallet_getCapabilities') && 
+                 !errorMsg.includes('wallet_sendCalls')) {
+        onError?.(errorMsg);
+      }
+    },
   });
 
   if (!isConnected || !address) {
@@ -53,81 +78,24 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
     );
   }
 
-  const handleSave = async () => {
-    try {
-      setIsSaving(true);
-      console.log('[SaveProgressButton] Saving level', level, 'with', stars, 'stars');
-      
-      playSound('transaction-submitted');
-      
-      writeContract({
-        address: contractAddress as Address,
-        abi: MEMORY_MATCH_PROGRESS_ABI,
-        functionName: 'update',
-        args: [level, stars],
-      });
-    } catch (err) {
-      console.error('[SaveProgressButton] Transaction error:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Transaction failed';
-      
-      // User-friendly error messages
-      if (errorMessage.includes('User rejected') || errorMessage.includes('User denied')) {
-        onError?.('Transaction cancelled');
-      } else if (errorMessage.includes('insufficient funds')) {
-        onError?.('Insufficient funds for gas');
-      } else if (!errorMessage.includes('wallet_getCapabilities') && 
-                 !errorMessage.includes('wallet_sendCalls')) {
-        onError?.('Transaction failed. Please try again.');
-      }
-      
-      setIsSaving(false);
-    }
+  const handleSave = () => {
+    console.log('[SaveProgressButton] Saving level', level, 'with', stars, 'stars');
+    playSound('transaction-submitted');
+    sendTransaction();
   };
-
-  // Handle transaction success
-  React.useEffect(() => {
-    if (isSuccess) {
-      console.log('[SaveProgressButton] Transaction confirmed!');
-      playSound('transaction-confirmed');
-      onSuccess?.();
-      setIsSaving(false);
-    }
-  }, [isSuccess, onSuccess]);
-
-  // Handle transaction error
-  React.useEffect(() => {
-    if (writeError) {
-      console.error('[SaveProgressButton] Write error:', writeError);
-      const errorMessage = writeError.message || 'Transaction failed';
-      
-      // User-friendly error messages
-      if (errorMessage.includes('User rejected') || errorMessage.includes('User denied')) {
-        onError?.('Transaction cancelled');
-      } else if (errorMessage.includes('insufficient funds')) {
-        onError?.('Insufficient funds for gas');
-      } else if (!errorMessage.includes('wallet_getCapabilities') && 
-                 !errorMessage.includes('wallet_sendCalls')) {
-        onError?.('Transaction failed. Please try again.');
-      }
-      
-      setIsSaving(false);
-    }
-  }, [writeError, onError]);
-
-  const isLoading = isPending || isConfirming || isSaving;
 
   return (
     <div className={`save-progress-button-container ${className}`}>
       <button
         onClick={handleSave}
-        disabled={isLoading || isSuccess}
+        disabled={isPending || isSuccess}
         className="save-progress-button"
-        title="Save progress to blockchain"
+        title={hasPaymaster ? "Save progress to blockchain (Gas-Free)" : "Save progress to blockchain"}
       >
-        {isLoading ? (
+        {isPending ? (
           <>
             <span className="save-progress-spinner"></span>
-            {isConfirming ? 'Confirming...' : 'Saving...'}
+            Saving...
           </>
         ) : isSuccess ? (
           <>✓ Saved!</>
@@ -136,18 +104,18 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
         )}
       </button>
 
-      {writeError && !writeError.message.includes('wallet_getCapabilities') && !writeError.message.includes('wallet_sendCalls') && (
+      {error && !error.includes('wallet_getCapabilities') && !error.includes('wallet_sendCalls') && (
         <p className="save-progress-error">
-          ⚠️ {writeError.message.includes('User rejected') || writeError.message.includes('User denied')
+          ⚠️ {error.includes('User rejected') || error.includes('User denied')
             ? 'Transaction cancelled'
-            : writeError.message.includes('insufficient funds')
+            : error.includes('insufficient funds')
             ? 'Insufficient funds for gas'
             : 'Transaction failed. Please try again.'}
         </p>
       )}
 
       <p className="gas-free-info">
-        ⚡ You will pay gas for this transaction
+        {hasPaymaster ? '⚡ Gas-free transaction (sponsored)' : '⚡ You will pay gas for this transaction'}
       </p>
     </div>
   );

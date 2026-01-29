@@ -38,3 +38,6 @@ export type { UseSpendPermissionsReturn } from './useSpendPermissions';
 export { useMagicSpend } from './useMagicSpend';
 
 export { useBatchTransactions } from './useBatchTransactions';
+
+export { usePaymasterTransaction } from './usePaymasterTransaction';
+export type { UsePaymasterTransactionResult, UsePaymasterTransactionOptions } from './usePaymasterTransaction';

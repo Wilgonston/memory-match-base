@@ -79,26 +79,37 @@
 /* Mobile Responsive (320px - 767px) */
 @media (max-width: 767px) {
   .pause-button {
-    padding: 10px 16px;
-    font-size: 0.875rem;
-    gap: 6px;
+    padding: 12px 18px;
+    font-size: 0.9375rem;
+    gap: 8px;
+    min-height: 48px; /* Larger touch target */
+    flex: 1;
   }
 
   .pause-icon {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
   }
 
-  /* Hide text on very small screens, show icon only */
+  .button-text {
+    font-size: 0.9375rem;
+  }
+
+  /* Keep text visible on mobile for better UX */
   @media (max-width: 360px) {
-    .button-text {
-      display: none;
+    .pause-button {
+      padding: 10px 14px;
+      font-size: 0.875rem;
+      min-height: 44px;
     }
 
-    .pause-button {
-      padding: 12px;
-      width: 44px;
-      height: 44px;
+    .pause-icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    .button-text {
+      font-size: 0.875rem;
     }
   }
 }
