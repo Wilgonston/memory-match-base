@@ -115,8 +115,13 @@
 /* Responsive sizing */
 @media (max-width: 767px) {
   .card-face {
-    border-radius: 8px;
-    padding: 8px;
+    border-radius: 6px;
+    padding: 6px;
+  }
+
+  .card-face img {
+    max-width: 90%;
+    max-height: 90%;
   }
 }
 
@@ -130,7 +135,7 @@
 /* Ensure minimum touch target size on mobile */
 @media (max-width: 767px) {
   .memory-card {
-    min-width: 44px;
-    min-height: 44px;
+    min-width: 40px;
+    min-height: 40px;
   }
 }

@@ -107,53 +107,60 @@
 /* Mobile Responsive (320px - 767px) */
 @media (max-width: 767px) {
   .game-header {
-    padding: 10px 8px;
+    padding: 8px 6px;
   }
 
   .header-container {
-    gap: 6px;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .header-item {
     flex-shrink: 0;
-    min-width: 60px;
+    min-width: 50px;
+    gap: 2px;
   }
 
   .header-label {
-    font-size: 0.625rem;
+    font-size: 0.5rem;
     white-space: nowrap;
   }
 
   .header-value {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
   }
 
-  /* Stack vertically on very small screens */
+  /* Hide labels on very small screens, show only values */
   @media (max-width: 360px) {
-    .header-container {
-      flex-direction: column;
-      gap: 8px;
-      overflow-x: visible;
+    .header-label {
+      display: none;
     }
 
     .header-item {
-      flex-direction: row;
-      justify-content: space-between;
-      width: 100%;
-      max-width: 100%;
-      min-width: unset;
-    }
-
-    .header-label {
-      font-size: 0.75rem;
+      min-width: 40px;
     }
 
     .header-value {
-      font-size: 1.25rem;
+      font-size: 1rem;
     }
+  }
+
+  /* Make wallet/network/sound buttons smaller */
+  .wallet-display,
+  .network-display,
+  .sound-display {
+    transform: scale(0.85);
+  }
+
+  .logout-button {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.7rem;
+  }
+
+  .logout-icon {
+    width: 14px;
+    height: 14px;
   }
 }
 

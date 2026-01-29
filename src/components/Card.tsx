@@ -60,25 +60,29 @@ export const Card: React.FC<CardProps> = ({ card, onClick, disabled }) => {
       <div className="card-inner">
         {/* Card Back */}
         <div className="card-face card-back">
-          <img 
-            src="/assets/projects/card-back-improved.svg" 
-            alt="Card back"
-            onError={(e) => {
-              // Fallback to original if improved version fails
-              e.currentTarget.src = '/assets/projects/card-back.svg';
-            }}
-          />
+          {/* Using CSS gradient background instead of image */}
         </div>
         
         {/* Card Front */}
         <div className="card-face card-front">
-          <img 
-            src={project?.imagePath || '/assets/projects/fallback.svg'}
-            alt={project?.name || 'Unknown project'}
-            onError={(e) => {
-              e.currentTarget.src = '/assets/projects/fallback.svg';
-            }}
-          />
+          {project?.imagePath ? (
+            <img 
+              src={project.imagePath}
+              alt={project.name || 'Unknown project'}
+              loading="lazy"
+              onError={(e) => {
+                // Hide broken image
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+          ) : (
+            <div style={{ 
+              width: '100%', 
+              height: '100%', 
+              background: 'linear-gradient(135deg, #0052FF 0%, #0041CC 100%)',
+              borderRadius: '8px'
+            }} />
+          )}
         </div>
       </div>
     </div>
