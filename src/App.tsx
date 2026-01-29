@@ -8,7 +8,7 @@
  * Requirements: All
  */
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useAccount } from 'wagmi';
 import { Wallet } from '@coinbase/onchainkit/wallet';
 import { LoginScreen } from './components/LoginScreen';
@@ -21,6 +21,8 @@ import { NetworkBlocker } from './components/NetworkBlocker';
 import { useProgress } from './hooks/useProgress';
 import { useGameState } from './hooks/useGameState';
 import { useSyncManager } from './hooks/useSyncManager';
+import { useLoadBlockchainProgress } from './hooks/useLoadBlockchainProgress';
+import { mergeProgress } from './utils/progressSync';
 import { calculateStars } from './utils/scoring';
 import { getLevelConfig } from './utils/levelConfig';
 import { initializeSounds } from './utils/soundManager';
@@ -44,6 +46,9 @@ function App() {
 
   // Sync manager for blockchain synchronization (manual only)
   const { syncToBlockchain } = useSyncManager();
+  
+  // Load blockchain progress (but don't use it directly to avoid loops)
+  const { progress: blockchainProgress, isLoading: isLoadingBlockchain } = useLoadBlockchainProgress();
 
   // Game state management hook
   const { state: gameState, dispatch } = useGameState();
@@ -52,6 +57,7 @@ function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('login');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
+  const hasLoadedBlockchainRef = useRef(false);
 
   /**
    * Check if user has seen welcome screen before
@@ -101,6 +107,57 @@ function App() {
       clearAuthentication();
     }
   }, [address, isConnected]);
+
+  /**
+   * Load and merge blockchain progress ONCE when authenticated
+   */
+  useEffect(() => {
+    // Only load once
+    if (hasLoadedBlockchainRef.current) {
+      return;
+    }
+
+    // Wait for authentication and blockchain data to load
+    if (!isConnected || !address || !isAuthenticated || isLoadingBlockchain) {
+      return;
+    }
+
+    // No blockchain progress - skip
+    if (!blockchainProgress) {
+      console.log('[App] No blockchain progress found');
+      hasLoadedBlockchainRef.current = true;
+      return;
+    }
+
+    // Merge blockchain with local
+    try {
+      const merged = mergeProgress(progress, blockchainProgress);
+      
+      const hasChanges = 
+        merged.completedLevels.size !== progress.completedLevels.size ||
+        merged.levelStars.size !== progress.levelStars.size ||
+        merged.highestUnlockedLevel !== progress.highestUnlockedLevel;
+      
+      if (hasChanges) {
+        console.log('[App] Merging blockchain progress with local');
+        updateProgress(() => merged);
+      }
+      
+      hasLoadedBlockchainRef.current = true;
+    } catch (error) {
+      console.error('[App] Failed to merge blockchain progress:', error);
+      hasLoadedBlockchainRef.current = true;
+    }
+  }, [isConnected, address, isAuthenticated, blockchainProgress, isLoadingBlockchain]);
+
+  /**
+   * Reset loaded flag when wallet disconnects
+   */
+  useEffect(() => {
+    if (!isConnected || !address) {
+      hasLoadedBlockchainRef.current = false;
+    }
+  }, [isConnected, address]);
 
   /**
    * Handle successful authentication
@@ -177,11 +234,19 @@ function App() {
         {/* Network blocker - blocks UI if on wrong network */}
         <NetworkBlocker />
 
-        {currentScreen === 'login' && (
+        {/* Loading blockchain progress */}
+        {isLoadingBlockchain && isAuthenticated && (
+          <LoadingIndicator
+            operation="Loading progress from blockchain"
+            estimatedTime={3}
+          />
+        )}
+
+        {!isLoadingBlockchain && currentScreen === 'login' && (
           <LoginScreen onAuthenticated={handleAuthenticated} />
         )}
 
-        {currentScreen === 'level-select' && isAuthenticated && (
+        {!isLoadingBlockchain && currentScreen === 'level-select' && isAuthenticated && (
           <Wallet>
             <LevelSelect
               progressData={progress}
@@ -191,7 +256,7 @@ function App() {
           </Wallet>
         )}
 
-        {currentScreen === 'game' && isAuthenticated && (
+        {!isLoadingBlockchain && currentScreen === 'game' && isAuthenticated && (
           <Wallet>
             <GameBoard
               gameState={gameState}
