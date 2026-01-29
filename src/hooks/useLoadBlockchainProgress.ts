@@ -1,14 +1,12 @@
 /**
  * useLoadBlockchainProgress Hook
  * 
- * Optimized blockchain progress loading:
- * 1. First checks getTotal to see if user has any progress
- * 2. Only loads individual levels if total > 0
- * 3. Uses multicall for efficiency when loading levels
+ * Loads complete progress from blockchain by reading all 100 levels.
+ * Uses multicall pattern for efficiency.
  */
 
-import { useAccount, useReadContract, useReadContracts } from 'wagmi';
-import { useMemo, useState, useEffect } from 'react';
+import { useAccount, useReadContracts } from 'wagmi';
+import { useMemo } from 'react';
 import { 
   MEMORY_MATCH_PROGRESS_ABI, 
   getContractAddress,
@@ -24,161 +22,90 @@ export interface UseLoadBlockchainProgressResult {
 
 /**
  * Load complete progress from blockchain
- * Optimized to check total first, then only load levels if needed
+ * Reads stars for all 100 levels using multicall for efficiency
  */
 export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
   const { address, isConnected } = useAccount();
   const contractAddress = getContractAddress();
-  const [shouldLoadLevels, setShouldLoadLevels] = useState(false);
 
-  console.log('[useLoadBlockchainProgress] 🚀 Hook called:', {
-    address,
-    isConnected,
-    contractAddress,
-  });
+  // Create array of contracts to read (all 100 levels + total + updated)
+  const contracts = useMemo(() => {
+    if (!address || !isConnected) return [];
 
-  // Step 1: Check total stars first
-  const { 
-    data: totalData, 
-    isLoading: isLoadingTotal, 
-    error: totalError,
-    refetch: refetchTotal 
-  } = useReadContract({
-    address: contractAddress,
-    abi: MEMORY_MATCH_PROGRESS_ABI,
-    functionName: 'getTotal',
-    args: address ? [address] : undefined,
-    query: {
-      enabled: isConnected && !!address,
-      staleTime: 10 * 60_000, // Cache for 10 minutes
-      gcTime: 30 * 60_000, // Keep in cache for 30 minutes
-    },
-  });
-
-  // Debug logging for total
-  useEffect(() => {
-    console.log('[useLoadBlockchainProgress] 🔍 Total check:', {
-      address,
-      isConnected,
-      contractAddress,
-      totalData,
-      isLoadingTotal,
-      totalError: totalError?.message,
-    });
-  }, [address, isConnected, contractAddress, totalData, isLoadingTotal, totalError]);
-
-  // Step 2: Get updated timestamp
-  const { 
-    data: updatedData, 
-    isLoading: isLoadingUpdated,
-    error: updatedError 
-  } = useReadContract({
-    address: contractAddress,
-    abi: MEMORY_MATCH_PROGRESS_ABI,
-    functionName: 'getUpdated',
-    args: address ? [address] : undefined,
-    query: {
-      enabled: isConnected && !!address && shouldLoadLevels,
-      staleTime: 10 * 60_000,
-      gcTime: 30 * 60_000,
-    },
-  });
-
-  // Determine if we should load individual levels
-  useEffect(() => {
-    if (totalData !== undefined) {
-      const total = Number(totalData);
-      console.log('[useLoadBlockchainProgress] 📊 Total stars on blockchain:', total);
-      console.log('[useLoadBlockchainProgress] Should load levels:', total > 0);
-      setShouldLoadLevels(total > 0);
-    }
-  }, [totalData]);
-
-  // Step 3: Only load individual levels if total > 0
-  const levelContracts = useMemo(() => {
-    if (!address || !isConnected || !shouldLoadLevels) return [];
-
-    return Array.from({ length: 100 }, (_, i) => ({
+    const levelContracts = Array.from({ length: 100 }, (_, i) => ({
       address: contractAddress,
       abi: MEMORY_MATCH_PROGRESS_ABI,
       functionName: 'getStars' as const,
       args: [address, (i + 1) as number],
     }));
-  }, [address, isConnected, contractAddress, shouldLoadLevels]);
 
-  const { 
-    data: levelsData, 
-    isLoading: isLoadingLevels, 
-    error: levelsError 
-  } = useReadContracts({
-    contracts: levelContracts,
+    return [
+      // First get total to check if user has any progress
+      {
+        address: contractAddress,
+        abi: MEMORY_MATCH_PROGRESS_ABI,
+        functionName: 'getTotal' as const,
+        args: [address],
+      },
+      // Then get updated timestamp
+      {
+        address: contractAddress,
+        abi: MEMORY_MATCH_PROGRESS_ABI,
+        functionName: 'getUpdated' as const,
+        args: [address],
+      },
+      // Then all level stars
+      ...levelContracts,
+    ];
+  }, [address, isConnected, contractAddress]);
+
+  // Use multicall to read all data at once
+  const { data, isLoading, error, refetch } = useReadContracts({
+    contracts,
     query: {
-      enabled: shouldLoadLevels && levelContracts.length > 0,
-      staleTime: 10 * 60_000,
-      gcTime: 30 * 60_000,
-      retry: 0,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      refetchOnMount: false,
+      enabled: isConnected && !!address && contracts.length > 0,
+      staleTime: 10_000, // Cache for 10 seconds
+      gcTime: 30_000,
     },
   });
 
-  // Combine loading states
-  const isLoading = isLoadingTotal || (shouldLoadLevels && (isLoadingUpdated || isLoadingLevels));
-  const error = totalError || updatedError || levelsError;
-
   // Parse results into OnChainProgress
   const progress = useMemo((): OnChainProgress | null => {
-    console.log('[useLoadBlockchainProgress] 🔄 Parsing progress:', {
-      totalData,
-      updatedData,
-      levelsDataLength: levelsData?.length,
-      shouldLoadLevels,
-    });
+    if (!data || data.length < 2) return null;
 
-    if (totalData === undefined) {
-      console.log('[useLoadBlockchainProgress] ❌ No totalData');
+    const totalResult = data[0];
+    const updatedResult = data[1];
+
+    // Check if results are valid
+    if (totalResult.status !== 'success' || updatedResult.status !== 'success') {
       return null;
     }
 
-    const total = Number(totalData);
+    const total = Number(totalResult.result);
+    const updated = Number(updatedResult.result);
 
-    // If no progress on blockchain, return null immediately
-    if (total === 0) {
-      console.log('[useLoadBlockchainProgress] ℹ️ No progress on blockchain (total = 0)');
+    // If no progress on blockchain, return null
+    if (total === 0 && updated === 0) {
       return null;
     }
 
-    // If we haven't loaded levels yet, return null
-    if (!levelsData || !updatedData) {
-      console.log('[useLoadBlockchainProgress] ⏳ Waiting for levels data...', {
-        hasLevelsData: !!levelsData,
-        hasUpdatedData: !!updatedData,
-      });
-      return null;
-    }
-
-    const updated = Number(updatedData);
-
-    // Parse level stars from results
+    // Parse level stars from remaining results
     const levelStars = new Map<number, number>();
-    for (let i = 0; i < levelsData.length; i++) {
-      const levelResult = levelsData[i];
+    for (let i = 0; i < 100; i++) {
+      const levelResult = data[i + 2]; // Skip first 2 (total and updated)
       if (levelResult && levelResult.status === 'success') {
         const stars = Number(levelResult.result);
         if (stars > 0) {
           levelStars.set(i + 1, stars);
-          console.log(`[useLoadBlockchainProgress] ⭐ Level ${i + 1}: ${stars} stars`);
         }
       }
     }
 
-    console.log('[useLoadBlockchainProgress] ✅ Loaded from blockchain:', {
+    console.log('[useLoadBlockchainProgress] Loaded from blockchain:', {
       total,
       updated,
       levelsWithStars: levelStars.size,
       levels: Array.from(levelStars.keys()),
-      allLevelStars: Array.from(levelStars.entries()),
     });
 
     return {
@@ -186,12 +113,7 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
       updated,
       levelStars,
     };
-  }, [totalData, updatedData, levelsData, shouldLoadLevels]);
-
-  // Refetch function
-  const refetch = () => {
-    refetchTotal();
-  };
+  }, [data]);
 
   return {
     progress,
