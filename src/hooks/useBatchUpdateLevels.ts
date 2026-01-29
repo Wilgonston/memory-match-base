@@ -17,6 +17,7 @@ import {
   type TransactionStatus 
 } from '../types/blockchain';
 import { getChainId } from '../utils/network';
+import { paymasterUrl } from '../config/onchainkit';
 
 /**
  * Hook return type
@@ -99,13 +100,6 @@ export function useBatchUpdateLevels(): UseBatchUpdateLevelsResult {
       capabilitiesForChain?.['paymasterService'] &&
       capabilitiesForChain['paymasterService'].supported
     ) {
-      const apiKey = import.meta.env.VITE_ONCHAINKIT_API_KEY || '';
-      console.log('[Paymaster] API Key present:', !!apiKey);
-      
-      const paymasterUrl = apiKey 
-        ? `https://api.developer.coinbase.com/rpc/v1/base/${apiKey}`
-        : '';
-      
       if (paymasterUrl) {
         console.log('[Paymaster] ✅ Paymaster service configured:', paymasterUrl.substring(0, 50) + '...');
         return {
@@ -114,7 +108,7 @@ export function useBatchUpdateLevels(): UseBatchUpdateLevelsResult {
           },
         };
       } else {
-        console.log('[Paymaster] ❌ No API key configured');
+        console.log('[Paymaster] ❌ No Paymaster URL configured (missing VITE_ONCHAINKIT_API_KEY)');
       }
     } else {
       console.log('[Paymaster] ❌ Paymaster service not supported by wallet');
