@@ -112,21 +112,36 @@ function App() {
           setIsLoadingBlockchainProgress(true);
           
           // Try to merge with blockchain progress
+          // mergeFromBlockchain handles errors internally and returns local progress on error
           const mergedProgress = await mergeFromBlockchain(progress);
+          
           console.log('[App] Merged progress:', {
             completedLevels: Array.from(mergedProgress.completedLevels),
             highestUnlockedLevel: mergedProgress.highestUnlockedLevel,
             levelStarsCount: mergedProgress.levelStars.size,
           });
           
-          updateProgress(() => mergedProgress);
+          // Only update if there are actual changes
+          const hasChanges = 
+            mergedProgress.completedLevels.size !== progress.completedLevels.size ||
+            mergedProgress.levelStars.size !== progress.levelStars.size ||
+            mergedProgress.highestUnlockedLevel !== progress.highestUnlockedLevel;
+          
+          if (hasChanges) {
+            console.log('[App] Updating progress with merged data');
+            updateProgress(() => mergedProgress);
+          } else {
+            console.log('[App] No changes detected, keeping local progress');
+          }
+          
           setHasLoadedBlockchainProgress(true);
           
           console.log('[App] Progress loaded from blockchain successfully');
           console.log('[App] Use "Save to Blockchain" button to sync local progress to blockchain');
         } catch (error) {
-          console.error('Failed to load blockchain progress:', error);
-          // Continue with local progress on error
+          console.error('[App] Failed to load blockchain progress:', error);
+          // Continue with local progress on error - don't throw
+          setHasLoadedBlockchainProgress(true);
         } finally {
           setIsLoadingBlockchainProgress(false);
         }
@@ -134,7 +149,7 @@ function App() {
     };
 
     loadBlockchainProgress();
-  }, [isConnected, address, isAuthenticated, hasLoadedBlockchainProgress, mergeFromBlockchain, progress, updateProgress, syncToBlockchain]);
+  }, [isConnected, address, isAuthenticated, hasLoadedBlockchainProgress, mergeFromBlockchain, progress, updateProgress]);
 
   /**
    * Reset blockchain progress loaded flag when wallet disconnects

@@ -109,44 +109,57 @@ export function mergeProgress(
   local: ProgressData,
   onChain: OnChainProgress
 ): ProgressData {
-  const completedLevels = new Set<number>();
-  const levelStars = new Map<number, number>();
+  try {
+    const completedLevels = new Set<number>();
+    const levelStars = new Map<number, number>();
 
-  // Merge level stars, keeping maximum for each level
-  const allLevels = new Set([
-    ...Array.from(local.levelStars.keys()),
-    ...Array.from(onChain.levelStars.keys()),
-  ]);
+    // Merge level stars, keeping maximum for each level
+    const allLevels = new Set([
+      ...Array.from(local.levelStars.keys()),
+      ...Array.from(onChain.levelStars.keys()),
+    ]);
 
-  allLevels.forEach(level => {
-    const localStars = local.levelStars.get(level) || 0;
-    const onChainStars = onChain.levelStars.get(level) || 0;
-    const maxStars = Math.max(localStars, onChainStars);
+    allLevels.forEach(level => {
+      const localStars = local.levelStars.get(level) || 0;
+      const onChainStars = onChain.levelStars.get(level) || 0;
+      const maxStars = Math.max(localStars, onChainStars);
 
-    if (maxStars > 0) {
-      completedLevels.add(level);
-      levelStars.set(level, maxStars);
-    }
-  });
+      if (maxStars > 0) {
+        completedLevels.add(level);
+        levelStars.set(level, maxStars);
+      }
+    });
 
-  // Calculate total stars and highest unlocked level
-  let totalStars = 0;
-  levelStars.forEach(stars => {
-    totalStars += stars;
-  });
+    // Calculate total stars and highest unlocked level
+    let totalStars = 0;
+    levelStars.forEach(stars => {
+      totalStars += stars;
+    });
 
-  // If no levels completed, level 1 should be unlocked
-  // Otherwise, unlock the next level after the highest completed
-  const highestUnlockedLevel = completedLevels.size > 0
-    ? Math.min(Math.max(...Array.from(completedLevels)) + 1, 100)
-    : 1;
+    // If no levels completed, level 1 should be unlocked
+    // Otherwise, unlock the next level after the highest completed
+    const highestUnlockedLevel = completedLevels.size > 0
+      ? Math.min(Math.max(...Array.from(completedLevels)) + 1, 100)
+      : 1;
 
-  return {
-    completedLevels,
-    levelStars,
-    highestUnlockedLevel,
-    soundEnabled: local.soundEnabled, // Preserve local preference
-  };
+    console.log('[mergeProgress] Merge successful:', {
+      localLevels: local.levelStars.size,
+      onChainLevels: onChain.levelStars.size,
+      mergedLevels: levelStars.size,
+      highestUnlockedLevel,
+    });
+
+    return {
+      completedLevels,
+      levelStars,
+      highestUnlockedLevel,
+      soundEnabled: local.soundEnabled, // Preserve local preference
+    };
+  } catch (error) {
+    console.error('[mergeProgress] Error during merge, returning local progress:', error);
+    // On any error, return local progress unchanged
+    return local;
+  }
 }
 
 /**
