@@ -115,7 +115,11 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
   // Handle success - only when transaction is confirmed on blockchain
   useEffect(() => {
     if (isSuccess && !isPending && hash) {
-      console.log('[SaveAllProgressButton] ✅ Transaction confirmed on blockchain:', hash);
+      console.log('[SaveAllProgressButton] ✅ Transaction confirmed on blockchain');
+      console.log('[SaveAllProgressButton] Transaction ID:', hash);
+      console.log('[SaveAllProgressButton] Note: This is a UserOperation (Account Abstraction)');
+      console.log('[SaveAllProgressButton] View on JiffyScan:', `https://jiffyscan.xyz/userOpHash/${hash}?network=base`);
+      
       setShowSuccess(true);
       setShowError(null);
       setIsSaving(false);
@@ -159,14 +163,19 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       <div className={`save-all-progress-container ${className}`}>
         <div className="save-all-success-message">
           ✅ Progress saved to blockchain!
-          <a 
-            href={`https://basescan.org/tx/${savedHash}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="tx-link"
-          >
-            View transaction
-          </a>
+          <div className="tx-links">
+            <a 
+              href={`https://jiffyscan.xyz/userOpHash/${savedHash}?network=base`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="tx-link"
+            >
+              View on JiffyScan
+            </a>
+            <span className="tx-note">
+              (Account Abstraction transaction)
+            </span>
+          </div>
         </div>
       </div>
     );
