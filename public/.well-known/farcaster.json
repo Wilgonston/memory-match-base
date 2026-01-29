@@ -13,7 +13,7 @@
     "splashBackgroundColor": "#0052FF",
     "webhookUrl": "https://memory-match-base.vercel.app/api/webhook",
     "subtitle": "Memory game with Base projects",
-    "description": "Classic memory card game featuring Base blockchain ecosystem Match pairs complete 100 levels and save progress onchain",
+    "description": "Classic memory card game featuring Base blockchain ecosystem. Match pairs, complete 100 levels and save progress onchain.",
     "screenshotUrls": [
       "https://memory-match-base.vercel.app/assets/miniapp/screenshot-1-gameplay.png",
       "https://memory-match-base.vercel.app/assets/miniapp/screenshot-2-level-select.png",
@@ -24,7 +24,7 @@
     "heroImageUrl": "https://memory-match-base.vercel.app/assets/miniapp/cover-1200x630.png",
     "tagline": "Master the Base ecosystem",
     "ogTitle": "Memory Match BASE",
-    "ogDescription": "Test your memory with Base blockchain projects Complete 100 levels of fun",
+    "ogDescription": "Test your memory with Base blockchain projects. Complete 100 levels of fun.",
     "ogImageUrl": "https://memory-match-base.vercel.app/assets/miniapp/cover-1200x630.png",
     "noindex": false
   }
