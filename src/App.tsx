@@ -121,62 +121,75 @@ function App() {
       hasBlockchainProgress: !!blockchainProgress,
     });
 
-    // Only load once
+    // Only load once per session
     if (hasLoadedBlockchainRef.current) {
       console.log('[App] Already loaded blockchain progress, skipping');
       return;
     }
 
-    // Wait for authentication and blockchain data to load
-    if (!isConnected || !address || !isAuthenticated || isLoadingBlockchain) {
-      console.log('[App] Waiting for conditions to load blockchain progress');
+    // Wait for authentication
+    if (!isConnected || !address || !isAuthenticated) {
+      console.log('[App] Waiting for authentication');
       return;
     }
 
-    // No blockchain progress - skip
+    // Wait for blockchain data to finish loading
+    if (isLoadingBlockchain) {
+      console.log('[App] Still loading blockchain data...');
+      return;
+    }
+
+    // Mark as loaded (whether we have progress or not)
+    hasLoadedBlockchainRef.current = true;
+
+    // No blockchain progress - nothing to merge
     if (!blockchainProgress) {
-      console.log('[App] No blockchain progress found');
-      hasLoadedBlockchainRef.current = true;
+      console.log('[App] No blockchain progress found - user has no saved progress on chain');
       return;
     }
 
     // Merge blockchain with local
     try {
-      console.log('[App] Blockchain progress found:', {
+      console.log('[App] 📦 Blockchain progress found:', {
+        total: blockchainProgress.total,
         levelStarsCount: blockchainProgress.levelStars.size,
-        levels: Array.from(blockchainProgress.levelStars.keys()),
+        levels: Array.from(blockchainProgress.levelStars.entries()),
       });
       
-      console.log('[App] Local progress:', {
+      console.log('[App] 💾 Local progress:', {
         completedLevels: Array.from(progress.completedLevels),
         levelStarsCount: progress.levelStars.size,
+        levelStars: Array.from(progress.levelStars.entries()),
       });
 
       const merged = mergeProgress(progress, blockchainProgress);
       
-      console.log('[App] Merged progress:', {
+      console.log('[App] 🔀 Merged progress:', {
         completedLevels: Array.from(merged.completedLevels),
         levelStarsCount: merged.levelStars.size,
+        levelStars: Array.from(merged.levelStars.entries()),
+        highestUnlockedLevel: merged.highestUnlockedLevel,
       });
       
+      // Check if merge resulted in any changes
       const hasChanges = 
         merged.completedLevels.size !== progress.completedLevels.size ||
         merged.levelStars.size !== progress.levelStars.size ||
-        merged.highestUnlockedLevel !== progress.highestUnlockedLevel;
+        merged.highestUnlockedLevel !== progress.highestUnlockedLevel ||
+        Array.from(merged.levelStars.entries()).some(([level, stars]) => 
+          progress.levelStars.get(level) !== stars
+        );
       
       if (hasChanges) {
-        console.log('[App] Merging blockchain progress with local');
+        console.log('[App] ✅ Applying merged progress to local state');
         updateProgress(() => merged);
       } else {
-        console.log('[App] No changes detected');
+        console.log('[App] ℹ️ No changes detected - local and blockchain are in sync');
       }
-      
-      hasLoadedBlockchainRef.current = true;
     } catch (error) {
-      console.error('[App] Failed to merge blockchain progress:', error);
-      hasLoadedBlockchainRef.current = true;
+      console.error('[App] ❌ Failed to merge blockchain progress:', error);
     }
-  }, [isConnected, address, isAuthenticated, blockchainProgress, isLoadingBlockchain]);
+  }, [isConnected, address, isAuthenticated, blockchainProgress, isLoadingBlockchain, progress, updateProgress]);
 
   /**
    * Reset loaded flag when wallet disconnects

@@ -7,6 +7,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAccount } from 'wagmi';
 import { useSequentialUpdateLevels } from '../hooks/useSequentialUpdateLevels';
+import { getContractAddress } from '../types/blockchain';
 import { ProgressData } from '../types';
 import './SaveAllProgressButton.css';
 
@@ -55,8 +56,10 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
   }
 
   const handleSave = () => {
-    console.log('[SaveAllProgressButton] handleSave called');
+    console.log('[SaveAllProgressButton] ========== SAVE BUTTON CLICKED ==========');
     console.log('[SaveAllProgressButton] levelsToSave:', levelsToSave);
+    console.log('[SaveAllProgressButton] isConnected:', isConnected);
+    console.log('[SaveAllProgressButton] Contract address:', getContractAddress());
     
     setIsSaving(true);
     setShowSuccess(false);
@@ -72,9 +75,9 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       
       updateLevels(levelsToSave.levels, levelsToSave.stars);
       
-      console.log('[SaveAllProgressButton] updateLevels called successfully');
+      console.log('[SaveAllProgressButton] ✅ updateLevels called successfully');
     } catch (err) {
-      console.error('[SaveAllProgressButton] Failed to save progress:', err);
+      console.error('[SaveAllProgressButton] ❌ Failed to save progress:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to save progress';
       
       // User-friendly error messages
