@@ -9,9 +9,20 @@ import { wagmiConfig } from './config/wagmi'
 import { onchainKitConfig } from './config/onchainkit'
 import { BaseAccountProvider } from './components/BaseAccountProvider'
 import { initBaseApp } from './utils/baseApp'
+import { setupGlobalFetchRetry, setupGlobalErrorHandler } from './utils/fetchRetry'
 
 // Initialize Base App detection and optimizations
 initBaseApp()
+
+// Setup global fetch retry and error handling
+setupGlobalFetchRetry({
+  maxRetries: 3,
+  retryDelay: 1000,
+  exponentialBackoff: true,
+  suppressAnalyticsErrors: true,
+})
+
+setupGlobalErrorHandler()
 
 // Create a client for React Query with optimized defaults
 const queryClient = new QueryClient({

@@ -81,7 +81,7 @@ export function useSyncManager(): UseSyncManagerResult {
   }, [isSyncing, isLoadingProgress]);
 
   /**
-   * Sync local progress to blockchain
+   * Sync local progress to blockchain (with retry logic)
    */
   const syncToBlockchain = useCallback(
     async (localProgress: ProgressData): Promise<void> => {
@@ -94,79 +94,114 @@ export function useSyncManager(): UseSyncManagerResult {
         return;
       }
 
-      try {
-        setSyncStatus(prev => ({ 
-          ...prev, 
-          isSyncing: true, 
-          syncError: undefined 
-        }));
+      const maxRetries = 3;
+      const retryDelay = 2000;
+      let lastError: Error | null = null;
 
-        const { levels, stars } = extractBatchUpdateData(localProgress);
-        
-        if (levels.length > 0) {
-          await batchUpdate(levels, stars);
-          
-          setSyncStatus(prev => ({
-            ...prev,
-            isSyncing: false,
-            lastSyncTime: Date.now(),
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          setSyncStatus(prev => ({ 
+            ...prev, 
+            isSyncing: true, 
+            syncError: undefined 
           }));
+
+          const { levels, stars } = extractBatchUpdateData(localProgress);
+          
+          if (levels.length > 0) {
+            console.log(`[useSyncManager] Syncing to blockchain, attempt ${attempt}/${maxRetries}`);
+            await batchUpdate(levels, stars);
+            
+            setSyncStatus(prev => ({
+              ...prev,
+              isSyncing: false,
+              lastSyncTime: Date.now(),
+            }));
+            
+            console.log('[useSyncManager] Sync successful');
+            return; // Success!
+          }
+        } catch (error) {
+          lastError = error instanceof Error ? error : new Error(String(error));
+          console.error(`[useSyncManager] Sync error on attempt ${attempt}:`, lastError);
+          
+          if (attempt < maxRetries) {
+            console.warn(`[useSyncManager] Retrying sync in ${retryDelay}ms...`);
+            await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
+          }
         }
-      } catch (error) {
-        const errorMsg = error instanceof Error ? error.message : 'Sync failed';
-        setSyncStatus(prev => ({
-          ...prev,
-          isSyncing: false,
-          syncError: errorMsg,
-        }));
-        throw error;
       }
+
+      // All retries exhausted
+      const errorMsg = lastError?.message || 'Sync failed';
+      setSyncStatus(prev => ({
+        ...prev,
+        isSyncing: false,
+        syncError: errorMsg,
+      }));
+      throw new Error(`Sync failed after ${maxRetries} attempts: ${errorMsg}`);
     },
     [isConnected, address, batchUpdate]
   );
 
   /**
-   * Merge blockchain progress with local
+   * Merge blockchain progress with local (with retry logic)
    */
   const mergeFromBlockchain = useCallback(
     async (localProgress: ProgressData): Promise<ProgressData> => {
-      console.log('[useSyncManager] mergeFromBlockchain called');
-      console.log('[useSyncManager] isConnected:', isConnected);
-      console.log('[useSyncManager] address:', address);
-      console.log('[useSyncManager] onChainProgress:', onChainProgress);
+      const maxRetries = 3;
+      const retryDelay = 2000;
       
-      try {
-        if (!isConnected || !address) {
-          // Return local progress if not connected
-          console.log('[useSyncManager] No blockchain connection, returning local progress');
-          return localProgress;
-        }
-        
-        if (!onChainProgress) {
-          // Return local progress if no blockchain data
-          console.log('[useSyncManager] No blockchain progress available, returning local progress');
-          return localProgress;
-        }
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          console.log(`[useSyncManager] mergeFromBlockchain attempt ${attempt}/${maxRetries}`);
+          console.log('[useSyncManager] isConnected:', isConnected);
+          console.log('[useSyncManager] address:', address);
+          console.log('[useSyncManager] onChainProgress:', onChainProgress);
+          
+          if (!isConnected || !address) {
+            // Return local progress if not connected
+            console.log('[useSyncManager] No blockchain connection, returning local progress');
+            return localProgress;
+          }
+          
+          if (!onChainProgress) {
+            // Return local progress if no blockchain data
+            console.log('[useSyncManager] No blockchain progress available, returning local progress');
+            return localProgress;
+          }
 
-        const merged = mergeProgress(localProgress, onChainProgress);
-        console.log('[useSyncManager] Merged progress result:', {
-          completedLevels: Array.from(merged.completedLevels),
-          highestUnlockedLevel: merged.highestUnlockedLevel,
-          levelStarsCount: merged.levelStars.size,
-        });
-        
-        return merged;
-      } catch (error) {
-        const errorMsg = error instanceof Error ? error.message : 'Merge failed';
-        console.error('[useSyncManager] Merge error:', error);
-        setSyncStatus(prev => ({
-          ...prev,
-          syncError: errorMsg,
-        }));
-        // IMPORTANT: Return local progress on error - don't throw
-        console.warn('[useSyncManager] Returning local progress due to error');
-        return localProgress;
+          const merged = mergeProgress(localProgress, onChainProgress);
+          console.log('[useSyncManager] Merged progress result:', {
+            completedLevels: Array.from(merged.completedLevels),
+            highestUnlockedLevel: merged.highestUnlockedLevel,
+            levelStarsCount: merged.levelStars.size,
+          });
+          
+          return merged;
+        } catch (error) {
+          const errorMsg = error instanceof Error ? error.message : 'Merge failed';
+          console.error(`[useSyncManager] Merge error on attempt ${attempt}:`, error);
+          
+          if (attempt < maxRetries) {
+            console.warn(`[useSyncManager] Retrying merge in ${retryDelay}ms...`);
+            await new Promise(resolve => setTimeout(resolve, retryDelay));
+            continue;
+          }
+          
+          // Final attempt failed
+          setSyncStatus(prev => ({
+            ...prev,
+            syncError: errorMsg,
+          }));
+          // IMPORTANT: Return local progress on error - don't throw
+          console.warn('[useSyncManager] All merge attempts failed, returning local progress');
+          return localProgress;
+        }
       }
+      
+      // Should never reach here, but TypeScript needs it
+      return localProgress;
     },
     [isConnected, address, onChainProgress]
   );

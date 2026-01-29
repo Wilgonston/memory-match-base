@@ -138,7 +138,8 @@ describe('PaymasterService', () => {
     it('should throw error if RPC returns error', async () => {
       const service = new PaymasterService(mockPaymasterUrl, memoryMatchGasPolicy);
 
-      mockFetch.mockResolvedValueOnce({
+      // Mock fetch to return error response on all attempts
+      mockFetch.mockResolvedValue({
         ok: true,
         json: async () => ({
           jsonrpc: '2.0',
@@ -149,7 +150,7 @@ describe('PaymasterService', () => {
 
       await expect(
         service.getPaymasterStubData(mockUserOp, mockEntrypoint, mockChainId)
-      ).rejects.toThrow('Insufficient gas credits');
+      ).rejects.toThrow('Paymaster RPC failed after 3 attempts');
     });
 
     it('should include context in RPC call if provided', async () => {

@@ -286,40 +286,62 @@ export class PaymasterService {
   }
 
   /**
-   * Call a paymaster RPC method
+   * Call a paymaster RPC method with retry logic
    * 
    * @param method - The RPC method name (e.g., 'pm_getPaymasterStubData')
    * @param params - The method parameters
    * @returns Promise resolving to the RPC response
    */
   private async callPaymasterRPC<T>(method: string, params: unknown[]): Promise<T> {
-    // Serialize params with BigInt support
-    const serializedParams = this.serializeWithBigInt(params);
+    const maxRetries = 3;
+    const retryDelay = 1000;
+    let lastError: Error | null = null;
 
-    const response = await fetch(this.paymasterUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        id: Date.now(),
-        method,
-        params: serializedParams,
-      }),
-    });
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        // Serialize params with BigInt support
+        const serializedParams = this.serializeWithBigInt(params);
 
-    if (!response.ok) {
-      throw new Error(`Paymaster RPC failed: ${response.status} ${response.statusText}`);
+        const response = await fetch(this.paymasterUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            jsonrpc: '2.0',
+            id: Date.now(),
+            method,
+            params: serializedParams,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Paymaster RPC failed: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        if (data.error) {
+          throw new Error(`Paymaster RPC error: ${data.error.message || JSON.stringify(data.error)}`);
+        }
+
+        logServiceOperation('PaymasterService', `RPC call successful on attempt ${attempt}`, { method });
+        return data.result as T;
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error));
+        
+        if (attempt < maxRetries) {
+          logServiceWarning('PaymasterService', `RPC call failed, retrying (${attempt}/${maxRetries})`, {
+            method,
+            error: lastError.message,
+          });
+          await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
+        }
+      }
     }
 
-    const data = await response.json();
-
-    if (data.error) {
-      throw new Error(`Paymaster RPC error: ${data.error.message || JSON.stringify(data.error)}`);
-    }
-
-    return data.result as T;
+    // All retries exhausted
+    throw new Error(`Paymaster RPC failed after ${maxRetries} attempts: ${lastError?.message || 'Unknown error'}`);
   }
 
   /**
