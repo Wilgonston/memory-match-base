@@ -42,8 +42,8 @@ function App() {
   // Progress management hook
   const { progress, completeLevel, updateProgress } = useProgress();
 
-  // Sync manager for blockchain synchronization
-  const { mergeFromBlockchain } = useSyncManager();
+  // Sync manager for blockchain synchronization (manual only)
+  const { syncToBlockchain } = useSyncManager();
 
   // Game state management hook
   const { state: gameState, dispatch } = useGameState();
@@ -51,8 +51,6 @@ function App() {
   // Current screen state
   const [currentScreen, setCurrentScreen] = useState<Screen>('login');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [hasLoadedBlockchainProgress, setHasLoadedBlockchainProgress] = useState(false);
-  const [isLoadingBlockchainProgress, setIsLoadingBlockchainProgress] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
 
   /**
@@ -89,66 +87,6 @@ function App() {
       console.error('Failed to initialize sounds:', error);
     });
   }, []);
-
-  /**
-   * Load progress from blockchain when wallet connects - RUNS ONCE
-   */
-  useEffect(() => {
-    if (!isConnected || !address || !isAuthenticated || hasLoadedBlockchainProgress) {
-      return;
-    }
-
-    if (import.meta.env.MODE === 'test') {
-      return;
-    }
-
-    let cancelled = false;
-
-    const loadBlockchainProgress = async () => {
-      try {
-        setIsLoadingBlockchainProgress(true);
-        
-        const mergedProgress = await mergeFromBlockchain(progress);
-        
-        if (cancelled) return;
-        
-        const hasChanges = 
-          mergedProgress.completedLevels.size !== progress.completedLevels.size ||
-          mergedProgress.levelStars.size !== progress.levelStars.size ||
-          mergedProgress.highestUnlockedLevel !== progress.highestUnlockedLevel;
-        
-        if (hasChanges) {
-          updateProgress(() => mergedProgress);
-        }
-        
-        setHasLoadedBlockchainProgress(true);
-      } catch (error) {
-        console.error('[App] Failed to load blockchain progress:', error);
-        if (!cancelled) {
-          setHasLoadedBlockchainProgress(true);
-        }
-      } finally {
-        if (!cancelled) {
-          setIsLoadingBlockchainProgress(false);
-        }
-      }
-    };
-
-    loadBlockchainProgress();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [isConnected, address, isAuthenticated, hasLoadedBlockchainProgress]);
-
-  /**
-   * Reset blockchain progress loaded flag when wallet disconnects
-   */
-  useEffect(() => {
-    if (!isConnected || !address) {
-      setHasLoadedBlockchainProgress(false);
-    }
-  }, [isConnected, address]);
 
   /**
    * Check authentication status on mount and wallet change
@@ -239,19 +177,11 @@ function App() {
         {/* Network blocker - blocks UI if on wrong network */}
         <NetworkBlocker />
 
-        {/* Loading blockchain progress */}
-        {isLoadingBlockchainProgress && (
-          <LoadingIndicator
-            operation="Loading progress from blockchain"
-            estimatedTime={3}
-          />
-        )}
-
-        {!isLoadingBlockchainProgress && currentScreen === 'login' && (
+        {currentScreen === 'login' && (
           <LoginScreen onAuthenticated={handleAuthenticated} />
         )}
 
-        {!isLoadingBlockchainProgress && currentScreen === 'level-select' && isAuthenticated && (
+        {currentScreen === 'level-select' && isAuthenticated && (
           <Wallet>
             <LevelSelect
               progressData={progress}
@@ -261,7 +191,7 @@ function App() {
           </Wallet>
         )}
 
-        {!isLoadingBlockchainProgress && currentScreen === 'game' && isAuthenticated && (
+        {currentScreen === 'game' && isAuthenticated && (
           <Wallet>
             <GameBoard
               gameState={gameState}
