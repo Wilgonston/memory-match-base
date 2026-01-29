@@ -37,6 +37,10 @@ export interface FetchRetryOptions {
  * });
  * ```
  */
+
+// Store original fetch before any modifications
+const originalFetch = window.fetch.bind(window);
+
 export async function fetchWithRetry(
   input: RequestInfo | URL,
   init?: RequestInit,
@@ -54,7 +58,8 @@ export async function fetchWithRetry(
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const response = await fetch(input, init);
+      // Use original fetch to avoid recursion
+      const response = await originalFetch(input, init);
       
       // If response is not ok but is a client error (4xx), don't retry
       if (!response.ok && response.status >= 400 && response.status < 500) {
@@ -165,8 +170,64 @@ export async function fetchJSON<T = unknown>(
  * ```
  */
 export function setupGlobalFetchRetry(options: FetchRetryOptions = {}): void {
+  // Save original fetch before overriding
+  const originalFetch = window.fetch.bind(window);
+  
   window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
-    return fetchWithRetry(input, init, options);
+    const {
+      maxRetries = 3,
+      retryDelay = 1000,
+      exponentialBackoff = true,
+      suppressAnalyticsErrors = true,
+      isRetryable = defaultIsRetryable,
+    } = options;
+
+    let lastError: Error | null = null;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        // Use original fetch, not the overridden one
+        const response = await originalFetch(input, init);
+        
+        // If response is not ok but is a client error (4xx), don't retry
+        if (!response.ok && response.status >= 400 && response.status < 500) {
+          return response;
+        }
+        
+        return response;
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error));
+        
+        // Check if this is an analytics request
+        const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
+        const isAnalytics = url.includes('analytics') || url.includes('coinbase') || url.includes('telemetry');
+        
+        // If it's analytics and we should suppress, return mock response
+        if (isAnalytics && suppressAnalyticsErrors) {
+          console.warn(`[fetchWithRetry] Suppressing analytics error: ${lastError.message}`);
+          return new Response(JSON.stringify({ success: true }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' }
+          });
+        }
+        
+        // Check if error is retryable
+        if (!isRetryable(lastError)) {
+          throw lastError;
+        }
+        
+        // If we have retries left, wait and try again
+        if (attempt < maxRetries) {
+          const delay = exponentialBackoff ? retryDelay * attempt : retryDelay;
+          console.warn(`[fetchWithRetry] Attempt ${attempt}/${maxRetries} failed, retrying in ${delay}ms...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          continue;
+        }
+      }
+    }
+
+    // All retries exhausted
+    throw new Error(`Fetch failed after ${maxRetries} attempts: ${lastError?.message || 'Unknown error'}`);
   };
   
   console.log('[fetchRetry] Global fetch interceptor installed with retry logic');
