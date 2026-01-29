@@ -135,9 +135,15 @@ export function useSyncManager(): UseSyncManagerResult {
       console.log('[useSyncManager] address:', address);
       console.log('[useSyncManager] onChainProgress:', onChainProgress);
       
-      if (!isConnected || !address || !onChainProgress) {
+      if (!isConnected || !address) {
         // Return local progress if not connected
         console.log('[useSyncManager] No blockchain connection, returning local progress');
+        return localProgress;
+      }
+      
+      if (!onChainProgress) {
+        // Return local progress if no blockchain data
+        console.log('[useSyncManager] No blockchain progress available, returning local progress');
         return localProgress;
       }
 
@@ -152,12 +158,12 @@ export function useSyncManager(): UseSyncManagerResult {
         return merged;
       } catch (error) {
         const errorMsg = error instanceof Error ? error.message : 'Merge failed';
+        console.error('[useSyncManager] Merge error:', error);
         setSyncStatus(prev => ({
           ...prev,
           syncError: errorMsg,
         }));
-        console.error('[useSyncManager] Merge error:', error);
-        // Return local progress on error
+        // Return local progress on error - don't throw
         return localProgress;
       }
     },

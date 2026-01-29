@@ -113,20 +113,40 @@ function App() {
           
           // Try to merge with blockchain progress
           const mergedProgress = await mergeFromBlockchain(progress);
+          
+          if (!mergedProgress) {
+            console.warn('[App] No blockchain progress returned, using local progress');
+            setHasLoadedBlockchainProgress(true);
+            setIsLoadingBlockchainProgress(false);
+            return;
+          }
+          
           console.log('[App] Merged progress:', {
             completedLevels: Array.from(mergedProgress.completedLevels),
             highestUnlockedLevel: mergedProgress.highestUnlockedLevel,
             levelStarsCount: mergedProgress.levelStars.size,
           });
           
-          updateProgress(() => mergedProgress);
+          // Only update if merged progress is different from local
+          const hasChanges = 
+            mergedProgress.completedLevels.size !== progress.completedLevels.size ||
+            mergedProgress.levelStars.size !== progress.levelStars.size;
+          
+          if (hasChanges) {
+            console.log('[App] Updating progress with merged data');
+            updateProgress(() => mergedProgress);
+          } else {
+            console.log('[App] No changes detected, keeping local progress');
+          }
+          
           setHasLoadedBlockchainProgress(true);
           
           console.log('[App] Progress loaded from blockchain successfully');
           console.log('[App] Use "Save to Blockchain" button to sync local progress to blockchain');
         } catch (error) {
-          console.error('Failed to load blockchain progress:', error);
-          // Continue with local progress on error
+          console.error('[App] Failed to load blockchain progress:', error);
+          // Continue with local progress on error - don't show error to user
+          setHasLoadedBlockchainProgress(true); // Mark as loaded to prevent retry loop
         } finally {
           setIsLoadingBlockchainProgress(false);
         }
