@@ -39,7 +39,11 @@ type Screen = 'login' | 'menu' | 'level-select' | 'game';
  * Main App component
  */
 function App() {
+  console.log('[App] 🚀 App component rendered - VERSION 2.0.1');
+  
   const { address, isConnected } = useAccount();
+  
+  console.log('[App] 👛 Wallet state:', { address, isConnected });
   
   // Progress management hook
   const { progress, completeLevel, updateProgress } = useProgress();
