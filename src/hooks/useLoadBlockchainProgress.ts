@@ -49,6 +49,18 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
     },
   });
 
+  // Debug logging for total
+  useEffect(() => {
+    console.log('[useLoadBlockchainProgress] 🔍 Total check:', {
+      address,
+      isConnected,
+      contractAddress,
+      totalData,
+      isLoadingTotal,
+      totalError: totalError?.message,
+    });
+  }, [address, isConnected, contractAddress, totalData, isLoadingTotal, totalError]);
+
   // Step 2: Get updated timestamp
   const { 
     data: updatedData, 
@@ -70,7 +82,8 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
   useEffect(() => {
     if (totalData !== undefined) {
       const total = Number(totalData);
-      console.log('[useLoadBlockchainProgress] Total stars on blockchain:', total);
+      console.log('[useLoadBlockchainProgress] 📊 Total stars on blockchain:', total);
+      console.log('[useLoadBlockchainProgress] Should load levels:', total > 0);
       setShouldLoadLevels(total > 0);
     }
   }, [totalData]);
@@ -110,18 +123,32 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
 
   // Parse results into OnChainProgress
   const progress = useMemo((): OnChainProgress | null => {
-    if (totalData === undefined) return null;
+    console.log('[useLoadBlockchainProgress] 🔄 Parsing progress:', {
+      totalData,
+      updatedData,
+      levelsDataLength: levelsData?.length,
+      shouldLoadLevels,
+    });
+
+    if (totalData === undefined) {
+      console.log('[useLoadBlockchainProgress] ❌ No totalData');
+      return null;
+    }
 
     const total = Number(totalData);
 
     // If no progress on blockchain, return null immediately
     if (total === 0) {
-      console.log('[useLoadBlockchainProgress] No progress on blockchain');
+      console.log('[useLoadBlockchainProgress] ℹ️ No progress on blockchain (total = 0)');
       return null;
     }
 
     // If we haven't loaded levels yet, return null
     if (!levelsData || !updatedData) {
+      console.log('[useLoadBlockchainProgress] ⏳ Waiting for levels data...', {
+        hasLevelsData: !!levelsData,
+        hasUpdatedData: !!updatedData,
+      });
       return null;
     }
 
@@ -135,15 +162,17 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
         const stars = Number(levelResult.result);
         if (stars > 0) {
           levelStars.set(i + 1, stars);
+          console.log(`[useLoadBlockchainProgress] ⭐ Level ${i + 1}: ${stars} stars`);
         }
       }
     }
 
-    console.log('[useLoadBlockchainProgress] Loaded from blockchain:', {
+    console.log('[useLoadBlockchainProgress] ✅ Loaded from blockchain:', {
       total,
       updated,
       levelsWithStars: levelStars.size,
       levels: Array.from(levelStars.keys()),
+      allLevelStars: Array.from(levelStars.entries()),
     });
 
     return {
@@ -151,7 +180,7 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
       updated,
       levelStars,
     };
-  }, [totalData, updatedData, levelsData]);
+  }, [totalData, updatedData, levelsData, shouldLoadLevels]);
 
   // Refetch function
   const refetch = () => {
