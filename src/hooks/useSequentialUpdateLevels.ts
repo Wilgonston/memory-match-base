@@ -150,6 +150,8 @@ export function useSequentialUpdateLevels(): UseSequentialUpdateLevelsResult {
         console.log(`[useSequentialUpdateLevels] Updating ${levels.length} levels`);
         console.log('[useSequentialUpdateLevels] Levels:', levels);
         console.log('[useSequentialUpdateLevels] Stars:', stars);
+        console.log('[useSequentialUpdateLevels] Contract address:', contractAddress);
+        console.log('[useSequentialUpdateLevels] Chain ID:', chainId);
         
         // Submit transaction to blockchain
         writeContract({
@@ -159,7 +161,7 @@ export function useSequentialUpdateLevels(): UseSequentialUpdateLevelsResult {
           args: [levels, stars],
         });
         
-        console.log('[useSequentialUpdateLevels] Transaction submitted, waiting for user signature and blockchain confirmation...');
+        console.log('[useSequentialUpdateLevels] writeContract called, waiting for user signature...');
         
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to update levels';

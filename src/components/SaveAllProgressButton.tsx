@@ -55,13 +55,24 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
   }
 
   const handleSave = () => {
+    console.log('[SaveAllProgressButton] handleSave called');
+    console.log('[SaveAllProgressButton] levelsToSave:', levelsToSave);
+    
     setIsSaving(true);
     setShowSuccess(false);
     setShowError(null);
     reset();
     
     try {
+      console.log('[SaveAllProgressButton] Calling updateLevels with:', {
+        levels: levelsToSave.levels,
+        stars: levelsToSave.stars,
+        count: levelsToSave.count
+      });
+      
       updateLevels(levelsToSave.levels, levelsToSave.stars);
+      
+      console.log('[SaveAllProgressButton] updateLevels called successfully');
     } catch (err) {
       console.error('[SaveAllProgressButton] Failed to save progress:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to save progress';
