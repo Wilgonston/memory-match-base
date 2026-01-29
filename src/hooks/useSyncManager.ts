@@ -7,7 +7,6 @@
 
 import { useCallback } from 'react';
 import { useAccount } from 'wagmi';
-import { useLoadBlockchainProgress } from './useLoadBlockchainProgress';
 import { useBatchUpdateLevels } from './useBatchUpdateLevels';
 import { 
   extractBatchUpdateData, 
