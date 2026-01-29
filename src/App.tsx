@@ -51,7 +51,6 @@ function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('login');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [hasLoadedBlockchainProgress, setHasLoadedBlockchainProgress] = useState(false);
-  const [isLoadingBlockchainProgress, setIsLoadingBlockchainProgress] = useState(false);
 
   /**
    * Check if user has seen welcome screen before
@@ -83,6 +82,7 @@ function App() {
 
   /**
    * Load progress from blockchain when wallet connects
+   * Wait for blockchain data to finish loading before merging
    */
   useEffect(() => {
     const loadBlockchainProgress = async () => {
@@ -91,17 +91,16 @@ function App() {
         return;
       }
 
-      if (isConnected && address && isAuthenticated && !hasLoadedBlockchainProgress) {
+      if (isConnected && address && isAuthenticated && !hasLoadedBlockchainProgress && !syncStatus.isSyncing) {
         try {
-          console.log('[App] Loading progress from blockchain...');
+          console.log('[App] Blockchain data loaded, merging with local progress...');
           console.log('[App] Current local progress:', {
             completedLevels: Array.from(progress.completedLevels),
             highestUnlockedLevel: progress.highestUnlockedLevel,
             levelStarsCount: progress.levelStars.size,
           });
-          setIsLoadingBlockchainProgress(true);
 
-          // Try to merge with blockchain progress
+          // Merge with blockchain progress (now that it's loaded)
           const mergedProgress = await mergeFromBlockchain(progress);
           console.log('[App] Merged progress:', {
             completedLevels: Array.from(mergedProgress.completedLevels),
@@ -109,22 +108,29 @@ function App() {
             levelStarsCount: mergedProgress.levelStars.size,
           });
 
-          updateProgress(() => mergedProgress);
-          setHasLoadedBlockchainProgress(true);
+          // Only update if merge actually changed something
+          if (mergedProgress.levelStars.size !== progress.levelStars.size ||
+              Array.from(mergedProgress.levelStars.entries()).some(([level, stars]) => 
+                progress.levelStars.get(level) !== stars
+              )) {
+            console.log('[App] Progress changed, updating UI...');
+            updateProgress(() => mergedProgress);
+          } else {
+            console.log('[App] No changes in progress, skipping update');
+          }
 
+          setHasLoadedBlockchainProgress(true);
           console.log('[App] Progress loaded from blockchain successfully');
-          console.log('[App] Use "Save to Blockchain" button to sync local progress to blockchain');
         } catch (error) {
           console.error('Failed to load blockchain progress:', error);
           // Continue with local progress on error
-        } finally {
-          setIsLoadingBlockchainProgress(false);
+          setHasLoadedBlockchainProgress(true);
         }
       }
     };
 
     loadBlockchainProgress();
-  }, [isConnected, address, isAuthenticated, hasLoadedBlockchainProgress, mergeFromBlockchain, progress, updateProgress, syncToBlockchain]);
+  }, [isConnected, address, isAuthenticated, hasLoadedBlockchainProgress, syncStatus.isSyncing, mergeFromBlockchain, progress, updateProgress]);
 
   /**
    * Reset blockchain progress loaded flag when wallet disconnects
@@ -222,18 +228,18 @@ function App() {
         <NetworkBlocker />
 
         {/* Loading blockchain progress */}
-        {isLoadingBlockchainProgress && (
+        {syncStatus.isSyncing && isConnected && !hasLoadedBlockchainProgress && (
           <LoadingIndicator
             operation="Loading progress from blockchain"
             estimatedTime={3}
           />
         )}
 
-        {!isLoadingBlockchainProgress && currentScreen === 'login' && (
+        {(!syncStatus.isSyncing || hasLoadedBlockchainProgress) && currentScreen === 'login' && (
           <LoginScreen onAuthenticated={handleAuthenticated} />
         )}
 
-        {!isLoadingBlockchainProgress && currentScreen === 'level-select' && isAuthenticated && (
+        {(!syncStatus.isSyncing || hasLoadedBlockchainProgress) && currentScreen === 'level-select' && isAuthenticated && (
           <Wallet>
             <LevelSelect
               progressData={progress}
@@ -243,7 +249,7 @@ function App() {
           </Wallet>
         )}
 
-        {!isLoadingBlockchainProgress && currentScreen === 'game' && isAuthenticated && (
+        {(!syncStatus.isSyncing || hasLoadedBlockchainProgress) && currentScreen === 'game' && isAuthenticated && (
           <Wallet>
             <GameBoard
               gameState={gameState}

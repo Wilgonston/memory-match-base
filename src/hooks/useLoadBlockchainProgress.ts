@@ -64,8 +64,8 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
     contracts,
     query: {
       enabled: isConnected && !!address && contracts.length > 0,
-      staleTime: 10_000, // Cache for 10 seconds
-      gcTime: 30_000,
+      staleTime: 5 * 60_000, // Cache for 5 minutes (prevent rate limit)
+      gcTime: 10 * 60_000, // Keep in cache for 10 minutes
     },
   });
 
