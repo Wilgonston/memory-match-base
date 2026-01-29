@@ -98,7 +98,26 @@ export function useUpdateLevel(): UseUpdateLevelResult {
     : 'idle';
 
   // Combined error message
-  const error = localError || writeError?.message || receiptError?.message;
+  const getErrorMessage = (err: Error | null | undefined): string | undefined => {
+    if (!err) return undefined;
+    
+    const message = err.message;
+    
+    // Handle specific error cases
+    if (message.includes('Failed to fetch signer')) {
+      return 'Wallet connection lost. Please refresh the page and try again.';
+    } else if (message.includes('User rejected')) {
+      return 'Transaction rejected by user';
+    } else if (message.includes('insufficient funds')) {
+      return 'Insufficient funds for gas';
+    } else if (message.includes('network')) {
+      return 'Network error. Please check your connection.';
+    }
+    
+    return message;
+  };
+
+  const error = localError || getErrorMessage(writeError) || getErrorMessage(receiptError);
 
   // Update level function
   const updateLevel = useCallback(

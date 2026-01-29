@@ -121,7 +121,22 @@ export function useBatchUpdateLevels(): UseBatchUpdateLevelsResult {
       },
       onError: (error) => {
         console.error('Batch transaction failed:', error);
-        const message = error.message || 'Batch transaction failed';
+        
+        // Handle specific error cases
+        let message = 'Batch transaction failed';
+        
+        if (error.message.includes('Failed to fetch signer')) {
+          message = 'Wallet connection lost. Please refresh the page and try again.';
+        } else if (error.message.includes('User rejected')) {
+          message = 'Transaction rejected by user';
+        } else if (error.message.includes('insufficient funds')) {
+          message = 'Insufficient funds for gas';
+        } else if (error.message.includes('network')) {
+          message = 'Network error. Please check your connection.';
+        } else if (error.message) {
+          message = error.message;
+        }
+        
         setLocalError(message);
         setIsSuccess(false);
       },
