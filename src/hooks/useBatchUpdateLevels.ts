@@ -82,30 +82,44 @@ export function useBatchUpdateLevels(): UseBatchUpdateLevelsResult {
 
   // Configure paymaster capabilities
   const capabilities = useMemo(() => {
-    if (!availableCapabilities || !address) return {};
+    if (!availableCapabilities || !address) {
+      console.log('[Paymaster] No capabilities or address:', { 
+        hasCapabilities: !!availableCapabilities, 
+        hasAddress: !!address 
+      });
+      return {};
+    }
+    
+    console.log('[Paymaster] Available capabilities:', availableCapabilities);
     
     const capabilitiesForChain = availableCapabilities[base.id];
+    console.log('[Paymaster] Capabilities for Base chain:', capabilitiesForChain);
     
     if (
       capabilitiesForChain?.['paymasterService'] &&
       capabilitiesForChain['paymasterService'].supported
     ) {
       const apiKey = import.meta.env.VITE_ONCHAINKIT_API_KEY || '';
+      console.log('[Paymaster] API Key present:', !!apiKey);
+      
       const paymasterUrl = apiKey 
         ? `https://api.developer.coinbase.com/rpc/v1/base/${apiKey}`
         : '';
       
       if (paymasterUrl) {
-        console.log('Paymaster service available for batch update');
+        console.log('[Paymaster] ✅ Paymaster service configured:', paymasterUrl.substring(0, 50) + '...');
         return {
           paymasterService: {
             url: paymasterUrl,
           },
         };
+      } else {
+        console.log('[Paymaster] ❌ No API key configured');
       }
+    } else {
+      console.log('[Paymaster] ❌ Paymaster service not supported by wallet');
     }
     
-    console.log('Paymaster service not available for batch update');
     return {};
   }, [availableCapabilities, address]);
 
