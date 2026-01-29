@@ -50,6 +50,21 @@ function App() {
   // Load blockchain progress (but don't use it directly to avoid loops)
   const { progress: blockchainProgress, isLoading: isLoadingBlockchain } = useLoadBlockchainProgress();
 
+  // Debug: Log blockchain progress state
+  useEffect(() => {
+    console.log('[App] 🔍 Blockchain progress state:', {
+      blockchainProgress,
+      isLoadingBlockchain,
+      hasProgress: !!blockchainProgress,
+      progressDetails: blockchainProgress ? {
+        total: blockchainProgress.total,
+        updated: blockchainProgress.updated,
+        levelStarsSize: blockchainProgress.levelStars.size,
+        levelStarsEntries: Array.from(blockchainProgress.levelStars.entries()),
+      } : null,
+    });
+  }, [blockchainProgress, isLoadingBlockchain]);
+
   // Game state management hook
   const { state: gameState, dispatch } = useGameState();
 

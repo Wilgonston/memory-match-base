@@ -31,6 +31,12 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
   const contractAddress = getContractAddress();
   const [shouldLoadLevels, setShouldLoadLevels] = useState(false);
 
+  console.log('[useLoadBlockchainProgress] 🚀 Hook called:', {
+    address,
+    isConnected,
+    contractAddress,
+  });
+
   // Step 1: Check total stars first
   const { 
     data: totalData, 
