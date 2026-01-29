@@ -7,8 +7,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAccount } from 'wagmi';
 import { useSequentialUpdateLevels } from '../hooks/useSequentialUpdateLevels';
+import { useLoadBlockchainProgress } from '../hooks/useLoadBlockchainProgress';
 import { getContractAddress } from '../types/blockchain';
 import { ProgressData } from '../types';
+import { getUnsavedLevels } from '../utils/unsavedProgress';
 import './SaveAllProgressButton.css';
 
 export interface SaveAllProgressButtonProps {
@@ -26,33 +28,50 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
 }) => {
   const { isConnected } = useAccount();
   const { updateLevels, isPending, error, isSuccess, progress, reset, hash } = useSequentialUpdateLevels();
+  const { progress: onChainProgress, isLoading: isLoadingBlockchain } = useLoadBlockchainProgress();
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState<string | null>(null);
   const [savedHash, setSavedHash] = useState<string | null>(null);
 
-  // Get all completed levels from local progress
+  // Get only unsaved levels (compare with blockchain)
   const levelsToSave = useMemo(() => {
-    const levels: number[] = [];
-    const stars: number[] = [];
+    const unsaved = getUnsavedLevels(progressData, onChainProgress);
     
-    progressData.levelStars.forEach((starCount, level) => {
-      if (starCount > 0) {
-        levels.push(level);
-        stars.push(starCount);
-      }
+    console.log('[SaveAllProgressButton] Checking unsaved levels:', {
+      localLevels: Array.from(progressData.levelStars.entries()),
+      blockchainLevels: onChainProgress ? Array.from(onChainProgress.levelStars.entries()) : 'null',
+      unsavedCount: unsaved.count,
+      unsavedLevels: unsaved.levels,
     });
     
-    return { levels, stars, count: levels.length };
-  }, [progressData]);
+    return unsaved;
+  }, [progressData, onChainProgress]);
 
   if (!isConnected) {
     return null;
   }
 
-  // Hide button if no progress to save
+  // Hide button if loading blockchain data
+  if (isLoadingBlockchain) {
+    return (
+      <div className={`save-all-progress-container ${className}`}>
+        <p className="save-all-info">
+          🔄 Checking blockchain progress...
+        </p>
+      </div>
+    );
+  }
+
+  // Hide button if no progress to save (all synced!)
   if (levelsToSave.count === 0) {
-    return null;
+    return (
+      <div className={`save-all-progress-container ${className}`}>
+        <div className="save-all-success-message">
+          ✅ All progress synced to blockchain!
+        </div>
+      </div>
+    );
   }
 
   const handleSave = () => {

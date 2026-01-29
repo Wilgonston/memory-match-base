@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { Address } from 'viem';
 import { getContractAddress, MEMORY_MATCH_PROGRESS_ABI } from '../types/blockchain';
+import { useLoadBlockchainProgress } from '../hooks/useLoadBlockchainProgress';
 import { playSound } from '../utils/soundManager';
 import './SaveProgressButton.css';
 
@@ -22,6 +23,7 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
 }) => {
   const { address, isConnected } = useAccount();
   const contractAddress = getContractAddress();
+  const { progress: onChainProgress, isLoading: isLoadingBlockchain } = useLoadBlockchainProgress();
   const [isSaving, setIsSaving] = useState(false);
 
   const { writeContract, data: hash, isPending, error: writeError } = useWriteContract();
@@ -32,6 +34,23 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
 
   if (!isConnected || !address) {
     return null;
+  }
+
+  // Check if this level is already saved on blockchain with same or better stars
+  const blockchainStars = onChainProgress?.levelStars.get(level) || 0;
+  const needsSaving = stars > blockchainStars;
+
+  console.log('[SaveProgressButton] Level', level, '- Local:', stars, 'stars, Blockchain:', blockchainStars, 'stars, Needs saving:', needsSaving);
+
+  // Hide button if already synced
+  if (!isLoadingBlockchain && !needsSaving) {
+    return (
+      <div className={`save-progress-button-container ${className}`}>
+        <div className="save-progress-synced">
+          ✅ Synced to blockchain
+        </div>
+      </div>
+    );
   }
 
   const handleSave = async () => {
