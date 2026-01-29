@@ -26,6 +26,9 @@ export type { UseUpdateLevelResult } from './useUpdateLevel';
 export { useBatchUpdateLevels } from './useBatchUpdateLevels';
 export type { UseBatchUpdateLevelsResult } from './useBatchUpdateLevels';
 
+export { useHybridTransaction } from './useHybridTransaction';
+export type { UseHybridTransactionResult, HybridTransactionOptions } from './useHybridTransaction';
+
 export { useSyncManager } from './useSyncManager';
 export type { UseSyncManagerResult } from './useSyncManager';
 
