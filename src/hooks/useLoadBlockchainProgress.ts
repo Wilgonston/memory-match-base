@@ -64,10 +64,10 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
     contracts,
     query: {
       enabled: isConnected && !!address && contracts.length > 0,
-      staleTime: 5 * 60_000, // Cache for 5 minutes (increased for better performance)
-      gcTime: 10 * 60_000, // Keep in cache for 10 minutes
+      staleTime: 10 * 60_000, // Cache for 10 minutes (increased to prevent rate limit)
+      gcTime: 30 * 60_000, // Keep in cache for 30 minutes
       throwOnError: false, // Don't throw errors - handle them gracefully
-      retry: 0, // Don't retry on error
+      retry: 0, // Don't retry on error to prevent rate limit
       refetchOnWindowFocus: false, // Don't refetch on window focus
       refetchOnReconnect: false, // Don't refetch on reconnect
       refetchOnMount: false, // Don't refetch on mount if data exists

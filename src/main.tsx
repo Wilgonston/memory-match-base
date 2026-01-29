@@ -47,7 +47,13 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <OnchainKitProvider
           apiKey={onchainKitConfig.apiKey}
           chain={onchainKitConfig.chain}
-          config={onchainKitConfig.config}
+          config={{
+            ...onchainKitConfig.config,
+            // Disable analytics to prevent "Failed to fetch" errors
+            analytics: {
+              enabled: false,
+            },
+          }}
         >
           <AppWithWalletModal />
         </OnchainKitProvider>

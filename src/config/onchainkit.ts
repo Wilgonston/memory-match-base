@@ -29,5 +29,8 @@ export const onchainKitConfig = {
   },
 };
 
+// Export Paymaster URL for use in transaction hooks
+export { paymasterUrl };
+
 // Export chain for use in components
 export { base, baseSepolia };
