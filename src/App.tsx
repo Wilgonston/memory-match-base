@@ -112,13 +112,24 @@ function App() {
    * Load and merge blockchain progress ONCE when authenticated
    */
   useEffect(() => {
+    console.log('[App] Blockchain progress effect triggered', {
+      hasLoaded: hasLoadedBlockchainRef.current,
+      isConnected,
+      address,
+      isAuthenticated,
+      isLoadingBlockchain,
+      hasBlockchainProgress: !!blockchainProgress,
+    });
+
     // Only load once
     if (hasLoadedBlockchainRef.current) {
+      console.log('[App] Already loaded blockchain progress, skipping');
       return;
     }
 
     // Wait for authentication and blockchain data to load
     if (!isConnected || !address || !isAuthenticated || isLoadingBlockchain) {
+      console.log('[App] Waiting for conditions to load blockchain progress');
       return;
     }
 
@@ -131,7 +142,22 @@ function App() {
 
     // Merge blockchain with local
     try {
+      console.log('[App] Blockchain progress found:', {
+        levelStarsCount: blockchainProgress.levelStars.size,
+        levels: Array.from(blockchainProgress.levelStars.keys()),
+      });
+      
+      console.log('[App] Local progress:', {
+        completedLevels: Array.from(progress.completedLevels),
+        levelStarsCount: progress.levelStars.size,
+      });
+
       const merged = mergeProgress(progress, blockchainProgress);
+      
+      console.log('[App] Merged progress:', {
+        completedLevels: Array.from(merged.completedLevels),
+        levelStarsCount: merged.levelStars.size,
+      });
       
       const hasChanges = 
         merged.completedLevels.size !== progress.completedLevels.size ||
@@ -141,6 +167,8 @@ function App() {
       if (hasChanges) {
         console.log('[App] Merging blockchain progress with local');
         updateProgress(() => merged);
+      } else {
+        console.log('[App] No changes detected');
       }
       
       hasLoadedBlockchainRef.current = true;
