@@ -130,23 +130,39 @@ export function useSyncManager(): UseSyncManagerResult {
    */
   const mergeFromBlockchain = useCallback(
     async (localProgress: ProgressData): Promise<ProgressData> => {
-      console.log('[useSyncManager] mergeFromBlockchain called');
+      console.log('[useSyncManager] ========== mergeFromBlockchain called ==========');
       console.log('[useSyncManager] isConnected:', isConnected);
       console.log('[useSyncManager] address:', address);
       console.log('[useSyncManager] onChainProgress:', onChainProgress);
+      
+      if (onChainProgress) {
+        console.log('[useSyncManager] onChainProgress details:', {
+          total: onChainProgress.total,
+          updated: onChainProgress.updated,
+          levelStarsSize: onChainProgress.levelStars.size,
+          levelStarsEntries: Array.from(onChainProgress.levelStars.entries()),
+        });
+      }
 
       if (!isConnected || !address || !onChainProgress) {
         // Return local progress if not connected
-        console.log('[useSyncManager] No blockchain connection, returning local progress');
+        console.log('[useSyncManager] No blockchain connection or progress, returning local progress');
         return localProgress;
       }
 
       try {
+        console.log('[useSyncManager] Calling mergeProgress with:', {
+          localLevels: Array.from(localProgress.levelStars.entries()),
+          blockchainLevels: Array.from(onChainProgress.levelStars.entries()),
+        });
+        
         const merged = mergeProgress(localProgress, onChainProgress);
+        
         console.log('[useSyncManager] Merged progress result:', {
           completedLevels: Array.from(merged.completedLevels),
           highestUnlockedLevel: merged.highestUnlockedLevel,
           levelStarsCount: merged.levelStars.size,
+          levelStarsEntries: Array.from(merged.levelStars.entries()),
         });
 
         return merged;
