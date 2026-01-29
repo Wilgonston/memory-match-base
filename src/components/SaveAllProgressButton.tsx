@@ -7,8 +7,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAccount } from 'wagmi';
 import { useSequentialUpdateLevels } from '../hooks/useSequentialUpdateLevels';
-import { useLoadBlockchainProgress } from '../hooks/useLoadBlockchainProgress';
-import { getUnsavedLevels } from '../utils/unsavedProgress';
 import { ProgressData } from '../types';
 import './SaveAllProgressButton.css';
 
@@ -27,35 +25,33 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
 }) => {
   const { isConnected } = useAccount();
   const { updateLevels, isPending, error, isSuccess, progress, reset, hash } = useSequentialUpdateLevels();
-  const { progress: blockchainProgress, isLoading: isLoadingBlockchain } = useLoadBlockchainProgress();
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState<string | null>(null);
   const [savedHash, setSavedHash] = useState<string | null>(null);
 
-  // Calculate unsaved levels (levels that need to be saved to blockchain)
-  const unsavedData = useMemo(() => {
-    return getUnsavedLevels(progressData, blockchainProgress);
-  }, [progressData, blockchainProgress]);
+  // Get all completed levels from local progress
+  const levelsToSave = useMemo(() => {
+    const levels: number[] = [];
+    const stars: number[] = [];
+    
+    progressData.levelStars.forEach((starCount, level) => {
+      if (starCount > 0) {
+        levels.push(level);
+        stars.push(starCount);
+      }
+    });
+    
+    return { levels, stars, count: levels.length };
+  }, [progressData]);
 
   if (!isConnected) {
     return null;
   }
 
-  // Hide button if no unsaved progress
-  if (unsavedData.count === 0 && !isLoadingBlockchain) {
+  // Hide button if no progress to save
+  if (levelsToSave.count === 0) {
     return null;
-  }
-
-  // Show loading while checking blockchain
-  if (isLoadingBlockchain) {
-    return (
-      <div className={`save-all-progress-container ${className}`}>
-        <div className="save-all-info">
-          Checking blockchain progress...
-        </div>
-      </div>
-    );
   }
 
   const handleSave = () => {
@@ -65,7 +61,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
     reset();
     
     try {
-      updateLevels(unsavedData.levels, unsavedData.stars);
+      updateLevels(levelsToSave.levels, levelsToSave.stars);
     } catch (err) {
       console.error('[SaveAllProgressButton] Failed to save progress:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to save progress';
@@ -149,7 +145,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
         onClick={handleSave}
         disabled={isLoading || showSuccess}
         className={`save-all-progress-button ${showSuccess ? 'success' : ''}`}
-        title={`Save ${unsavedData.count} unsaved level${unsavedData.count > 1 ? 's' : ''} to blockchain`}
+        title={`Save ${levelsToSave.count} level${levelsToSave.count > 1 ? 's' : ''} to blockchain`}
       >
         {isLoading ? (
           <>
@@ -162,7 +158,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
           <>✓ All Saved!</>
         ) : (
           <>
-            💾 Save to Blockchain ({unsavedData.count})
+            💾 Save to Blockchain ({levelsToSave.count})
           </>
         )}
       </button>
@@ -174,7 +170,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       )}
 
       <p className="save-all-info">
-        ⚡ You will pay gas • Saves {unsavedData.count} unsaved level{unsavedData.count > 1 ? 's' : ''}
+        ⚡ You will pay gas • Saves {levelsToSave.count} level{levelsToSave.count > 1 ? 's' : ''}
       </p>
     </div>
   );
