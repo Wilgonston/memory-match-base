@@ -20,24 +20,26 @@
 
 ## Где найти ваши транзакции?
 
-### Вариант 1: BaseScan - Account Abstraction раздел
+### Вариант 1: BaseScan - обычный поиск по transaction hash
+https://basescan.org/tx/{HASH}
+
+Bundled транзакции (когда несколько UserOperations объединены в одну) отображаются здесь.
+Вы увидите список всех UserOperations внутри транзакции.
+
+**Пример:**
+```
+https://basescan.org/tx/0x0e834cc4a6d3d67f483a9acde4f0b39c22657cde4108cd53245fd28919f7f470
+```
+
+В этой транзакции вы увидите:
+- Несколько UserOperations от разных пользователей
+- Ваша UserOperation: `skywhywalker.base.eth - Execute Batch`
+- Детали выполнения и газ
+
+### Вариант 2: BaseScan - Account Abstraction раздел
 https://basescan.org/txsAA
 
-Здесь отображаются все UserOperations на Base.
-
-### Вариант 2: JiffyScan (рекомендуется)
-https://jiffyscan.xyz/
-
-JiffyScan - это специализированный эксплорер для Account Abstraction транзакций. Он показывает:
-- UserOperation hash
-- Bundler информацию
-- Paymaster данные (кто оплатил газ)
-- Детали выполнения
-
-**Ссылка на вашу транзакцию:**
-```
-https://jiffyscan.xyz/userOpHash/{HASH}?network=base
-```
+Здесь отображаются все UserOperations на Base в хронологическом порядке.
 
 ## Как проверить транзакцию в приложении?
 
@@ -47,10 +49,11 @@ https://jiffyscan.xyz/userOpHash/{HASH}?network=base
 2. Найдите логи:
    ```
    [SaveAllProgressButton] ✅ Transaction confirmed on blockchain
-   [SaveAllProgressButton] Transaction ID: 0x...
-   [SaveAllProgressButton] View on JiffyScan: https://jiffyscan.xyz/userOpHash/0x...
+   [SaveAllProgressButton] Transaction/UserOp ID: 0x...
+   [SaveAllProgressButton] View on BaseScan: https://basescan.org/tx/0x...
    ```
-3. Перейдите по ссылке JiffyScan
+3. Перейдите по ссылке BaseScan
+4. Найдите вашу UserOperation в списке (по вашему basename или адресу)
 
 ## Почему это лучше?
 
@@ -118,4 +121,11 @@ Entry Point 0.6.0
 
 Ваши транзакции **успешно проходят** и **сохраняются на блокчейне**! Они просто отображаются в другом месте из-за использования Account Abstraction.
 
-Используйте **JiffyScan** для просмотра деталей транзакций или проверяйте прогресс напрямую через контракт.
+Используйте **BaseScan** для просмотра деталей транзакций или проверяйте прогресс напрямую через контракт.
+
+### Важно!
+
+Когда вы видите ссылку "View on BaseScan" после сохранения:
+- Это **bundled transaction** (несколько UserOperations в одной транзакции)
+- Найдите вашу UserOperation по вашему basename (`skywhywalker.base.eth`)
+- Она будет в списке "AA Txn Hash" с методом "Execute Batch"
