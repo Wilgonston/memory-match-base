@@ -156,26 +156,35 @@
 
 /* Responsive Design */
 
-/* Mobile (320px - 767px) */
+/* Mobile Responsive (320px - 767px) */
 @media (max-width: 767px) {
   .game-board {
-    padding: 0.75rem;
+    padding: 0.5rem;
+    min-height: 100dvh; /* Use dynamic viewport height for mobile */
   }
 
   .game-content {
-    gap: 1.5rem;
+    gap: 1rem;
+    padding: 0;
+  }
+
+  .game-controls {
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0 0.5rem;
   }
 
   .failure-content {
-    padding: 2rem 1.5rem;
+    padding: 1.5rem 1rem;
+    margin: 1rem;
   }
 
   .failure-title {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
 
   .failure-message {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
   .failure-buttons {
@@ -186,6 +195,7 @@
   .action-button {
     width: 100%;
     min-width: unset;
+    padding: 1rem 1.5rem;
   }
 }
 

@@ -37,28 +37,44 @@
 /* Mobile Responsive (320px - 767px) */
 @media (max-width: 767px) {
   .memory-grid {
-    gap: 8px;
-    padding: 12px;
+    gap: 6px;
+    padding: 8px;
   }
 
   /* Adjust grid for smaller screens */
   .memory-grid.grid-4x4 {
     max-width: 100%;
+    gap: 10px;
   }
 
   .memory-grid.grid-6x6 {
     max-width: 100%;
+    gap: 8px;
   }
 
   .memory-grid.grid-8x8 {
     max-width: 100%;
-    gap: 6px;
+    gap: 4px;
+    padding: 6px;
   }
 
   /* Ensure minimum touch target size (44x44px) */
   .memory-grid > * {
     min-width: 44px;
     min-height: 44px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 375px) {
+  .memory-grid {
+    gap: 4px;
+    padding: 6px;
+  }
+
+  .memory-grid.grid-8x8 {
+    gap: 3px;
+    padding: 4px;
   }
 }
 

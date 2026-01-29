@@ -107,33 +107,44 @@
 /* Mobile Responsive (320px - 767px) */
 @media (max-width: 767px) {
   .game-header {
-    padding: 12px;
+    padding: 10px 8px;
   }
 
   .header-container {
-    gap: 8px;
+    gap: 6px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .header-item {
+    flex-shrink: 0;
+    min-width: 60px;
   }
 
   .header-label {
     font-size: 0.625rem;
+    white-space: nowrap;
   }
 
   .header-value {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
   }
 
   /* Stack vertically on very small screens */
   @media (max-width: 360px) {
     .header-container {
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
+      overflow-x: visible;
     }
 
     .header-item {
       flex-direction: row;
       justify-content: space-between;
       width: 100%;
-      max-width: 200px;
+      max-width: 100%;
+      min-width: unset;
     }
 
     .header-label {
@@ -141,7 +152,7 @@
     }
 
     .header-value {
-      font-size: 1.5rem;
+      font-size: 1.25rem;
     }
   }
 }
