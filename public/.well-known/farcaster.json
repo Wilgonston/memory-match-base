@@ -12,19 +12,19 @@
     "splashImageUrl": "https://memory-match-base.vercel.app/assets/miniapp/splash-improved.svg",
     "splashBackgroundColor": "#0052FF",
     "webhookUrl": "https://memory-match-base.vercel.app/api/webhook",
-    "subtitle": "Test your memory with BASE ecosystem projects",
-    "description": "Classic memory card game featuring BASE blockchain ecosystem projects. Match pairs, complete 100 levels, and master the BASE ecosystem! Play now and save your progress on-chain with gas-free transactions.",
+    "subtitle": "Test your memory with BASE projects",
+    "description": "Classic memory card game featuring BASE blockchain ecosystem projects Match pairs complete 100 levels and save progress onchain",
     "screenshotUrls": [
       "https://memory-match-base.vercel.app/assets/miniapp/screenshot-1-gameplay.png",
       "https://memory-match-base.vercel.app/assets/miniapp/screenshot-2-level-select.png",
       "https://memory-match-base.vercel.app/assets/miniapp/screenshot-3-victory.png"
     ],
     "primaryCategory": "games",
-    "tags": ["memory", "game", "base", "crypto", "puzzle", "blockchain", "web3"],
-    "heroImageUrl": "https://memory-match-base.vercel.app/assets/miniapp/hero-improved.svg",
-    "tagline": "Master the BASE ecosystem through memory",
-    "ogTitle": "Memory Match BASE - Blockchain Memory Game",
-    "ogDescription": "Test your memory with BASE blockchain projects. 100 levels of crypto fun!",
+    "tags": ["memory", "game", "base", "crypto", "puzzle"],
+    "heroImageUrl": "https://memory-match-base.vercel.app/assets/miniapp/cover-1200x630.png",
+    "tagline": "Master the BASE ecosystem",
+    "ogTitle": "Memory Match BASE",
+    "ogDescription": "Test your memory with BASE blockchain projects 100 levels of crypto fun",
     "ogImageUrl": "https://memory-match-base.vercel.app/assets/miniapp/cover-1200x630.png",
     "noindex": false
   }
