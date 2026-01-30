@@ -40,7 +40,7 @@ function App() {
   const { address, isConnected } = useAccount();
   
   // Progress management hook
-  const { progress, completeLevel, updateProgress } = useProgress();
+  const { progress, completeLevel, updateProgress, resetProgress } = useProgress();
 
   // Sync manager for blockchain synchronization
   const { mergeFromBlockchain } = useSyncManager();
