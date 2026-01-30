@@ -97,14 +97,25 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
       // Reduced batch size and increased delay to prevent 429 errors
       const BATCH_SIZE = 3; // Reduced from 5 to 3
       const DELAY_BETWEEN_BATCHES = 800; // Increased from 300ms to 800ms
+      
+      // Track if we found an empty level (optimization: stop loading after first empty)
+      let foundEmptyLevel = false;
 
       for (let batchStart = 1; batchStart <= 100; batchStart += BATCH_SIZE) {
+        // Stop if we already found an empty level
+        if (foundEmptyLevel) {
+          console.log(`[useLoadBlockchainProgress] Stopping at level ${batchStart} - no more progress beyond this point`);
+          break;
+        }
+        
         const batchEnd = Math.min(batchStart + BATCH_SIZE - 1, 100);
         
         console.log(`[useLoadBlockchainProgress] Loading levels ${batchStart}-${batchEnd}...`);
 
         // Load batch in parallel using wagmi's readContract
         const batchPromises = [];
+        const batchResults: Array<{ level: number; stars: number }> = [];
+        
         for (let level = batchStart; level <= batchEnd; level++) {
           const promise = (async () => {
             try {
@@ -126,6 +137,8 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
                   });
                   
                   const starsNumber = Number(stars);
+                  batchResults.push({ level, stars: starsNumber });
+                  
                   if (starsNumber > 0) {
                     levelStars.set(level, starsNumber);
                   }
@@ -152,6 +165,8 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
               if (!isRateLimit) {
                 console.error(`[useLoadBlockchainProgress] Error loading level ${level}:`, err);
               }
+              // Add empty result on error
+              batchResults.push({ level, stars: 0 });
             }
           })();
 
@@ -160,16 +175,24 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
 
         // Wait for batch to complete
         await Promise.all(batchPromises);
+        
+        // Check if all levels in this batch are empty
+        const allEmpty = batchResults.every(r => r.stars === 0);
+        if (allEmpty && batchResults.length > 0) {
+          foundEmptyLevel = true;
+          console.log(`[useLoadBlockchainProgress] Found empty batch at levels ${batchStart}-${batchEnd}, stopping early`);
+        }
 
         // Update progress
+        const currentLevel = Math.min(batchEnd, 100);
         setLoadingProgress({
-          current: batchEnd,
+          current: currentLevel,
           total: 100,
-          percentage: Math.round((batchEnd / 100) * 100)
+          percentage: Math.round((currentLevel / 100) * 100)
         });
 
-        // Delay before next batch (except for last batch)
-        if (batchEnd < 100) {
+        // Delay before next batch (except for last batch or if stopping early)
+        if (batchEnd < 100 && !foundEmptyLevel) {
           await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_BATCHES));
         }
       }
