@@ -108,6 +108,7 @@ function App() {
   /**
    * Check authentication status on mount and wallet change
    * If already authenticated, load blockchain progress automatically
+   * This only runs ONCE on initial mount/reconnect, not after manual refetch
    */
   useEffect(() => {
     if (isConnected && isAuthenticatedForAddress(address)) {
@@ -115,9 +116,14 @@ function App() {
       setCurrentScreen('level-select');
       
       // Auto-load blockchain progress if already authenticated and not currently loading
+      // hasLoadedBlockchainProgress prevents re-loading after manual refetch (e.g., after save)
       if (!hasLoadedBlockchainProgress && !isLoadingBlockchain) {
         console.log('[App] User already authenticated, auto-loading blockchain progress...');
         refetchBlockchainProgress();
+      } else if (hasLoadedBlockchainProgress) {
+        console.log('[App] Blockchain progress already loaded, skipping auto-load');
+      } else if (isLoadingBlockchain) {
+        console.log('[App] Blockchain loading in progress, skipping auto-load');
       }
     } else {
       setIsAuthenticated(false);
