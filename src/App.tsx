@@ -124,6 +124,7 @@ function App() {
       if (!hasLoadedBlockchainProgress && !isLoadingBlockchain && !isLoadingRef.current) {
         console.log('[App] User already authenticated, auto-loading blockchain progress...');
         isLoadingRef.current = true;
+        setHasLoadedBlockchainProgress(true); // Mark as loaded immediately to prevent re-trigger
         refetchBlockchainProgress().finally(() => {
           isLoadingRef.current = false;
         });
@@ -151,6 +152,7 @@ function App() {
     if (isConnected && address && !hasLoadedBlockchainProgress && !isLoadingRef.current) {
       console.log('[App] Authentication successful, triggering blockchain progress load...');
       isLoadingRef.current = true;
+      setHasLoadedBlockchainProgress(true); // Mark as loaded immediately to prevent re-trigger
       refetchBlockchainProgress().finally(() => {
         isLoadingRef.current = false;
       });
@@ -196,22 +198,15 @@ function App() {
             console.log('[App] No changes in progress, skipping update');
           }
 
-          // Mark as loaded on first load
-          if (!hasLoadedBlockchainProgress) {
-            setHasLoadedBlockchainProgress(true);
-          }
           console.log('[App] ✅ Progress applied from blockchain successfully');
         } catch (error) {
           console.error('Failed to apply blockchain progress:', error);
-          if (!hasLoadedBlockchainProgress) {
-            setHasLoadedBlockchainProgress(true);
-          }
         }
       };
 
       applyBlockchainProgress();
     }
-  }, [blockchainProgress, isAuthenticated, progress, mergeFromBlockchain, updateProgress, hasLoadedBlockchainProgress]);
+  }, [blockchainProgress, isAuthenticated, progress, mergeFromBlockchain, updateProgress]);
 
   /**
    * Handle back to main menu (logout)
