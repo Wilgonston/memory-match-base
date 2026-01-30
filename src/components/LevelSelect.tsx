@@ -232,9 +232,6 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
             console.log('[LevelSelect] Progress reset successfully!');
             setErrorMessage(null);
           }}
-          onError={(error) => {
-            console.error('[LevelSelect] Failed to reset progress:', error);
-          }}
         />
       </div>
 
