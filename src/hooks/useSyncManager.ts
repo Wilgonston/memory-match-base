@@ -10,7 +10,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import { useLoadBlockchainProgress } from './useLoadBlockchainProgress';
-import { useBatchUpdateLevels } from './useBatchUpdateLevels';
+import { useSequentialUpdateLevels } from './useSequentialUpdateLevels';
 import {
   mergeProgress,
   extractBatchUpdateData,
@@ -59,7 +59,7 @@ export interface UseSyncManagerResult {
 export function useSyncManager(): UseSyncManagerResult {
   const { address, isConnected } = useAccount();
   const { progress: onChainProgress, isLoading: isLoadingProgress } = useLoadBlockchainProgress();
-  const { batchUpdate, isPending: isSyncing } = useBatchUpdateLevels();
+  const { updateLevels, isPending: isSyncing } = useSequentialUpdateLevels();
 
   const [syncStatus, setSyncStatus] = useState<SyncStatus>({
     isSyncing: false,
@@ -104,7 +104,7 @@ export function useSyncManager(): UseSyncManagerResult {
         const { levels, stars } = extractBatchUpdateData(localProgress);
 
         if (levels.length > 0) {
-          await batchUpdate(levels, stars);
+          updateLevels(levels, stars);
 
           setSyncStatus(prev => ({
             ...prev,
@@ -122,7 +122,7 @@ export function useSyncManager(): UseSyncManagerResult {
         throw error;
       }
     },
-    [isConnected, address, batchUpdate]
+    [isConnected, address, updateLevels]
   );
 
   /**
