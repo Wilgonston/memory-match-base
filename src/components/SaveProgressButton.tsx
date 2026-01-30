@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useAccount, useConnectorClient } from 'wagmi';
+import React from 'react';
+import { useAccount } from 'wagmi';
 import { getContractAddress, MEMORY_MATCH_PROGRESS_ABI } from '../types/blockchain';
 import { useLoadBlockchainProgress } from '../hooks/useLoadBlockchainProgress';
 import { usePaymasterTransaction } from '../hooks/usePaymasterTransaction';
@@ -24,7 +24,7 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
 }) => {
   const { address, isConnected, connector } = useAccount();
   const contractAddress = getContractAddress();
-  const { progress: onChainProgress, isLoading: isLoadingBlockchain } = useLoadBlockchainProgress();
+  const { progress: onChainProgress, isLoading: isLoadingBlockchain, refetch } = useLoadBlockchainProgress();
 
   // Determine if this is a Smart Wallet
   const isSmartWalletConnected = isSmartWallet(connector?.id);
@@ -41,9 +41,16 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
     abi: MEMORY_MATCH_PROGRESS_ABI,
     functionName: 'update',
     args: [level, stars],
-    onSuccess: (hash) => {
+    onSuccess: async (hash) => {
       console.log('[SaveProgressButton] Transaction confirmed:', hash);
       playSound('transaction-confirmed');
+      
+      // Wait a bit for blockchain to update, then refetch
+      setTimeout(() => {
+        console.log('[SaveProgressButton] Refetching blockchain progress...');
+        refetch();
+      }, 2000);
+      
       onSuccess?.();
     },
     onError: (errorMsg) => {

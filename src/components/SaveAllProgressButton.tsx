@@ -29,7 +29,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
 }) => {
   const { isConnected, connector } = useAccount();
   const { updateLevels, isPending, error, isSuccess, progress, reset, hash } = useSequentialUpdateLevels();
-  const { progress: onChainProgress, isLoading: isLoadingBlockchain } = useLoadBlockchainProgress();
+  const { progress: onChainProgress, isLoading: isLoadingBlockchain, refetch } = useLoadBlockchainProgress();
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState<string | null>(null);
@@ -127,6 +127,13 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       setShowError(null);
       setIsSaving(false);
       setSavedHash(hash); // Save hash to prevent re-showing button
+      
+      // Wait a bit for blockchain to update, then refetch
+      setTimeout(() => {
+        console.log('[SaveAllProgressButton] Refetching blockchain progress...');
+        refetch();
+      }, 2000);
+      
       onSuccess?.();
       
       // Auto-hide after 10 seconds
@@ -137,7 +144,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       
       return () => clearTimeout(timer);
     }
-  }, [isSuccess, isPending, hash, onSuccess]);
+  }, [isSuccess, isPending, hash, onSuccess, refetch]);
 
   // Handle error
   useEffect(() => {

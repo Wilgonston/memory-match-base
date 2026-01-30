@@ -4,8 +4,6 @@
  * Utilities for detecting wallet type and capabilities.
  */
 
-import { useConnectorClient } from 'wagmi';
-
 /**
  * Check if the connected wallet is a Smart Wallet (Coinbase Smart Wallet)
  * 
