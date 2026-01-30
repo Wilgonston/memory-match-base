@@ -26,7 +26,6 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
   const { address, isConnected, connector } = useAccount();
   const contractAddress = getContractAddress();
   const { progress: onChainProgress, isLoading: isLoadingBlockchain, refetch } = useLoadBlockchainProgress({ autoLoad: false });
-  const [isVerifying, setIsVerifying] = React.useState(false);
 
   // Determine if this is a Smart Wallet
   const isSmartWalletConnected = isSmartWallet(connector?.id);
@@ -46,13 +45,11 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
     onSuccess: async (hash) => {
       console.log('[SaveProgressButton] Transaction confirmed:', hash);
       playSound('transaction-confirmed');
-      setIsVerifying(true);
       
-      // Wait for blockchain to update, then refetch
+      // Refetch blockchain data in background (don't block UI)
       const verifyTimer = setTimeout(async () => {
-        console.log('[SaveProgressButton] Refetching blockchain progress...');
+        console.log('[SaveProgressButton] Refetching blockchain progress in background...');
         await refetch();
-        setIsVerifying(false);
         console.log('[SaveProgressButton] Blockchain data refreshed');
       }, TIMEOUTS.VERIFY_DELAY);
       
@@ -102,14 +99,14 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
     <div className={`save-progress-button-container ${className}`}>
       <button
         onClick={handleSave}
-        disabled={isPending || isSuccess || isVerifying}
+        disabled={isPending || isSuccess}
         className="save-progress-button"
         title={hasPaymaster ? "Save progress to blockchain (Gas-Free)" : "Save progress to blockchain"}
       >
-        {isPending || isVerifying ? (
+        {isPending ? (
           <>
             <span className="save-progress-spinner"></span>
-            {isVerifying ? 'Verifying...' : 'Saving...'}
+            Saving...
           </>
         ) : isSuccess ? (
           <>✓ Saved!</>
@@ -118,7 +115,7 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
         )}
       </button>
 
-      {error && shouldDisplayError(error) && !isVerifying && (
+      {error && shouldDisplayError(error) && (
         <p className="save-progress-error">
           ⚠️ {getUserFriendlyError(error)}
         </p>

@@ -7,8 +7,8 @@
 // Common timeout values
 export const TIMEOUTS = {
   REFETCH_DELAY: 2000,
-  VERIFY_DELAY: 3000,
-  AUTO_DISMISS: 8000,
+  VERIFY_DELAY: 1000,
+  AUTO_DISMISS: 12000,
   WALLET_RESET: 2000,
 } as const;
 
