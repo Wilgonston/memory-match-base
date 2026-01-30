@@ -146,22 +146,28 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       const verifyTimer = setTimeout(async () => {
         console.log('[SaveAllProgressButton] Refetching blockchain progress...');
         
-        // Use external refetch if provided, otherwise use internal
-        if (onRefetchBlockchain) {
-          await onRefetchBlockchain();
-        } else {
-          await refetch();
+        try {
+          // Use external refetch if provided, otherwise use internal
+          if (onRefetchBlockchain) {
+            await onRefetchBlockchain();
+          } else {
+            await refetch();
+          }
+          
+          console.log('[SaveAllProgressButton] Blockchain data refreshed');
+        } catch (error) {
+          console.error('[SaveAllProgressButton] Failed to refetch:', error);
+        } finally {
+          // Always reset verifying state
+          setIsVerifying(false);
         }
-        
-        // After refetch, component will re-render and check levelsToSave
-        // If levelsToSave.count === 0, it will show "All progress synced"
-        console.log('[SaveAllProgressButton] Blockchain data refreshed');
-        setIsVerifying(false);
       }, 3000);
       
       onSuccess?.();
       
-      return () => clearTimeout(verifyTimer);
+      return () => {
+        clearTimeout(verifyTimer);
+      };
     }
   }, [isSuccess, isPending, hash, onSuccess, onRefetchBlockchain, refetch, isVerifying]);
 
@@ -197,8 +203,10 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
         {isLoading ? (
           <>
             <span className="save-all-spinner"></span>
-            {progress.total > 0 
+            {progress.total > 0 && progress.current > 0
               ? `Saving ${progress.current}/${progress.total}...` 
+              : progress.total > 0
+              ? 'Waiting for signature...'
               : 'Saving...'}
           </>
         ) : showSuccess ? (

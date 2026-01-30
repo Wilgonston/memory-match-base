@@ -93,12 +93,23 @@ export function useSequentialUpdateLevels(): UseSequentialUpdateLevelsResult {
   // Combined error message
   const error = localError || writeError?.message;
 
-  // Log transaction confirmation
+  // Update progress when transaction is submitted
   useEffect(() => {
-    if (isConfirmed && hash) {
-      // Transaction confirmed on blockchain
+    if (isWritePending && progress.total > 0 && progress.current === 0) {
+      // Transaction submitted, waiting for confirmation
+      console.log('[useSequentialUpdateLevels] Transaction submitted, updating progress');
+      setProgress(prev => ({ ...prev, current: 1 }));
     }
-  }, [isConfirmed, hash]);
+  }, [isWritePending, progress.total, progress.current]);
+
+  // Log transaction confirmation and update progress
+  useEffect(() => {
+    if (isConfirmed && hash && progress.total > 0) {
+      // Transaction confirmed on blockchain - mark all as complete
+      console.log('[useSequentialUpdateLevels] Transaction confirmed, updating progress to complete');
+      setProgress(prev => ({ ...prev, current: prev.total }));
+    }
+  }, [isConfirmed, hash, progress.total]);
 
   // Sequential update function
   const updateLevels = useCallback(
