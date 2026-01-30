@@ -113,7 +113,7 @@ function App() {
 
   /**
    * Handle successful authentication
-   * Load blockchain progress after authentication ONLY if blockchain has more progress
+   * Check blockchain progress and sync if blockchain has more
    */
   const handleAuthenticated = useCallback(async () => {
     setIsAuthenticated(true);
@@ -134,32 +134,32 @@ function App() {
         // Wait for blockchain data to load
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        // Get blockchain progress through mergeFromBlockchain (it loads the data)
+        // Get blockchain progress (merged contains both local and blockchain)
         const mergedProgress = await mergeFromBlockchain(progress);
         
-        console.log('[App] Blockchain progress check:', {
-          blockchainLevelStarsCount: mergedProgress.levelStars.size,
-          blockchainLevelStars: Array.from(mergedProgress.levelStars.entries()),
+        console.log('[App] Merged progress:', {
+          mergedLevelStarsCount: mergedProgress.levelStars.size,
+          mergedLevelStars: Array.from(mergedProgress.levelStars.entries()),
         });
 
-        // Only update if blockchain has MORE progress than local
-        let shouldUpdate = false;
+        // Check if merged progress has MORE than local (meaning blockchain had something better)
+        let blockchainHadMore = false;
         
-        // Check if any level on blockchain has more stars than local
-        for (const [level, blockchainStars] of mergedProgress.levelStars.entries()) {
+        // Compare merged with local - if merged has more stars on any level, blockchain had more
+        for (const [level, mergedStars] of mergedProgress.levelStars.entries()) {
           const localStars = progress.levelStars.get(level) || 0;
-          if (blockchainStars > localStars) {
-            shouldUpdate = true;
-            console.log(`[App] Level ${level}: blockchain has ${blockchainStars} stars, local has ${localStars} stars`);
+          if (mergedStars > localStars) {
+            blockchainHadMore = true;
+            console.log(`[App] Level ${level}: merged has ${mergedStars} stars, local has ${localStars} stars - blockchain had more`);
             break;
           }
         }
 
-        if (shouldUpdate) {
+        if (blockchainHadMore) {
           console.log('[App] Blockchain has more progress, updating local...');
           updateProgress(() => mergedProgress);
         } else {
-          console.log('[App] Local progress is up to date or better than blockchain');
+          console.log('[App] Local progress is same or better than blockchain');
         }
 
         setHasLoadedBlockchainProgress(true);
