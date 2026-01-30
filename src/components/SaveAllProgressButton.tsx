@@ -166,7 +166,10 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
         clearTimeout(verifyTimer);
       };
     }
-  }, [isSuccess, isPending, hash, onSuccess, onRefetchBlockchain, refetch]);
+    // IMPORTANT: Do NOT include onSuccess, onRefetchBlockchain, refetch in dependencies
+    // They are functions that change on every render and cause infinite loops
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess, isPending, hash]);
 
   // Handle error - but ignore if we're verifying (transaction was successful)
   useEffect(() => {
@@ -179,7 +182,9 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
         onError?.(errorMsg);
       }
     }
-  }, [error, onError]);
+    // IMPORTANT: Do NOT include onError in dependencies - it causes infinite loops
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
 
   const isLoading = isSaving || isPending;
 

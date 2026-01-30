@@ -97,7 +97,10 @@ export const ResetProgressButton: React.FC<ResetProgressButtonProps> = ({
         clearTimeout(verifyTimer);
       };
     }
-  }, [isSuccess, isPending, hash, onSuccess, onResetLocal, onRefetchBlockchain]);
+    // IMPORTANT: Do NOT include onResetLocal, onRefetchBlockchain, onSuccess in dependencies
+    // They are functions that change on every render and cause infinite loops
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess, isPending, hash]);
 
   // Handle error
   React.useEffect(() => {
@@ -111,7 +114,9 @@ export const ResetProgressButton: React.FC<ResetProgressButtonProps> = ({
         onError?.(errorMsg);
       }
     }
-  }, [error, onError]);
+    // IMPORTANT: Do NOT include onError in dependencies - it causes infinite loops
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
 
   const isLoading = isResetting || isPending;
 
