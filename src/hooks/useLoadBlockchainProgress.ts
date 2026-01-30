@@ -93,60 +93,65 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
 
       const levelStars = new Map<number, number>();
       
-      // Load levels in batches of 5 with delays to avoid rate limits
-      const BATCH_SIZE = 5;
-      const DELAY_BETWEEN_BATCHES = 300; // 300ms delay between batches
-
-      // Multiple RPC URLs for load balancing and fallback
-      const RPC_URLS = [
-        'https://base.llamarpc.com',
-        'https://mainnet.base.org',
-        'https://base.gateway.tenderly.co',
-        'https://base-rpc.publicnode.com',
-      ];
-      let currentRpcIndex = 0;
+      // Load levels in batches with delays to avoid rate limits
+      // Reduced batch size and increased delay to prevent 429 errors
+      const BATCH_SIZE = 3; // Reduced from 5 to 3
+      const DELAY_BETWEEN_BATCHES = 800; // Increased from 300ms to 800ms
 
       for (let batchStart = 1; batchStart <= 100; batchStart += BATCH_SIZE) {
         const batchEnd = Math.min(batchStart + BATCH_SIZE - 1, 100);
         
         console.log(`[useLoadBlockchainProgress] Loading levels ${batchStart}-${batchEnd}...`);
 
-        // Load batch in parallel
+        // Load batch in parallel using wagmi's readContract
         const batchPromises = [];
         for (let level = batchStart; level <= batchEnd; level++) {
-          // Rotate through RPC URLs for load balancing
-          const rpcUrl = RPC_URLS[currentRpcIndex % RPC_URLS.length];
-          currentRpcIndex++;
-
           const promise = (async () => {
             try {
-              const response = await fetch(rpcUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  jsonrpc: '2.0',
-                  id: level,
-                  method: 'eth_call',
-                  params: [
-                    {
-                      to: contractAddress,
-                      data: `0x8e179e49${address.slice(2).padStart(64, '0')}${level.toString(16).padStart(64, '0')}`
-                    },
-                    'latest'
-                  ]
-                })
-              });
+              // Use wagmi's readContract which handles RPC properly
+              const { readContract } = await import('@wagmi/core');
+              const { wagmiConfig } = await import('../config/wagmi');
               
-              const data = await response.json();
+              // Retry logic for rate limit errors
+              let retries = 0;
+              const maxRetries = 3;
               
-              if (data.result) {
-                const stars = parseInt(data.result, 16);
-                if (stars > 0) {
-                  levelStars.set(level, stars);
+              while (retries < maxRetries) {
+                try {
+                  const stars = await readContract(wagmiConfig, {
+                    address: contractAddress,
+                    abi: MEMORY_MATCH_PROGRESS_ABI,
+                    functionName: 'getStars',
+                    args: [address, level],
+                  });
+                  
+                  const starsNumber = Number(stars);
+                  if (starsNumber > 0) {
+                    levelStars.set(level, starsNumber);
+                  }
+                  break; // Success, exit retry loop
+                } catch (retryErr: any) {
+                  // Check if it's a rate limit error
+                  const isRateLimit = retryErr?.cause?.status === 429 || 
+                                     retryErr?.message?.includes('rate limit') ||
+                                     retryErr?.message?.includes('429');
+                  
+                  if (isRateLimit && retries < maxRetries - 1) {
+                    retries++;
+                    const delay = 1000 * retries; // 1s, 2s, 3s
+                    console.log(`[useLoadBlockchainProgress] Rate limit for level ${level}, retry ${retries}/${maxRetries} after ${delay}ms`);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                  } else {
+                    throw retryErr; // Not rate limit or max retries reached
+                  }
                 }
               }
             } catch (err) {
-              console.error(`[useLoadBlockchainProgress] Error loading level ${level}:`, err);
+              // Only log non-rate-limit errors
+              const isRateLimit = (err as any)?.cause?.status === 429;
+              if (!isRateLimit) {
+                console.error(`[useLoadBlockchainProgress] Error loading level ${level}:`, err);
+              }
             }
           })();
 
