@@ -37,6 +37,10 @@ export { SaveProgressButton } from './SaveProgressButton';
 
 export { LoginScreen } from './LoginScreen';
 
+export { SpendPermissionStatus } from './SpendPermissionStatus';
+
+export { MagicSpendStatus } from './MagicSpendStatus';
+
 export { BatchTransactionPreview } from './BatchTransactionPreview';
 
 export { NetworkSwitcher } from './NetworkSwitcher';
@@ -51,4 +55,3 @@ export { Web3ErrorBoundary } from './Web3ErrorBoundary';
 
 export { WelcomeScreen } from './WelcomeScreen';
 export type { WelcomeScreenProps } from './WelcomeScreen';
-

@@ -10,7 +10,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import { useLoadBlockchainProgress } from './useLoadBlockchainProgress';
-import { useSequentialUpdateLevels } from './useSequentialUpdateLevels';
+import { useBatchUpdateLevels } from './useBatchUpdateLevels';
 import {
   mergeProgress,
   extractBatchUpdateData,
@@ -59,7 +59,7 @@ export interface UseSyncManagerResult {
 export function useSyncManager(): UseSyncManagerResult {
   const { address, isConnected } = useAccount();
   const { progress: onChainProgress, isLoading: isLoadingProgress } = useLoadBlockchainProgress();
-  const { updateLevels, isPending: isSyncing } = useSequentialUpdateLevels();
+  const { batchUpdate, isPending: isSyncing } = useBatchUpdateLevels();
 
   const [syncStatus, setSyncStatus] = useState<SyncStatus>({
     isSyncing: false,
@@ -104,7 +104,7 @@ export function useSyncManager(): UseSyncManagerResult {
         const { levels, stars } = extractBatchUpdateData(localProgress);
 
         if (levels.length > 0) {
-          updateLevels(levels, stars);
+          await batchUpdate(levels, stars);
 
           setSyncStatus(prev => ({
             ...prev,
@@ -122,7 +122,7 @@ export function useSyncManager(): UseSyncManagerResult {
         throw error;
       }
     },
-    [isConnected, address, updateLevels]
+    [isConnected, address, batchUpdate]
   );
 
   /**
@@ -133,7 +133,31 @@ export function useSyncManager(): UseSyncManagerResult {
       console.log('[useSyncManager] ========== mergeFromBlockchain called ==========');
       console.log('[useSyncManager] isConnected:', isConnected);
       console.log('[useSyncManager] address:', address);
+      console.log('[useSyncManager] isLoadingProgress:', isLoadingProgress);
       console.log('[useSyncManager] onChainProgress:', onChainProgress);
+      
+      if (!isConnected || !address) {
+        // Return local progress if not connected
+        console.log('[useSyncManager] No blockchain connection, returning local progress');
+        return localProgress;
+      }
+
+      // Wait for blockchain data to finish loading
+      if (isLoadingProgress) {
+        console.log('[useSyncManager] Waiting for blockchain data to load...');
+        // Wait up to 30 seconds for loading to complete
+        const maxWaitTime = 30000;
+        const startTime = Date.now();
+        
+        while (isLoadingProgress && (Date.now() - startTime) < maxWaitTime) {
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
+        
+        if (isLoadingProgress) {
+          console.log('[useSyncManager] Timeout waiting for blockchain data, using local progress');
+          return localProgress;
+        }
+      }
       
       if (onChainProgress) {
         console.log('[useSyncManager] onChainProgress details:', {
@@ -144,9 +168,9 @@ export function useSyncManager(): UseSyncManagerResult {
         });
       }
 
-      if (!isConnected || !address || !onChainProgress) {
-        // Return local progress if not connected
-        console.log('[useSyncManager] No blockchain connection or progress, returning local progress');
+      if (!onChainProgress) {
+        // Return local progress if no blockchain data
+        console.log('[useSyncManager] No blockchain progress, returning local progress');
         return localProgress;
       }
 
@@ -177,7 +201,7 @@ export function useSyncManager(): UseSyncManagerResult {
         return localProgress;
       }
     },
-    [isConnected, address, onChainProgress]
+    [isConnected, address, onChainProgress, isLoadingProgress]
   );
 
   /**

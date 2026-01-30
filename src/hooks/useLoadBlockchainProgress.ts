@@ -2,11 +2,11 @@
  * useLoadBlockchainProgress Hook
  * 
  * Loads complete progress from blockchain by reading all 100 levels.
- * Uses multicall pattern for efficiency.
+ * Uses sequential loading with delays to avoid rate limits.
  */
 
-import { useAccount, useReadContracts } from 'wagmi';
-import { useMemo } from 'react';
+import { useAccount, useReadContract } from 'wagmi';
+import { useState, useEffect, useCallback } from 'react';
 import { 
   MEMORY_MATCH_PROGRESS_ABI, 
   getContractAddress,
@@ -18,107 +18,187 @@ export interface UseLoadBlockchainProgressResult {
   isLoading: boolean;
   error: Error | null;
   refetch: () => void;
+  loadingProgress: {
+    current: number;
+    total: number;
+    percentage: number;
+  };
 }
 
 /**
  * Load complete progress from blockchain
- * Reads stars for all 100 levels using multicall for efficiency
+ * Reads stars for all 100 levels sequentially with delays to avoid rate limits
  */
 export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
   const { address, isConnected } = useAccount();
   const contractAddress = getContractAddress();
 
-  // Create array of contracts to read (all 100 levels + total + updated)
-  const contracts = useMemo(() => {
-    if (!address || !isConnected) return [];
+  const [progress, setProgress] = useState<OnChainProgress | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [loadingProgress, setLoadingProgress] = useState({ current: 0, total: 100, percentage: 0 });
+  const [shouldLoad, setShouldLoad] = useState(false);
 
-    const levelContracts = Array.from({ length: 100 }, (_, i) => ({
-      address: contractAddress,
-      abi: MEMORY_MATCH_PROGRESS_ABI,
-      functionName: 'getStars' as const,
-      args: [address, (i + 1) as number],
-    }));
-
-    return [
-      // First get total to check if user has any progress
-      {
-        address: contractAddress,
-        abi: MEMORY_MATCH_PROGRESS_ABI,
-        functionName: 'getTotal' as const,
-        args: [address],
-      },
-      // Then get updated timestamp
-      {
-        address: contractAddress,
-        abi: MEMORY_MATCH_PROGRESS_ABI,
-        functionName: 'getUpdated' as const,
-        args: [address],
-      },
-      // Then all level stars
-      ...levelContracts,
-    ];
-  }, [address, isConnected, contractAddress]);
-
-  // Use multicall to read all data at once
-  const { data, isLoading, error, refetch } = useReadContracts({
-    contracts,
+  // Read total stars
+  const { data: totalData } = useReadContract({
+    address: contractAddress,
+    abi: MEMORY_MATCH_PROGRESS_ABI,
+    functionName: 'getTotal',
+    args: address ? [address] : undefined,
     query: {
-      enabled: isConnected && !!address && contracts.length > 0,
-      staleTime: 5 * 60_000, // Cache for 5 minutes (prevent rate limit)
-      gcTime: 10 * 60_000, // Keep in cache for 10 minutes
+      enabled: isConnected && !!address && shouldLoad,
     },
   });
 
-  // Parse results into OnChainProgress
-  const progress = useMemo((): OnChainProgress | null => {
-    if (!data || data.length < 2) return null;
+  // Read updated timestamp
+  const { data: updatedData } = useReadContract({
+    address: contractAddress,
+    abi: MEMORY_MATCH_PROGRESS_ABI,
+    functionName: 'getUpdated',
+    args: address ? [address] : undefined,
+    query: {
+      enabled: isConnected && !!address && shouldLoad,
+    },
+  });
 
-    const totalResult = data[0];
-    const updatedResult = data[1];
-
-    // Check if results are valid
-    if (totalResult.status !== 'success' || updatedResult.status !== 'success') {
-      return null;
+  // Load all levels sequentially with delays
+  const loadAllLevels = useCallback(async () => {
+    if (!address || !isConnected) {
+      console.log('[useLoadBlockchainProgress] No address or not connected');
+      return;
     }
 
-    const total = Number(totalResult.result);
-    const updated = Number(updatedResult.result);
+    setIsLoading(true);
+    setError(null);
+    setLoadingProgress({ current: 0, total: 100, percentage: 0 });
 
-    // If no progress on blockchain, return null
-    if (total === 0 && updated === 0) {
-      return null;
-    }
+    try {
+      console.log('[useLoadBlockchainProgress] Starting to load progress from blockchain...');
+      
+      const total = totalData ? Number(totalData) : 0;
+      const updated = updatedData ? Number(updatedData) : 0;
 
-    // Parse level stars from remaining results
-    const levelStars = new Map<number, number>();
-    for (let i = 0; i < 100; i++) {
-      const levelResult = data[i + 2]; // Skip first 2 (total and updated)
-      if (levelResult && levelResult.status === 'success') {
-        const stars = Number(levelResult.result);
-        if (stars > 0) {
-          levelStars.set(i + 1, stars);
+      console.log('[useLoadBlockchainProgress] Total stars:', total, 'Updated:', updated);
+
+      // If no progress on blockchain, return null
+      if (total === 0 && updated === 0) {
+        console.log('[useLoadBlockchainProgress] No progress on blockchain');
+        setProgress(null);
+        setIsLoading(false);
+        return;
+      }
+
+      const levelStars = new Map<number, number>();
+      
+      // Load levels in batches of 5 with delays to avoid rate limits
+      const BATCH_SIZE = 5;
+      const DELAY_BETWEEN_BATCHES = 300; // 300ms delay between batches
+
+      for (let batchStart = 1; batchStart <= 100; batchStart += BATCH_SIZE) {
+        const batchEnd = Math.min(batchStart + BATCH_SIZE - 1, 100);
+        
+        console.log(`[useLoadBlockchainProgress] Loading levels ${batchStart}-${batchEnd}...`);
+
+        // Load batch in parallel
+        const batchPromises = [];
+        for (let level = batchStart; level <= batchEnd; level++) {
+          // Use wagmi's readContract directly
+          const promise = (async () => {
+            try {
+              const response = await fetch(`https://base.llamarpc.com`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  jsonrpc: '2.0',
+                  id: level,
+                  method: 'eth_call',
+                  params: [
+                    {
+                      to: contractAddress,
+                      data: `0x8e179e49${address.slice(2).padStart(64, '0')}${level.toString(16).padStart(64, '0')}`
+                    },
+                    'latest'
+                  ]
+                })
+              });
+              
+              const data = await response.json();
+              
+              if (data.result) {
+                const stars = parseInt(data.result, 16);
+                if (stars > 0) {
+                  levelStars.set(level, stars);
+                }
+              }
+            } catch (err) {
+              console.error(`[useLoadBlockchainProgress] Error loading level ${level}:`, err);
+            }
+          })();
+
+          batchPromises.push(promise);
+        }
+
+        // Wait for batch to complete
+        await Promise.all(batchPromises);
+
+        // Update progress
+        setLoadingProgress({
+          current: batchEnd,
+          total: 100,
+          percentage: Math.round((batchEnd / 100) * 100)
+        });
+
+        // Delay before next batch (except for last batch)
+        if (batchEnd < 100) {
+          await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_BATCHES));
         }
       }
+
+      console.log('[useLoadBlockchainProgress] Loaded from blockchain:', {
+        total,
+        updated,
+        levelsWithStars: levelStars.size,
+        levels: Array.from(levelStars.keys()),
+      });
+
+      setProgress({
+        total,
+        updated,
+        levelStars,
+      });
+      setIsLoading(false);
+    } catch (err) {
+      console.error('[useLoadBlockchainProgress] Error loading progress:', err);
+      setError(err instanceof Error ? err : new Error('Failed to load progress'));
+      setIsLoading(false);
     }
+  }, [address, isConnected, contractAddress, totalData, updatedData]);
 
-    console.log('[useLoadBlockchainProgress] Loaded from blockchain:', {
-      total,
-      updated,
-      levelsWithStars: levelStars.size,
-      levels: Array.from(levelStars.keys()),
-    });
+  // Trigger load when enabled
+  useEffect(() => {
+    if (shouldLoad && address && isConnected && totalData !== undefined && updatedData !== undefined) {
+      loadAllLevels();
+    }
+  }, [shouldLoad, address, isConnected, totalData, updatedData, loadAllLevels]);
 
-    return {
-      total,
-      updated,
-      levelStars,
-    };
-  }, [data]);
+  // Auto-load on mount
+  useEffect(() => {
+    if (address && isConnected && !shouldLoad) {
+      setShouldLoad(true);
+    }
+  }, [address, isConnected, shouldLoad]);
+
+  const refetch = useCallback(() => {
+    console.log('[useLoadBlockchainProgress] Manual refetch triggered');
+    setShouldLoad(false);
+    setTimeout(() => setShouldLoad(true), 100);
+  }, []);
 
   return {
     progress,
     isLoading,
-    error: error as Error | null,
+    error,
     refetch,
+    loadingProgress,
   };
 }

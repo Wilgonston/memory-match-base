@@ -23,17 +23,21 @@ export type { UsePlayerProgressResult } from './usePlayerProgress';
 export { useUpdateLevel } from './useUpdateLevel';
 export type { UseUpdateLevelResult } from './useUpdateLevel';
 
+export { useBatchUpdateLevels } from './useBatchUpdateLevels';
+export type { UseBatchUpdateLevelsResult } from './useBatchUpdateLevels';
+
+export { useHybridTransaction } from './useHybridTransaction';
+export type { UseHybridTransactionResult, HybridTransactionOptions } from './useHybridTransaction';
+
 export { useSyncManager } from './useSyncManager';
 export type { UseSyncManagerResult } from './useSyncManager';
+
+export { useSpendPermissions } from './useSpendPermissions';
+export type { UseSpendPermissionsReturn } from './useSpendPermissions';
+
+export { useMagicSpend } from './useMagicSpend';
 
 export { useBatchTransactions } from './useBatchTransactions';
 
 export { usePaymasterTransaction } from './usePaymasterTransaction';
 export type { UsePaymasterTransactionResult, UsePaymasterTransactionOptions } from './usePaymasterTransaction';
-
-export { useSequentialUpdateLevels } from './useSequentialUpdateLevels';
-export type { UseSequentialUpdateLevelsResult } from './useSequentialUpdateLevels';
-
-export { useLoadBlockchainProgress } from './useLoadBlockchainProgress';
-export type { UseLoadBlockchainProgressResult } from './useLoadBlockchainProgress';
-

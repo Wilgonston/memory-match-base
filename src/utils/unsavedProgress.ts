@@ -72,34 +72,6 @@ export function getUnsavedLevels(
 }
 
 /**
- * Check if blockchain has more progress than local
- * 
- * Returns true if there are levels on blockchain that:
- * - Don't exist locally
- * - Have more stars on blockchain than locally
- * 
- * @param local - Local progress data
- * @param onChain - Blockchain progress data (null if no blockchain data)
- * @returns True if blockchain has more progress
- */
-export function hasMoreProgressOnBlockchain(
-  local: ProgressData,
-  onChain: OnChainProgress | null
-): boolean {
-  if (!onChain) return false;
-
-  // Check if any level on blockchain has more stars than local
-  for (const [level, blockchainStars] of onChain.levelStars.entries()) {
-    const localStars = local.levelStars.get(level) || 0;
-    if (blockchainStars > localStars) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-/**
  * Check if there is any unsaved progress
  * 
  * @param local - Local progress data

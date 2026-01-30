@@ -28,6 +28,10 @@ export interface LoadingIndicatorProps {
   stillWorking?: boolean;
   /** Custom icon or element */
   icon?: ReactNode;
+  /** Progress percentage (0-100) */
+  progress?: number;
+  /** Progress details (e.g., "Loading 50/100 levels") */
+  progressDetails?: string;
 }
 
 /**
@@ -54,6 +58,8 @@ export function LoadingIndicator({
   onCancel,
   stillWorking = false,
   icon,
+  progress,
+  progressDetails,
 }: LoadingIndicatorProps) {
   return (
     <div className="loading-indicator">
@@ -69,7 +75,20 @@ export function LoadingIndicator({
         <div className="loading-text">
           <p className="loading-operation">{operation}</p>
           
-          {estimatedTime && !stillWorking && (
+          {progress !== undefined && (
+            <div className="loading-progress-bar">
+              <div 
+                className="loading-progress-fill" 
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          )}
+          
+          {progressDetails && (
+            <p className="loading-progress-details">{progressDetails}</p>
+          )}
+          
+          {estimatedTime && !stillWorking && !progress && (
             <p className="loading-estimate">
               Estimated time: ~{estimatedTime}s
             </p>
