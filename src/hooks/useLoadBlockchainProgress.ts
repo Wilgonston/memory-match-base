@@ -38,6 +38,7 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
   const [error, setError] = useState<Error | null>(null);
   const [loadingProgress, setLoadingProgress] = useState({ current: 0, total: 100, percentage: 0 });
   const [shouldLoad, setShouldLoad] = useState(false);
+  const [hasAttemptedLoad, setHasAttemptedLoad] = useState(false);
 
   // Read total stars
   const { data: totalData } = useReadContract({
@@ -69,6 +70,7 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
     }
 
     setIsLoading(true);
+    setHasAttemptedLoad(true);
     setError(null);
     setLoadingProgress({ current: 0, total: 100, percentage: 0 });
 
@@ -186,14 +188,15 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
 
   // Auto-load on mount (only once)
   useEffect(() => {
-    if (address && isConnected && !shouldLoad && !isLoading && !progress) {
+    if (address && isConnected && !shouldLoad && !isLoading && !hasAttemptedLoad) {
       console.log('[useLoadBlockchainProgress] Auto-triggering initial load');
       setShouldLoad(true);
     }
-  }, [address, isConnected, shouldLoad, isLoading, progress]);
+  }, [address, isConnected, shouldLoad, isLoading, hasAttemptedLoad]);
 
   const refetch = useCallback(() => {
     console.log('[useLoadBlockchainProgress] Manual refetch triggered');
+    setHasAttemptedLoad(false);
     setShouldLoad(false);
     setTimeout(() => setShouldLoad(true), 100);
   }, []);
