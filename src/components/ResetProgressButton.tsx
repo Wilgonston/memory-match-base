@@ -54,16 +54,22 @@ export const ResetProgressButton: React.FC<ResetProgressButtonProps> = ({
       
       console.log('[ResetProgressButton] Resetting 100 levels to 0 stars...');
       
+      // Validate that we have valid data before calling updateLevels
+      if (levels.length === 0 || stars.length === 0) {
+        throw new Error('Invalid reset data');
+      }
+      
       updateLevels(levels, stars);
       
       console.log('[ResetProgressButton] ✅ Reset transaction initiated');
     } catch (err) {
       console.error('[ResetProgressButton] ❌ Failed to reset progress:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Failed to reset progress';
+      const errorMessage = err instanceof Error ? err.message : String(err || 'Failed to reset progress');
       
       const friendlyError = getUserFriendlyError(errorMessage);
       if (friendlyError) {
         setShowError(friendlyError);
+        onError?.(friendlyError);
       }
       setIsResetting(false);
     }

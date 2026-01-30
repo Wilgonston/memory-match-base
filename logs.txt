@@ -1608,3 +1608,2325 @@
 [2026-01-30T22:40:02.014Z] [ERROR] [ResetProgressButton] ❌ Failed to reset progress: {}
 [2026-01-30T22:40:02.020Z] [ERROR] [LevelSelect] Failed to reset progress: Transaction failed. Please try again.
 [2026-01-30T22:40:05.233Z] [WARN] [fetchWithRetry] Suppressing analytics error: Failed to fetch
+[2026-01-30T22:40:14.965Z] [LOG] Console logs downloaded!
+[2026-01-30T22:40:15.280Z] [WARN] [fetchWithRetry] Suppressing analytics error: Failed to fetch
+[2026-01-30T22:40:26.154Z] [WARN] [fetchWithRetry] Suppressing analytics error: Failed to fetch
+[2026-01-30T22:40:43.457Z] [DEBUG] [vite] hot updated: /src/App.tsx
+[2026-01-30T22:40:43.458Z] [DEBUG] [vite] hot updated: /src/index.css
+[2026-01-30T22:40:43.487Z] [LOG] Paymaster service not available for batch update
+[2026-01-30T22:40:43.488Z] [LOG] Paymaster service not available for batch update
+[2026-01-30T22:40:43.799Z] [ERROR] [LevelSelect] Failed to reset progress: Transaction failed. Please try again.
+[2026-01-30T22:40:43.809Z] [LOG] [App] Blockchain progress already loaded, skipping auto-load
+[2026-01-30T22:40:43.812Z] [LOG] [App] Blockchain progress loaded, merging with local progress...
+[2026-01-30T22:40:43.813Z] [LOG] [App] Current local progress: {
+  "completedLevels": [
+    3,
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ],
+  "highestUnlockedLevel": 26,
+  "levelStarsCount": 25
+}
+[2026-01-30T22:40:43.815Z] [LOG] [App] Blockchain progress: {
+  "total": 37,
+  "updated": 1769810691,
+  "levelsWithStars": 25
+}
+[2026-01-30T22:40:43.817Z] [LOG] [useSyncManager] ========== mergeFromBlockchain called ==========
+[2026-01-30T22:40:43.870Z] [LOG] [useSyncManager] isConnected: true
+[2026-01-30T22:40:43.871Z] [LOG] [useSyncManager] address: 0xAb24862fc70dfAa91d67Fc465C2be8Cae2e9fe02
+[2026-01-30T22:40:43.873Z] [LOG] [useSyncManager] onChainProgress: {
+  "total": 37,
+  "updated": 1769810691,
+  "levelStars": {}
+}
+[2026-01-30T22:40:43.875Z] [LOG] [useSyncManager] onChainProgress details: {
+  "total": 37,
+  "updated": 1769810691,
+  "levelStarsSize": 25,
+  "levelStarsEntries": [
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      3,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      6,
+      1
+    ],
+    [
+      7,
+      1
+    ],
+    [
+      8,
+      1
+    ],
+    [
+      9,
+      1
+    ],
+    [
+      10,
+      1
+    ],
+    [
+      11,
+      1
+    ],
+    [
+      12,
+      1
+    ],
+    [
+      13,
+      1
+    ],
+    [
+      14,
+      2
+    ],
+    [
+      15,
+      1
+    ],
+    [
+      16,
+      2
+    ],
+    [
+      17,
+      2
+    ],
+    [
+      18,
+      3
+    ],
+    [
+      19,
+      2
+    ],
+    [
+      20,
+      2
+    ],
+    [
+      21,
+      1
+    ],
+    [
+      22,
+      2
+    ],
+    [
+      23,
+      1
+    ],
+    [
+      24,
+      2
+    ],
+    [
+      25,
+      1
+    ]
+  ]
+}
+[2026-01-30T22:40:43.878Z] [LOG] [useSyncManager] Calling mergeProgress with: {
+  "localLevels": [
+    [
+      3,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      6,
+      1
+    ],
+    [
+      7,
+      1
+    ],
+    [
+      8,
+      1
+    ],
+    [
+      9,
+      1
+    ],
+    [
+      10,
+      1
+    ],
+    [
+      11,
+      1
+    ],
+    [
+      12,
+      1
+    ],
+    [
+      13,
+      1
+    ],
+    [
+      14,
+      2
+    ],
+    [
+      15,
+      1
+    ],
+    [
+      16,
+      2
+    ],
+    [
+      17,
+      2
+    ],
+    [
+      18,
+      3
+    ],
+    [
+      19,
+      2
+    ],
+    [
+      20,
+      2
+    ],
+    [
+      21,
+      1
+    ],
+    [
+      22,
+      2
+    ],
+    [
+      23,
+      1
+    ],
+    [
+      24,
+      2
+    ],
+    [
+      25,
+      1
+    ]
+  ],
+  "blockchainLevels": [
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      3,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      6,
+      1
+    ],
+    [
+      7,
+      1
+    ],
+    [
+      8,
+      1
+    ],
+    [
+      9,
+      1
+    ],
+    [
+      10,
+      1
+    ],
+    [
+      11,
+      1
+    ],
+    [
+      12,
+      1
+    ],
+    [
+      13,
+      1
+    ],
+    [
+      14,
+      2
+    ],
+    [
+      15,
+      1
+    ],
+    [
+      16,
+      2
+    ],
+    [
+      17,
+      2
+    ],
+    [
+      18,
+      3
+    ],
+    [
+      19,
+      2
+    ],
+    [
+      20,
+      2
+    ],
+    [
+      21,
+      1
+    ],
+    [
+      22,
+      2
+    ],
+    [
+      23,
+      1
+    ],
+    [
+      24,
+      2
+    ],
+    [
+      25,
+      1
+    ]
+  ]
+}
+[2026-01-30T22:40:43.883Z] [LOG] [mergeProgress] Merge successful: {
+  "localLevels": 25,
+  "onChainLevels": 25,
+  "mergedLevels": 25,
+  "highestUnlockedLevel": 26
+}
+[2026-01-30T22:40:43.885Z] [LOG] [useSyncManager] Merged progress result: {
+  "completedLevels": [
+    3,
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ],
+  "highestUnlockedLevel": 26,
+  "levelStarsCount": 25,
+  "levelStarsEntries": [
+    [
+      3,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      6,
+      1
+    ],
+    [
+      7,
+      1
+    ],
+    [
+      8,
+      1
+    ],
+    [
+      9,
+      1
+    ],
+    [
+      10,
+      1
+    ],
+    [
+      11,
+      1
+    ],
+    [
+      12,
+      1
+    ],
+    [
+      13,
+      1
+    ],
+    [
+      14,
+      2
+    ],
+    [
+      15,
+      1
+    ],
+    [
+      16,
+      2
+    ],
+    [
+      17,
+      2
+    ],
+    [
+      18,
+      3
+    ],
+    [
+      19,
+      2
+    ],
+    [
+      20,
+      2
+    ],
+    [
+      21,
+      1
+    ],
+    [
+      22,
+      2
+    ],
+    [
+      23,
+      1
+    ],
+    [
+      24,
+      2
+    ],
+    [
+      25,
+      1
+    ]
+  ]
+}
+[2026-01-30T22:40:44.283Z] [ERROR] [LevelSelect] Failed to reset progress: Transaction failed. Please try again.
+[2026-01-30T22:40:44.287Z] [LOG] [App] Merged progress: {
+  "completedLevels": [
+    3,
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ],
+  "highestUnlockedLevel": 26,
+  "levelStarsCount": 25
+}
+[2026-01-30T22:40:44.288Z] [LOG] [App] No changes in progress, skipping update
+[2026-01-30T22:40:44.288Z] [LOG] [App] ✅ Progress applied from blockchain successfully
+[2026-01-30T22:40:57.202Z] [DEBUG] [vite] hot updated: /src/App.tsx
+[2026-01-30T22:40:57.204Z] [DEBUG] [vite] hot updated: /src/index.css
+[2026-01-30T22:40:57.220Z] [LOG] [useProgress] Initial progress loaded: {
+  "completedLevels": [
+    3,
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ],
+  "highestUnlockedLevel": 26,
+  "levelStarsCount": 25
+}
+[2026-01-30T22:40:57.222Z] [LOG] [useProgress] Initial progress loaded: {
+  "completedLevels": [
+    3,
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ],
+  "highestUnlockedLevel": 26,
+  "levelStarsCount": 25
+}
+[2026-01-30T22:40:57.224Z] [LOG] Paymaster service not available for batch update
+[2026-01-30T22:40:57.225Z] [LOG] Paymaster service not available for batch update
+[2026-01-30T22:40:57.255Z] [LOG] [App] isLoadingBlockchain changed: false progress: {
+  "current": 0,
+  "total": 100,
+  "percentage": 0
+}
+[2026-01-30T22:40:57.257Z] [LOG] [Config] ✅ All configuration validated successfully
+[2026-01-30T22:40:57.273Z] [ERROR] %o
+
+%s
+
+%s
+ {} The above error occurred in the <App> component. React will try to recreate this component tree from scratch using the error boundary you provided, OnchainKitProviderBoundary.
+[2026-01-30T22:40:57.275Z] [ERROR] Uncaught error: {} {
+  "componentStack": "\n    at App (http://localhost:3000/src/App.tsx?t=1769812857011:39:36)\n    at BaseAccountProvider (http://localhost:3000/src/components/BaseAccountProvider.tsx:22:39)\n    at AppWithWalletModal (<anonymous>)\n    at OnchainKitProviderBoundary (http://localhost:3000/node_modules/.vite/deps/@coinbase_onchainkit.js?v=788065c0:1505:5)\n    at MiniKitProvider (http://localhost:3000/node_modules/.vite/deps/chunk-I3HAL43T.js?v=788065c0:35725:3)\n    at QueryClientProviderWithDefault (http://localhost:3000/node_modules/.vite/deps/@coinbase_onchainkit.js?v=788065c0:1490:3)\n    at WagmiProviderWithDefault (http://localhost:3000/node_modules/.vite/deps/@coinbase_onchainkit.js?v=788065c0:1457:3)\n    at DefaultOnchainKitProviders (http://localhost:3000/node_modules/.vite/deps/@coinbase_onchainkit.js?v=788065c0:1448:3)\n    at OnchainKitProvider (http://localhost:3000/node_modules/.vite/deps/@coinbase_onchainkit.js?v=788065c0:1684:3)\n    at QueryClientProvider (http://localhost:3000/node_modules/.vite/deps/chunk-GVKX5KEQ.js?v=788065c0:3168:3)\n    at Hydrate (http://localhost:3000/node_modules/.vite/deps/chunk-OC2SIO4G.js?v=788065c0:231:11)\n    at WagmiProvider (http://localhost:3000/node_modules/.vite/deps/chunk-OC2SIO4G.js?v=788065c0:256:11)"
+}
+[2026-01-30T22:41:05.420Z] [DEBUG] [vite] hot updated: /src/App.tsx
+[2026-01-30T22:41:05.420Z] [DEBUG] [vite] hot updated: /src/index.css
+[2026-01-30T22:41:06.133Z] [LOG] [useProgress] Initial progress loaded: {
+  "completedLevels": [
+    3,
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ],
+  "highestUnlockedLevel": 26,
+  "levelStarsCount": 25
+}
+[2026-01-30T22:41:06.135Z] [LOG] [useProgress] Initial progress loaded: {
+  "completedLevels": [
+    3,
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ],
+  "highestUnlockedLevel": 26,
+  "levelStarsCount": 25
+}
+[2026-01-30T22:41:06.138Z] [LOG] Paymaster service not available for batch update
+[2026-01-30T22:41:06.139Z] [LOG] Paymaster service not available for batch update
+[2026-01-30T22:41:06.197Z] [LOG] [App] isLoadingBlockchain changed: false progress: {
+  "current": 0,
+  "total": 100,
+  "percentage": 0
+}
+[2026-01-30T22:41:06.219Z] [LOG] [Config] ✅ All configuration validated successfully
+[2026-01-30T22:41:06.221Z] [LOG] [App] User already authenticated, auto-loading blockchain progress...
+[2026-01-30T22:41:06.228Z] [LOG] [Base Account SDK] Initialized successfully
+[2026-01-30T22:41:06.232Z] [ERROR] %o
+
+%s
+
+%s
+ {} The above error occurred in the <App> component. React will try to recreate this component tree from scratch using the error boundary you provided, OnchainKitProviderBoundary.
+[2026-01-30T22:41:06.239Z] [ERROR] Uncaught error: {} {
+  "componentStack": "\n    at App (http://localhost:3000/src/App.tsx?t=1769812865227:39:36)\n    at BaseAccountProvider (http://localhost:3000/src/components/BaseAccountProvider.tsx:22:39)\n    at AppWithWalletModal (<anonymous>)\n    at OnchainKitProviderBoundary (http://localhost:3000/node_modules/.vite/deps/@coinbase_onchainkit.js?v=788065c0:1505:5)\n    at MiniKitProvider (http://localhost:3000/node_modules/.vite/deps/chunk-I3HAL43T.js?v=788065c0:35725:3)\n    at QueryClientProviderWithDefault (http://localhost:3000/node_modules/.vite/deps/@coinbase_onchainkit.js?v=788065c0:1490:3)\n    at WagmiProviderWithDefault (http://localhost:3000/node_modules/.vite/deps/@coinbase_onchainkit.js?v=788065c0:1457:3)\n    at DefaultOnchainKitProviders (http://localhost:3000/node_modules/.vite/deps/@coinbase_onchainkit.js?v=788065c0:1448:3)\n    at OnchainKitProvider (http://localhost:3000/node_modules/.vite/deps/@coinbase_onchainkit.js?v=788065c0:1684:3)\n    at QueryClientProvider (http://localhost:3000/node_modules/.vite/deps/chunk-GVKX5KEQ.js?v=788065c0:3168:3)\n    at Hydrate (http://localhost:3000/node_modules/.vite/deps/chunk-OC2SIO4G.js?v=788065c0:231:11)\n    at WagmiProvider (http://localhost:3000/node_modules/.vite/deps/chunk-OC2SIO4G.js?v=788065c0:256:11)"
+}
+[2026-01-30T22:41:14.232Z] [DEBUG] [vite] hot updated: /src/App.tsx
+[2026-01-30T22:41:14.233Z] [DEBUG] [vite] hot updated: /src/index.css
+[2026-01-30T22:41:15.160Z] [LOG] [useProgress] Initial progress loaded: {
+  "completedLevels": [
+    3,
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ],
+  "highestUnlockedLevel": 26,
+  "levelStarsCount": 25
+}
+[2026-01-30T22:41:15.163Z] [LOG] [useProgress] Initial progress loaded: {
+  "completedLevels": [
+    3,
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ],
+  "highestUnlockedLevel": 26,
+  "levelStarsCount": 25
+}
+[2026-01-30T22:41:15.170Z] [LOG] Paymaster service not available for batch update
+[2026-01-30T22:41:15.172Z] [LOG] Paymaster service not available for batch update
+[2026-01-30T22:41:15.631Z] [LOG] [App] isLoadingBlockchain changed: false progress: {
+  "current": 0,
+  "total": 100,
+  "percentage": 0
+}
+[2026-01-30T22:41:15.632Z] [LOG] [Config] ✅ All configuration validated successfully
+[2026-01-30T22:41:15.635Z] [LOG] [App] User already authenticated, auto-loading blockchain progress...
+[2026-01-30T22:41:15.636Z] [LOG] [useLoadBlockchainProgress] Manual refetch triggered
+[2026-01-30T22:41:15.648Z] [LOG] [Base Account SDK] Initialized successfully
+[2026-01-30T22:41:15.673Z] [LOG] [App] isLoadingBlockchain changed: false progress: {
+  "current": 0,
+  "total": 100,
+  "percentage": 0
+}
+[2026-01-30T22:41:15.996Z] [LOG] [SaveAllProgressButton] Checking unsaved levels: {
+  "localLevels": [
+    [
+      3,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      6,
+      1
+    ],
+    [
+      7,
+      1
+    ],
+    [
+      8,
+      1
+    ],
+    [
+      9,
+      1
+    ],
+    [
+      10,
+      1
+    ],
+    [
+      11,
+      1
+    ],
+    [
+      12,
+      1
+    ],
+    [
+      13,
+      1
+    ],
+    [
+      14,
+      2
+    ],
+    [
+      15,
+      1
+    ],
+    [
+      16,
+      2
+    ],
+    [
+      17,
+      2
+    ],
+    [
+      18,
+      3
+    ],
+    [
+      19,
+      2
+    ],
+    [
+      20,
+      2
+    ],
+    [
+      21,
+      1
+    ],
+    [
+      22,
+      2
+    ],
+    [
+      23,
+      1
+    ],
+    [
+      24,
+      2
+    ],
+    [
+      25,
+      1
+    ]
+  ],
+  "blockchainLevels": "null",
+  "unsavedCount": 25,
+  "unsavedLevels": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ]
+}
+[2026-01-30T22:41:15.997Z] [LOG] [SaveAllProgressButton] Checking unsaved levels: {
+  "localLevels": [
+    [
+      3,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      6,
+      1
+    ],
+    [
+      7,
+      1
+    ],
+    [
+      8,
+      1
+    ],
+    [
+      9,
+      1
+    ],
+    [
+      10,
+      1
+    ],
+    [
+      11,
+      1
+    ],
+    [
+      12,
+      1
+    ],
+    [
+      13,
+      1
+    ],
+    [
+      14,
+      2
+    ],
+    [
+      15,
+      1
+    ],
+    [
+      16,
+      2
+    ],
+    [
+      17,
+      2
+    ],
+    [
+      18,
+      3
+    ],
+    [
+      19,
+      2
+    ],
+    [
+      20,
+      2
+    ],
+    [
+      21,
+      1
+    ],
+    [
+      22,
+      2
+    ],
+    [
+      23,
+      1
+    ],
+    [
+      24,
+      2
+    ],
+    [
+      25,
+      1
+    ]
+  ],
+  "blockchainLevels": "null",
+  "unsavedCount": 25,
+  "unsavedLevels": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ]
+}
+[2026-01-30T22:41:16.461Z] [LOG] [useLoadBlockchainProgress] Starting to load progress from blockchain...
+[2026-01-30T22:41:16.462Z] [LOG] [useLoadBlockchainProgress] Total stars: 37 Updated: 1769810691
+[2026-01-30T22:41:16.464Z] [LOG] [useLoadBlockchainProgress] Loading levels 1-3...
+[2026-01-30T22:41:16.471Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 0,
+  "total": 100,
+  "percentage": 0
+}
+[2026-01-30T22:41:16.475Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 0,
+  "total": 100,
+  "percentage": 0
+}
+[2026-01-30T22:41:16.496Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
+  "current": 0,
+  "total": 100,
+  "percentage": 0
+}
+[2026-01-30T22:41:16.499Z] [LOG] [App] Blockchain progress already loaded, skipping auto-load
+[2026-01-30T22:41:16.504Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 0,
+  "total": 100,
+  "percentage": 0
+}
+[2026-01-30T22:41:16.507Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 0,
+  "total": 100,
+  "percentage": 0
+}
+[2026-01-30T22:41:16.866Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 3,
+  "total": 100,
+  "percentage": 3
+}
+[2026-01-30T22:41:16.868Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 3,
+  "total": 100,
+  "percentage": 3
+}
+[2026-01-30T22:41:16.873Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
+  "current": 3,
+  "total": 100,
+  "percentage": 3
+}
+[2026-01-30T22:41:18.082Z] [LOG] [useLoadBlockchainProgress] Loading levels 4-6...
+[2026-01-30T22:41:18.312Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 6,
+  "total": 100,
+  "percentage": 6
+}
+[2026-01-30T22:41:18.315Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 6,
+  "total": 100,
+  "percentage": 6
+}
+[2026-01-30T22:41:18.320Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
+  "current": 6,
+  "total": 100,
+  "percentage": 6
+}
+[2026-01-30T22:41:19.112Z] [LOG] [useLoadBlockchainProgress] Loading levels 7-9...
+[2026-01-30T22:41:19.402Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 9,
+  "total": 100,
+  "percentage": 9
+}
+[2026-01-30T22:41:19.406Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 9,
+  "total": 100,
+  "percentage": 9
+}
+[2026-01-30T22:41:19.413Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
+  "current": 9,
+  "total": 100,
+  "percentage": 9
+}
+[2026-01-30T22:41:20.204Z] [LOG] [useLoadBlockchainProgress] Loading levels 10-12...
+[2026-01-30T22:41:20.423Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 12,
+  "total": 100,
+  "percentage": 12
+}
+[2026-01-30T22:41:20.427Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 12,
+  "total": 100,
+  "percentage": 12
+}
+[2026-01-30T22:41:20.435Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
+  "current": 12,
+  "total": 100,
+  "percentage": 12
+}
+[2026-01-30T22:41:21.224Z] [LOG] [useLoadBlockchainProgress] Loading levels 13-15...
+[2026-01-30T22:41:22.346Z] [DEBUG] [vite] hot updated: /src/App.tsx
+[2026-01-30T22:41:22.347Z] [DEBUG] [vite] hot updated: /src/index.css
+[2026-01-30T22:41:22.367Z] [LOG] Paymaster service not available for batch update
+[2026-01-30T22:41:22.368Z] [LOG] Paymaster service not available for batch update
+[2026-01-30T22:41:22.372Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 12,
+  "total": 100,
+  "percentage": 12
+}
+[2026-01-30T22:41:22.374Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 12,
+  "total": 100,
+  "percentage": 12
+}
+[2026-01-30T22:41:22.386Z] [LOG] [App] Blockchain progress already loaded, skipping auto-load
+[2026-01-30T22:41:22.393Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 12,
+  "total": 100,
+  "percentage": 12
+}
+[2026-01-30T22:41:22.395Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 12,
+  "total": 100,
+  "percentage": 12
+}
+[2026-01-30T22:41:23.171Z] [LOG] [useLoadBlockchainProgress] Rate limit for level 13, retry 1/3 after 1000ms
+[2026-01-30T22:41:23.173Z] [LOG] [useLoadBlockchainProgress] Rate limit for level 14, retry 1/3 after 1000ms
+[2026-01-30T22:41:23.175Z] [LOG] [useLoadBlockchainProgress] Rate limit for level 15, retry 1/3 after 1000ms
+[2026-01-30T22:41:24.369Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 15,
+  "total": 100,
+  "percentage": 15
+}
+[2026-01-30T22:41:24.373Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 15,
+  "total": 100,
+  "percentage": 15
+}
+[2026-01-30T22:41:24.378Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
+  "current": 15,
+  "total": 100,
+  "percentage": 15
+}
+[2026-01-30T22:41:25.168Z] [LOG] [useLoadBlockchainProgress] Loading levels 16-18...
+[2026-01-30T22:41:25.359Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 18,
+  "total": 100,
+  "percentage": 18
+}
+[2026-01-30T22:41:25.361Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 18,
+  "total": 100,
+  "percentage": 18
+}
+[2026-01-30T22:41:25.367Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
+  "current": 18,
+  "total": 100,
+  "percentage": 18
+}
+[2026-01-30T22:41:27.135Z] [LOG] [useLoadBlockchainProgress] Loading levels 19-21...
+[2026-01-30T22:41:27.328Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 21,
+  "total": 100,
+  "percentage": 21
+}
+[2026-01-30T22:41:27.330Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 21,
+  "total": 100,
+  "percentage": 21
+}
+[2026-01-30T22:41:27.335Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
+  "current": 21,
+  "total": 100,
+  "percentage": 21
+}
+[2026-01-30T22:41:29.126Z] [LOG] [useLoadBlockchainProgress] Loading levels 22-24...
+[2026-01-30T22:41:29.455Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 24,
+  "total": 100,
+  "percentage": 24
+}
+[2026-01-30T22:41:29.460Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 24,
+  "total": 100,
+  "percentage": 24
+}
+[2026-01-30T22:41:29.467Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
+  "current": 24,
+  "total": 100,
+  "percentage": 24
+}
+[2026-01-30T22:41:30.257Z] [LOG] [useLoadBlockchainProgress] Loading levels 25-27...
+[2026-01-30T22:41:32.039Z] [LOG] [useLoadBlockchainProgress] Rate limit for level 25, retry 1/3 after 1000ms
+[2026-01-30T22:41:32.041Z] [LOG] [useLoadBlockchainProgress] Rate limit for level 26, retry 1/3 after 1000ms
+[2026-01-30T22:41:32.045Z] [LOG] [useLoadBlockchainProgress] Rate limit for level 27, retry 1/3 after 1000ms
+[2026-01-30T22:41:34.125Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 27,
+  "total": 100,
+  "percentage": 27
+}
+[2026-01-30T22:41:34.130Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+  "current": 27,
+  "total": 100,
+  "percentage": 27
+}
+[2026-01-30T22:41:34.141Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
+  "current": 27,
+  "total": 100,
+  "percentage": 27
+}
+[2026-01-30T22:41:35.127Z] [LOG] [useLoadBlockchainProgress] Loading levels 28-30...
+[2026-01-30T22:41:35.474Z] [LOG] [useLoadBlockchainProgress] Found empty batch at levels 28-30, stopping early
+[2026-01-30T22:41:35.475Z] [LOG] [useLoadBlockchainProgress] Stopping at level 31 - no more progress beyond this point
+[2026-01-30T22:41:35.476Z] [LOG] [useLoadBlockchainProgress] Loaded from blockchain: {
+  "total": 37,
+  "updated": 1769810691,
+  "levelsWithStars": 25,
+  "levels": [
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      3,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      6,
+      1
+    ],
+    [
+      7,
+      1
+    ],
+    [
+      8,
+      1
+    ],
+    [
+      9,
+      1
+    ],
+    [
+      10,
+      1
+    ],
+    [
+      11,
+      1
+    ],
+    [
+      12,
+      1
+    ],
+    [
+      13,
+      1
+    ],
+    [
+      14,
+      2
+    ],
+    [
+      15,
+      1
+    ],
+    [
+      16,
+      2
+    ],
+    [
+      17,
+      2
+    ],
+    [
+      18,
+      3
+    ],
+    [
+      19,
+      2
+    ],
+    [
+      20,
+      2
+    ],
+    [
+      21,
+      1
+    ],
+    [
+      22,
+      2
+    ],
+    [
+      23,
+      1
+    ],
+    [
+      24,
+      2
+    ],
+    [
+      25,
+      1
+    ]
+  ],
+  "stoppedEarly": true,
+  "lastLevelChecked": 30
+}
+[2026-01-30T22:41:35.477Z] [LOG] ✅ Blockchain sync complete! Found 25 levels with progress (37 total stars)
+[2026-01-30T22:41:35.484Z] [LOG] [App] isLoadingBlockchain changed: false progress: {
+  "current": 30,
+  "total": 100,
+  "percentage": 30
+}
+[2026-01-30T22:41:35.486Z] [LOG] [App] Blockchain progress already loaded, skipping auto-load
+[2026-01-30T22:41:35.487Z] [LOG] [App] Blockchain progress loaded, merging with local progress...
+[2026-01-30T22:41:35.489Z] [LOG] [App] Current local progress: {
+  "completedLevels": [
+    3,
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ],
+  "highestUnlockedLevel": 26,
+  "levelStarsCount": 25
+}
+[2026-01-30T22:41:35.492Z] [LOG] [App] Blockchain progress: {
+  "total": 37,
+  "updated": 1769810691,
+  "levelsWithStars": 25
+}
+[2026-01-30T22:41:35.493Z] [LOG] [useSyncManager] ========== mergeFromBlockchain called ==========
+[2026-01-30T22:41:35.494Z] [LOG] [useSyncManager] isConnected: true
+[2026-01-30T22:41:35.496Z] [LOG] [useSyncManager] address: 0xAb24862fc70dfAa91d67Fc465C2be8Cae2e9fe02
+[2026-01-30T22:41:35.497Z] [LOG] [useSyncManager] onChainProgress: {
+  "total": 37,
+  "updated": 1769810691,
+  "levelStars": {}
+}
+[2026-01-30T22:41:35.499Z] [LOG] [useSyncManager] onChainProgress details: {
+  "total": 37,
+  "updated": 1769810691,
+  "levelStarsSize": 25,
+  "levelStarsEntries": [
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      3,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      6,
+      1
+    ],
+    [
+      7,
+      1
+    ],
+    [
+      8,
+      1
+    ],
+    [
+      9,
+      1
+    ],
+    [
+      10,
+      1
+    ],
+    [
+      11,
+      1
+    ],
+    [
+      12,
+      1
+    ],
+    [
+      13,
+      1
+    ],
+    [
+      14,
+      2
+    ],
+    [
+      15,
+      1
+    ],
+    [
+      16,
+      2
+    ],
+    [
+      17,
+      2
+    ],
+    [
+      18,
+      3
+    ],
+    [
+      19,
+      2
+    ],
+    [
+      20,
+      2
+    ],
+    [
+      21,
+      1
+    ],
+    [
+      22,
+      2
+    ],
+    [
+      23,
+      1
+    ],
+    [
+      24,
+      2
+    ],
+    [
+      25,
+      1
+    ]
+  ]
+}
+[2026-01-30T22:41:35.500Z] [LOG] [useSyncManager] Calling mergeProgress with: {
+  "localLevels": [
+    [
+      3,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      6,
+      1
+    ],
+    [
+      7,
+      1
+    ],
+    [
+      8,
+      1
+    ],
+    [
+      9,
+      1
+    ],
+    [
+      10,
+      1
+    ],
+    [
+      11,
+      1
+    ],
+    [
+      12,
+      1
+    ],
+    [
+      13,
+      1
+    ],
+    [
+      14,
+      2
+    ],
+    [
+      15,
+      1
+    ],
+    [
+      16,
+      2
+    ],
+    [
+      17,
+      2
+    ],
+    [
+      18,
+      3
+    ],
+    [
+      19,
+      2
+    ],
+    [
+      20,
+      2
+    ],
+    [
+      21,
+      1
+    ],
+    [
+      22,
+      2
+    ],
+    [
+      23,
+      1
+    ],
+    [
+      24,
+      2
+    ],
+    [
+      25,
+      1
+    ]
+  ],
+  "blockchainLevels": [
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      3,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      6,
+      1
+    ],
+    [
+      7,
+      1
+    ],
+    [
+      8,
+      1
+    ],
+    [
+      9,
+      1
+    ],
+    [
+      10,
+      1
+    ],
+    [
+      11,
+      1
+    ],
+    [
+      12,
+      1
+    ],
+    [
+      13,
+      1
+    ],
+    [
+      14,
+      2
+    ],
+    [
+      15,
+      1
+    ],
+    [
+      16,
+      2
+    ],
+    [
+      17,
+      2
+    ],
+    [
+      18,
+      3
+    ],
+    [
+      19,
+      2
+    ],
+    [
+      20,
+      2
+    ],
+    [
+      21,
+      1
+    ],
+    [
+      22,
+      2
+    ],
+    [
+      23,
+      1
+    ],
+    [
+      24,
+      2
+    ],
+    [
+      25,
+      1
+    ]
+  ]
+}
+[2026-01-30T22:41:35.503Z] [LOG] [mergeProgress] Merge successful: {
+  "localLevels": 25,
+  "onChainLevels": 25,
+  "mergedLevels": 25,
+  "highestUnlockedLevel": 26
+}
+[2026-01-30T22:41:35.504Z] [LOG] [useSyncManager] Merged progress result: {
+  "completedLevels": [
+    3,
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ],
+  "highestUnlockedLevel": 26,
+  "levelStarsCount": 25,
+  "levelStarsEntries": [
+    [
+      3,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      6,
+      1
+    ],
+    [
+      7,
+      1
+    ],
+    [
+      8,
+      1
+    ],
+    [
+      9,
+      1
+    ],
+    [
+      10,
+      1
+    ],
+    [
+      11,
+      1
+    ],
+    [
+      12,
+      1
+    ],
+    [
+      13,
+      1
+    ],
+    [
+      14,
+      2
+    ],
+    [
+      15,
+      1
+    ],
+    [
+      16,
+      2
+    ],
+    [
+      17,
+      2
+    ],
+    [
+      18,
+      3
+    ],
+    [
+      19,
+      2
+    ],
+    [
+      20,
+      2
+    ],
+    [
+      21,
+      1
+    ],
+    [
+      22,
+      2
+    ],
+    [
+      23,
+      1
+    ],
+    [
+      24,
+      2
+    ],
+    [
+      25,
+      1
+    ]
+  ]
+}
+[2026-01-30T22:41:35.507Z] [LOG] [App] Merged progress: {
+  "completedLevels": [
+    3,
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ],
+  "highestUnlockedLevel": 26,
+  "levelStarsCount": 25
+}
+[2026-01-30T22:41:35.510Z] [LOG] [App] No changes in progress, skipping update
+[2026-01-30T22:41:35.511Z] [LOG] [App] ✅ Progress applied from blockchain successfully
+[2026-01-30T22:41:35.663Z] [LOG] [SaveAllProgressButton] Checking unsaved levels: {
+  "localLevels": [
+    [
+      3,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      6,
+      1
+    ],
+    [
+      7,
+      1
+    ],
+    [
+      8,
+      1
+    ],
+    [
+      9,
+      1
+    ],
+    [
+      10,
+      1
+    ],
+    [
+      11,
+      1
+    ],
+    [
+      12,
+      1
+    ],
+    [
+      13,
+      1
+    ],
+    [
+      14,
+      2
+    ],
+    [
+      15,
+      1
+    ],
+    [
+      16,
+      2
+    ],
+    [
+      17,
+      2
+    ],
+    [
+      18,
+      3
+    ],
+    [
+      19,
+      2
+    ],
+    [
+      20,
+      2
+    ],
+    [
+      21,
+      1
+    ],
+    [
+      22,
+      2
+    ],
+    [
+      23,
+      1
+    ],
+    [
+      24,
+      2
+    ],
+    [
+      25,
+      1
+    ]
+  ],
+  "blockchainLevels": [
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      3,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      6,
+      1
+    ],
+    [
+      7,
+      1
+    ],
+    [
+      8,
+      1
+    ],
+    [
+      9,
+      1
+    ],
+    [
+      10,
+      1
+    ],
+    [
+      11,
+      1
+    ],
+    [
+      12,
+      1
+    ],
+    [
+      13,
+      1
+    ],
+    [
+      14,
+      2
+    ],
+    [
+      15,
+      1
+    ],
+    [
+      16,
+      2
+    ],
+    [
+      17,
+      2
+    ],
+    [
+      18,
+      3
+    ],
+    [
+      19,
+      2
+    ],
+    [
+      20,
+      2
+    ],
+    [
+      21,
+      1
+    ],
+    [
+      22,
+      2
+    ],
+    [
+      23,
+      1
+    ],
+    [
+      24,
+      2
+    ],
+    [
+      25,
+      1
+    ]
+  ],
+  "unsavedCount": 0,
+  "unsavedLevels": []
+}
+[2026-01-30T22:41:35.664Z] [LOG] [SaveAllProgressButton] Checking unsaved levels: {
+  "localLevels": [
+    [
+      3,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      6,
+      1
+    ],
+    [
+      7,
+      1
+    ],
+    [
+      8,
+      1
+    ],
+    [
+      9,
+      1
+    ],
+    [
+      10,
+      1
+    ],
+    [
+      11,
+      1
+    ],
+    [
+      12,
+      1
+    ],
+    [
+      13,
+      1
+    ],
+    [
+      14,
+      2
+    ],
+    [
+      15,
+      1
+    ],
+    [
+      16,
+      2
+    ],
+    [
+      17,
+      2
+    ],
+    [
+      18,
+      3
+    ],
+    [
+      19,
+      2
+    ],
+    [
+      20,
+      2
+    ],
+    [
+      21,
+      1
+    ],
+    [
+      22,
+      2
+    ],
+    [
+      23,
+      1
+    ],
+    [
+      24,
+      2
+    ],
+    [
+      25,
+      1
+    ]
+  ],
+  "blockchainLevels": [
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      3,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      6,
+      1
+    ],
+    [
+      7,
+      1
+    ],
+    [
+      8,
+      1
+    ],
+    [
+      9,
+      1
+    ],
+    [
+      10,
+      1
+    ],
+    [
+      11,
+      1
+    ],
+    [
+      12,
+      1
+    ],
+    [
+      13,
+      1
+    ],
+    [
+      14,
+      2
+    ],
+    [
+      15,
+      1
+    ],
+    [
+      16,
+      2
+    ],
+    [
+      17,
+      2
+    ],
+    [
+      18,
+      3
+    ],
+    [
+      19,
+      2
+    ],
+    [
+      20,
+      2
+    ],
+    [
+      21,
+      1
+    ],
+    [
+      22,
+      2
+    ],
+    [
+      23,
+      1
+    ],
+    [
+      24,
+      2
+    ],
+    [
+      25,
+      1
+    ]
+  ],
+  "unsavedCount": 0,
+  "unsavedLevels": []
+}
+[2026-01-30T22:41:39.422Z] [LOG] [ResetProgressButton] Starting reset process...
+[2026-01-30T22:41:39.424Z] [LOG] [ResetProgressButton] Resetting 100 levels to 0 stars...
+[2026-01-30T22:41:39.425Z] [ERROR] [ResetProgressButton] ❌ Failed to reset progress: {}
+[2026-01-30T22:41:39.432Z] [ERROR] [LevelSelect] Failed to reset progress: Transaction failed. Please try again.
