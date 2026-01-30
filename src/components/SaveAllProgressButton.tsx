@@ -211,7 +211,9 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
         className={`save-all-progress-button ${showSuccess ? 'success' : ''}`}
         title={`Save ${levelsToSave.count} level${levelsToSave.count > 1 ? 's' : ''} to blockchain`}
       >
-        {isLoading ? (
+        {showSuccess ? (
+          <>✓ All Saved!</>
+        ) : isLoading ? (
           <>
             <span className="save-all-spinner"></span>
             {progress.total > 0 && progress.current > 0
@@ -220,8 +222,6 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
               ? 'Waiting for signature...'
               : 'Saving...'}
           </>
-        ) : showSuccess ? (
-          <>✓ All Saved!</>
         ) : (
           <>
             💾 Save to Blockchain ({levelsToSave.count})
