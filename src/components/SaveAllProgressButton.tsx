@@ -34,6 +34,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState<string | null>(null);
   const [savedHash, setSavedHash] = useState<string | null>(null);
+  const [isVerifying, setIsVerifying] = useState(false);
 
   // Determine if this is a Smart Wallet
   const isSmartWalletConnected = isSmartWallet(connector?.id);
@@ -118,7 +119,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
 
   // Handle success - only when transaction is confirmed on blockchain
   useEffect(() => {
-    if (isSuccess && !isPending && hash) {
+    if (isSuccess && !isPending && hash && !isVerifying) {
       console.log('[SaveAllProgressButton] ✅ Transaction confirmed on blockchain');
       console.log('[SaveAllProgressButton] Transaction/UserOp ID:', hash);
       console.log('[SaveAllProgressButton] View on BaseScan:', `https://basescan.org/tx/${hash}`);
@@ -126,29 +127,28 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       setShowSuccess(true);
       setShowError(null);
       setIsSaving(false);
-      setSavedHash(hash); // Save hash to prevent re-showing button
+      setSavedHash(hash);
+      setIsVerifying(true);
       
-      // Wait a bit for blockchain to update, then refetch
-      setTimeout(() => {
+      // Wait for blockchain to update, then refetch and verify
+      const verifyTimer = setTimeout(async () => {
         console.log('[SaveAllProgressButton] Refetching blockchain progress...');
-        refetch();
-      }, 2000);
+        await refetch();
+        
+        // After refetch, component will re-render and check levelsToSave
+        // If levelsToSave.count === 0, it will show "All progress synced"
+        console.log('[SaveAllProgressButton] Blockchain data refreshed');
+      }, 3000);
       
       onSuccess?.();
       
-      // Auto-hide after 10 seconds
-      const timer = setTimeout(() => {
-        setShowSuccess(false);
-        setSavedHash(null); // Reset to allow saving new progress
-      }, 10000);
-      
-      return () => clearTimeout(timer);
+      return () => clearTimeout(verifyTimer);
     }
-  }, [isSuccess, isPending, hash, onSuccess, refetch]);
+  }, [isSuccess, isPending, hash, onSuccess, refetch, isVerifying]);
 
-  // Handle error
+  // Handle error - but ignore if we're verifying (transaction was successful)
   useEffect(() => {
-    if (error && !error.includes('wallet_getCapabilities') && !error.includes('wallet_sendCalls')) {
+    if (error && !error.includes('wallet_getCapabilities') && !error.includes('wallet_sendCalls') && !isVerifying) {
       // User-friendly error messages
       let errorMsg = 'Transaction failed. Please try again.';
       
@@ -163,33 +163,9 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       setIsSaving(false);
       onError?.(errorMsg);
     }
-  }, [error, onError]);
+  }, [error, onError, isVerifying]);
 
-  const isLoading = isSaving || isPending;
-  
-  // Hide button if transaction was successful (data is on blockchain)
-  if (savedHash && showSuccess) {
-    return (
-      <div className={`save-all-progress-container ${className}`}>
-        <div className="save-all-success-message">
-          ✅ Progress saved to blockchain!
-          <div className="tx-links">
-            <a 
-              href={`https://basescan.org/tx/${savedHash}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="tx-link"
-            >
-              View on BaseScan
-            </a>
-            <span className="tx-note">
-              (Account Abstraction transaction)
-            </span>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const isLoading = isSaving || isPending || isVerifying;
 
   return (
     <div className={`save-all-progress-container ${className}`}>

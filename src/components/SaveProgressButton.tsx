@@ -25,6 +25,7 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
   const { address, isConnected, connector } = useAccount();
   const contractAddress = getContractAddress();
   const { progress: onChainProgress, isLoading: isLoadingBlockchain, refetch } = useLoadBlockchainProgress();
+  const [isVerifying, setIsVerifying] = React.useState(false);
 
   // Determine if this is a Smart Wallet
   const isSmartWalletConnected = isSmartWallet(connector?.id);
@@ -44,12 +45,15 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
     onSuccess: async (hash) => {
       console.log('[SaveProgressButton] Transaction confirmed:', hash);
       playSound('transaction-confirmed');
+      setIsVerifying(true);
       
-      // Wait a bit for blockchain to update, then refetch
-      setTimeout(() => {
+      // Wait for blockchain to update, then refetch
+      setTimeout(async () => {
         console.log('[SaveProgressButton] Refetching blockchain progress...');
-        refetch();
-      }, 2000);
+        await refetch();
+        setIsVerifying(false);
+        console.log('[SaveProgressButton] Blockchain data refreshed');
+      }, 3000);
       
       onSuccess?.();
     },
@@ -99,14 +103,14 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
     <div className={`save-progress-button-container ${className}`}>
       <button
         onClick={handleSave}
-        disabled={isPending || isSuccess}
+        disabled={isPending || isSuccess || isVerifying}
         className="save-progress-button"
         title={hasPaymaster ? "Save progress to blockchain (Gas-Free)" : "Save progress to blockchain"}
       >
-        {isPending ? (
+        {isPending || isVerifying ? (
           <>
             <span className="save-progress-spinner"></span>
-            Saving...
+            {isVerifying ? 'Verifying...' : 'Saving...'}
           </>
         ) : isSuccess ? (
           <>✓ Saved!</>
@@ -115,7 +119,7 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
         )}
       </button>
 
-      {error && !error.includes('wallet_getCapabilities') && !error.includes('wallet_sendCalls') && (
+      {error && !error.includes('wallet_getCapabilities') && !error.includes('wallet_sendCalls') && !isVerifying && (
         <p className="save-progress-error">
           ⚠️ {error.includes('User rejected') || error.includes('User denied')
             ? 'Transaction cancelled'
