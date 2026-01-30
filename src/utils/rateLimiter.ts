@@ -127,9 +127,22 @@ export const apiRateLimiter = new RateLimiter({
 });
 
 // Cleanup old entries every 5 minutes
+// Store interval ID for potential cleanup
+let cleanupIntervalId: NodeJS.Timeout | null = null;
+
 if (typeof window !== 'undefined') {
-  setInterval(() => {
+  cleanupIntervalId = setInterval(() => {
     webhookRateLimiter.cleanup();
     apiRateLimiter.cleanup();
   }, 5 * 60 * 1000);
+}
+
+/**
+ * Stop the cleanup interval (useful for testing or cleanup)
+ */
+export function stopCleanupInterval(): void {
+  if (cleanupIntervalId) {
+    clearInterval(cleanupIntervalId);
+    cleanupIntervalId = null;
+  }
 }

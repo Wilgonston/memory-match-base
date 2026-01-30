@@ -108,7 +108,9 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
           // Use wagmi's readContract directly
           const promise = (async () => {
             try {
-              const response = await fetch(`https://base.llamarpc.com`, {
+              // Use environment variable for RPC URL with fallback
+              const rpcUrl = import.meta.env.VITE_BASE_RPC_URL || 'https://base.llamarpc.com';
+              const response = await fetch(rpcUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
