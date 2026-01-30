@@ -114,8 +114,8 @@ function App() {
       setIsAuthenticated(true);
       setCurrentScreen('level-select');
       
-      // Auto-load blockchain progress if already authenticated
-      if (!hasLoadedBlockchainProgress) {
+      // Auto-load blockchain progress if already authenticated and not currently loading
+      if (!hasLoadedBlockchainProgress && !isLoadingBlockchain) {
         console.log('[App] User already authenticated, auto-loading blockchain progress...');
         refetchBlockchainProgress();
       }
@@ -124,7 +124,7 @@ function App() {
       setCurrentScreen('login');
       clearAuthentication();
     }
-  }, [address, isConnected, hasLoadedBlockchainProgress, refetchBlockchainProgress]);
+  }, [address, isConnected, hasLoadedBlockchainProgress, isLoadingBlockchain, refetchBlockchainProgress]);
 
   /**
    * Handle successful authentication
