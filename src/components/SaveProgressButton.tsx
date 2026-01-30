@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useConnectorClient } from 'wagmi';
 import { getContractAddress, MEMORY_MATCH_PROGRESS_ABI } from '../types/blockchain';
 import { useLoadBlockchainProgress } from '../hooks/useLoadBlockchainProgress';
 import { usePaymasterTransaction } from '../hooks/usePaymasterTransaction';
 import { playSound } from '../utils/soundManager';
+import { isSmartWallet } from '../utils/walletDetection';
 import './SaveProgressButton.css';
 
 export interface SaveProgressButtonProps {
@@ -21,9 +22,12 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
   onError,
   className = '',
 }) => {
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, connector } = useAccount();
   const contractAddress = getContractAddress();
   const { progress: onChainProgress, isLoading: isLoadingBlockchain } = useLoadBlockchainProgress();
+
+  // Determine if this is a Smart Wallet
+  const isSmartWalletConnected = isSmartWallet(connector?.id);
 
   // Use Paymaster transaction hook
   const {
@@ -115,7 +119,9 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
       )}
 
       <p className="gas-free-info">
-        {hasPaymaster ? '⚡ Gas-free transaction (sponsored)' : '⚡ You will pay gas for this transaction'}
+        {isSmartWalletConnected 
+          ? '⚡ Gas-free transaction (sponsored)' 
+          : '⚡ You will pay gas for this transaction'}
       </p>
     </div>
   );
