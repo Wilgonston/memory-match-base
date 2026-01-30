@@ -100,6 +100,7 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
       
       // Track if we found an empty level (optimization: stop loading after first empty)
       let foundEmptyLevel = false;
+      let lastLevelChecked = 0;
 
       for (let batchStart = 1; batchStart <= 100; batchStart += BATCH_SIZE) {
         // Stop if we already found an empty level
@@ -109,6 +110,7 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
         }
         
         const batchEnd = Math.min(batchStart + BATCH_SIZE - 1, 100);
+        lastLevelChecked = batchEnd;
         
         console.log(`[useLoadBlockchainProgress] Loading levels ${batchStart}-${batchEnd}...`);
 
@@ -203,7 +205,7 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
         levelsWithStars: levelStars.size,
         levels: Array.from(levelStars.entries()).sort((a, b) => a[0] - b[0]),
         stoppedEarly: foundEmptyLevel,
-        lastLevelChecked: batchStart - 1,
+        lastLevelChecked,
       });
       
       console.log(`✅ Blockchain sync complete! Found ${levelStars.size} levels with progress (${total} total stars)`);
