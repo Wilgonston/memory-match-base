@@ -100,9 +100,9 @@ export function useLoadBlockchainProgress(options: UseLoadBlockchainProgressOpti
       const levelStars = new Map<number, number>();
       
       // Load levels in batches with delays to avoid rate limits
-      // Reduced batch size and increased delay to prevent 429 errors
-      const BATCH_SIZE = 3; // Reduced from 5 to 3
-      const DELAY_BETWEEN_BATCHES = 800; // Increased from 300ms to 800ms
+      // Optimized batch size and delay to prevent 429 errors
+      const BATCH_SIZE = 2; // Reduced from 3 to 2 for better rate limit handling
+      const DELAY_BETWEEN_BATCHES = 1200; // Increased from 800ms to 1200ms
       
       // Track if we found an empty level (optimization: stop loading after first empty)
       let foundEmptyLevel = false;
@@ -159,7 +159,7 @@ export function useLoadBlockchainProgress(options: UseLoadBlockchainProgressOpti
                   
                   if (isRateLimit && retries < maxRetries - 1) {
                     retries++;
-                    const delay = 1000 * retries; // 1s, 2s, 3s
+                    const delay = 2000 * retries; // 2s, 4s, 6s - increased from 1s, 2s, 3s
                     console.log(`[useLoadBlockchainProgress] Rate limit for level ${level}, retry ${retries}/${maxRetries} after ${delay}ms`);
                     await new Promise(resolve => setTimeout(resolve, delay));
                   } else {
