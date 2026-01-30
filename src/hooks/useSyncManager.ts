@@ -17,7 +17,7 @@ import {
   hasCompletedLevels
 } from '../utils/progressSync';
 import type { ProgressData } from '../types/game';
-import type { SyncStatus } from '../types/blockchain';
+import type { SyncStatus, OnChainProgress } from '../types/blockchain';
 
 /**
  * Hook return type

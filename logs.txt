@@ -1,12 +1,12 @@
-[2026-01-30T22:23:26.872Z] [LOG] Console logger initialized. Use downloadConsoleLogs() to download logs.
-[2026-01-30T22:23:26.911Z] [DEBUG] [vite] connecting...
-[2026-01-30T22:23:26.938Z] [DEBUG] [vite] connected.
-[2026-01-30T22:23:27.331Z] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[2026-01-30T22:23:27.646Z] [WARN] Module "buffer" has been externalized for browser compatibility. Cannot access "buffer.Buffer" in client code. See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
-[2026-01-30T22:23:27.902Z] [LOG] 🌐 Running in standard browser
-[2026-01-30T22:23:27.902Z] [LOG] [fetchRetry] Global fetch interceptor installed with retry logic
-[2026-01-30T22:23:27.902Z] [LOG] [fetchRetry] Global error handler installed
-[2026-01-30T22:23:27.955Z] [LOG] [useProgress] Initial progress loaded: {
+[2026-01-30T22:39:39.620Z] [LOG] Console logger initialized. Use downloadConsoleLogs() to download logs.
+[2026-01-30T22:39:39.672Z] [DEBUG] [vite] connecting...
+[2026-01-30T22:39:39.740Z] [DEBUG] [vite] connected.
+[2026-01-30T22:39:40.310Z] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[2026-01-30T22:39:40.635Z] [WARN] Module "buffer" has been externalized for browser compatibility. Cannot access "buffer.Buffer" in client code. See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[2026-01-30T22:39:40.872Z] [LOG] 🌐 Running in standard browser
+[2026-01-30T22:39:40.873Z] [LOG] [fetchRetry] Global fetch interceptor installed with retry logic
+[2026-01-30T22:39:40.873Z] [LOG] [fetchRetry] Global error handler installed
+[2026-01-30T22:39:40.929Z] [LOG] [useProgress] Initial progress loaded: {
   "completedLevels": [
     3,
     1,
@@ -37,7 +37,7 @@
   "highestUnlockedLevel": 26,
   "levelStarsCount": 25
 }
-[2026-01-30T22:23:27.956Z] [LOG] [useProgress] Initial progress loaded: {
+[2026-01-30T22:39:40.930Z] [LOG] [useProgress] Initial progress loaded: {
   "completedLevels": [
     3,
     1,
@@ -68,29 +68,29 @@
   "highestUnlockedLevel": 26,
   "levelStarsCount": 25
 }
-[2026-01-30T22:23:28.154Z] [LOG] [App] isLoadingBlockchain changed: false progress: {
+[2026-01-30T22:39:41.095Z] [LOG] [App] isLoadingBlockchain changed: false progress: {
   "current": 0,
   "total": 100,
   "percentage": 0
 }
-[2026-01-30T22:23:28.155Z] [LOG] [Config] ✅ All configuration validated successfully
-[2026-01-30T22:23:28.162Z] [LOG] [App] User already authenticated, auto-loading blockchain progress...
-[2026-01-30T22:23:28.163Z] [LOG] [useLoadBlockchainProgress] Manual refetch triggered
-[2026-01-30T22:23:28.197Z] [LOG] [Base Account SDK] Initialized successfully
-[2026-01-30T22:23:28.205Z] [LOG] [App] isLoadingBlockchain changed: false progress: {
+[2026-01-30T22:39:41.096Z] [LOG] [Config] ✅ All configuration validated successfully
+[2026-01-30T22:39:41.100Z] [LOG] [App] User already authenticated, auto-loading blockchain progress...
+[2026-01-30T22:39:41.101Z] [LOG] [useLoadBlockchainProgress] Manual refetch triggered
+[2026-01-30T22:39:41.131Z] [LOG] [Base Account SDK] Initialized successfully
+[2026-01-30T22:39:41.140Z] [LOG] [App] isLoadingBlockchain changed: false progress: {
   "current": 0,
   "total": 100,
   "percentage": 0
 }
-[2026-01-30T22:23:28.205Z] [LOG] [Config] ✅ All configuration validated successfully
-[2026-01-30T22:23:28.209Z] [LOG] [App] Blockchain progress already loaded, skipping auto-load
-[2026-01-30T22:23:28.212Z] [LOG] [Base Account SDK] Initialized successfully
-[2026-01-30T22:23:28.327Z] [LOG] [App] isLoadingBlockchain changed: false progress: {
+[2026-01-30T22:39:41.141Z] [LOG] [Config] ✅ All configuration validated successfully
+[2026-01-30T22:39:41.145Z] [LOG] [App] Blockchain progress already loaded, skipping auto-load
+[2026-01-30T22:39:41.147Z] [LOG] [Base Account SDK] Initialized successfully
+[2026-01-30T22:39:41.304Z] [LOG] [App] isLoadingBlockchain changed: false progress: {
   "current": 0,
   "total": 100,
   "percentage": 0
 }
-[2026-01-30T22:23:28.494Z] [LOG] [SaveAllProgressButton] Checking unsaved levels: {
+[2026-01-30T22:39:41.673Z] [LOG] [SaveAllProgressButton] Checking unsaved levels: {
   "localLevels": [
     [
       3,
@@ -223,7 +223,7 @@
     25
   ]
 }
-[2026-01-30T22:23:28.495Z] [LOG] [SaveAllProgressButton] Checking unsaved levels: {
+[2026-01-30T22:39:41.674Z] [LOG] [SaveAllProgressButton] Checking unsaved levels: {
   "localLevels": [
     [
       3,
@@ -356,202 +356,192 @@
     25
   ]
 }
-[2026-01-30T22:23:28.775Z] [WARN] The configured WalletConnect 'metadata.url':https://memory-match-base.vercel.app differs from the actual page url:http://localhost:3000. This is probably unintended and can lead to issues.
-[2026-01-30T22:23:29.046Z] [WARN] Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
-[2026-01-30T22:23:29.068Z] [LOG] Sound Manager initialized (6/6 sounds loaded)
-[2026-01-30T22:23:29.310Z] [LOG] [useLoadBlockchainProgress] Starting to load progress from blockchain...
-[2026-01-30T22:23:29.311Z] [LOG] [useLoadBlockchainProgress] Total stars: 37 Updated: 1769810691
-[2026-01-30T22:23:29.311Z] [LOG] [useLoadBlockchainProgress] Loading levels 1-3...
-[2026-01-30T22:23:29.328Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:41.892Z] [WARN] The configured WalletConnect 'metadata.url':https://memory-match-base.vercel.app differs from the actual page url:http://localhost:3000. This is probably unintended and can lead to issues.
+[2026-01-30T22:39:42.146Z] [WARN] Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[2026-01-30T22:39:42.167Z] [LOG] Sound Manager initialized (6/6 sounds loaded)
+[2026-01-30T22:39:42.212Z] [LOG] Paymaster service not available for batch update
+[2026-01-30T22:39:42.212Z] [LOG] Paymaster service not available for batch update
+[2026-01-30T22:39:42.789Z] [LOG] [useLoadBlockchainProgress] Starting to load progress from blockchain...
+[2026-01-30T22:39:42.790Z] [LOG] [useLoadBlockchainProgress] Total stars: 37 Updated: 1769810691
+[2026-01-30T22:39:42.791Z] [LOG] [useLoadBlockchainProgress] Loading levels 1-3...
+[2026-01-30T22:39:42.800Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 0,
   "total": 100,
   "percentage": 0
 }
-[2026-01-30T22:23:29.330Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:42.802Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 0,
   "total": 100,
   "percentage": 0
 }
-[2026-01-30T22:23:29.354Z] [LOG] Sound Manager initialized (6/6 sounds loaded)
-[2026-01-30T22:23:29.358Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
+[2026-01-30T22:39:42.818Z] [LOG] Sound Manager initialized (6/6 sounds loaded)
+[2026-01-30T22:39:42.823Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
   "current": 0,
   "total": 100,
   "percentage": 0
 }
-[2026-01-30T22:23:29.359Z] [LOG] [App] Blockchain progress already loaded, skipping auto-load
-[2026-01-30T22:23:29.377Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:42.824Z] [LOG] [App] Blockchain progress already loaded, skipping auto-load
+[2026-01-30T22:39:42.851Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 0,
   "total": 100,
   "percentage": 0
 }
-[2026-01-30T22:23:29.380Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:42.852Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 0,
   "total": 100,
   "percentage": 0
 }
-[2026-01-30T22:23:29.410Z] [LOG] Paymaster service not available for batch update
-[2026-01-30T22:23:29.411Z] [LOG] Paymaster service not available for batch update
-[2026-01-30T22:23:29.414Z] [LOG] [App] Rendering LoadingIndicator with progress: {
-  "current": 0,
-  "total": 100,
-  "percentage": 0
-}
-[2026-01-30T22:23:29.416Z] [LOG] [App] Rendering LoadingIndicator with progress: {
-  "current": 0,
-  "total": 100,
-  "percentage": 0
-}
-[2026-01-30T22:23:29.645Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:43.064Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 3,
   "total": 100,
   "percentage": 3
 }
-[2026-01-30T22:23:29.647Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:43.067Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 3,
   "total": 100,
   "percentage": 3
 }
-[2026-01-30T22:23:29.653Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
+[2026-01-30T22:39:43.074Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
   "current": 3,
   "total": 100,
   "percentage": 3
 }
-[2026-01-30T22:23:30.447Z] [LOG] [useLoadBlockchainProgress] Loading levels 4-6...
-[2026-01-30T22:23:30.638Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:43.864Z] [LOG] [useLoadBlockchainProgress] Loading levels 4-6...
+[2026-01-30T22:39:44.103Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 6,
   "total": 100,
   "percentage": 6
 }
-[2026-01-30T22:23:30.641Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:44.105Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 6,
   "total": 100,
   "percentage": 6
 }
-[2026-01-30T22:23:30.647Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
+[2026-01-30T22:39:44.111Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
   "current": 6,
   "total": 100,
   "percentage": 6
 }
-[2026-01-30T22:23:31.439Z] [LOG] [useLoadBlockchainProgress] Loading levels 7-9...
-[2026-01-30T22:23:31.688Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:44.904Z] [LOG] [useLoadBlockchainProgress] Loading levels 7-9...
+[2026-01-30T22:39:45.103Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 9,
   "total": 100,
   "percentage": 9
 }
-[2026-01-30T22:23:31.691Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:45.105Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 9,
   "total": 100,
   "percentage": 9
 }
-[2026-01-30T22:23:31.700Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
+[2026-01-30T22:39:45.109Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
   "current": 9,
   "total": 100,
   "percentage": 9
 }
-[2026-01-30T22:23:32.488Z] [LOG] [useLoadBlockchainProgress] Loading levels 10-12...
-[2026-01-30T22:23:32.679Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:45.903Z] [LOG] [useLoadBlockchainProgress] Loading levels 10-12...
+[2026-01-30T22:39:46.096Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 12,
   "total": 100,
   "percentage": 12
 }
-[2026-01-30T22:23:32.681Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:46.097Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 12,
   "total": 100,
   "percentage": 12
 }
-[2026-01-30T22:23:32.687Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
+[2026-01-30T22:39:46.104Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
   "current": 12,
   "total": 100,
   "percentage": 12
 }
-[2026-01-30T22:23:33.481Z] [LOG] [useLoadBlockchainProgress] Loading levels 13-15...
-[2026-01-30T22:23:33.895Z] [WARN] [fetchWithRetry] Suppressing analytics error: Failed to fetch
-[2026-01-30T22:23:34.019Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:46.897Z] [LOG] [useLoadBlockchainProgress] Loading levels 13-15...
+[2026-01-30T22:39:46.994Z] [WARN] [fetchWithRetry] Suppressing analytics error: Failed to fetch
+[2026-01-30T22:39:47.089Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 15,
   "total": 100,
   "percentage": 15
 }
-[2026-01-30T22:23:34.021Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:47.091Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 15,
   "total": 100,
   "percentage": 15
 }
-[2026-01-30T22:23:34.027Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
+[2026-01-30T22:39:47.097Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
   "current": 15,
   "total": 100,
   "percentage": 15
 }
-[2026-01-30T22:23:34.821Z] [LOG] [useLoadBlockchainProgress] Loading levels 16-18...
-[2026-01-30T22:23:35.303Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:47.894Z] [LOG] [useLoadBlockchainProgress] Loading levels 16-18...
+[2026-01-30T22:39:48.252Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 18,
   "total": 100,
   "percentage": 18
 }
-[2026-01-30T22:23:35.305Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:48.255Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 18,
   "total": 100,
   "percentage": 18
 }
-[2026-01-30T22:23:35.309Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
+[2026-01-30T22:39:48.263Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
   "current": 18,
   "total": 100,
   "percentage": 18
 }
-[2026-01-30T22:23:36.105Z] [LOG] [useLoadBlockchainProgress] Loading levels 19-21...
-[2026-01-30T22:23:36.299Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:49.050Z] [LOG] [useLoadBlockchainProgress] Loading levels 19-21...
+[2026-01-30T22:39:51.269Z] [LOG] [useLoadBlockchainProgress] Rate limit for level 19, retry 1/3 after 1000ms
+[2026-01-30T22:39:51.270Z] [LOG] [useLoadBlockchainProgress] Rate limit for level 20, retry 1/3 after 1000ms
+[2026-01-30T22:39:51.271Z] [LOG] [useLoadBlockchainProgress] Rate limit for level 21, retry 1/3 after 1000ms
+[2026-01-30T22:39:54.341Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 21,
   "total": 100,
   "percentage": 21
 }
-[2026-01-30T22:23:36.302Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:54.344Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 21,
   "total": 100,
   "percentage": 21
 }
-[2026-01-30T22:23:36.307Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
+[2026-01-30T22:39:54.353Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
   "current": 21,
   "total": 100,
   "percentage": 21
 }
-[2026-01-30T22:23:37.099Z] [LOG] [useLoadBlockchainProgress] Loading levels 22-24...
-[2026-01-30T22:23:37.331Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:55.141Z] [LOG] [useLoadBlockchainProgress] Loading levels 22-24...
+[2026-01-30T22:39:55.349Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 24,
   "total": 100,
   "percentage": 24
 }
-[2026-01-30T22:23:37.332Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:55.351Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 24,
   "total": 100,
   "percentage": 24
 }
-[2026-01-30T22:23:37.336Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
+[2026-01-30T22:39:55.358Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
   "current": 24,
   "total": 100,
   "percentage": 24
 }
-[2026-01-30T22:23:38.134Z] [LOG] [useLoadBlockchainProgress] Loading levels 25-27...
-[2026-01-30T22:23:38.318Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:56.148Z] [LOG] [useLoadBlockchainProgress] Loading levels 25-27...
+[2026-01-30T22:39:56.472Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 27,
   "total": 100,
   "percentage": 27
 }
-[2026-01-30T22:23:38.320Z] [LOG] [App] Rendering LoadingIndicator with progress: {
+[2026-01-30T22:39:56.475Z] [LOG] [App] Rendering LoadingIndicator with progress: {
   "current": 27,
   "total": 100,
   "percentage": 27
 }
-[2026-01-30T22:23:38.323Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
+[2026-01-30T22:39:56.485Z] [LOG] [App] isLoadingBlockchain changed: true progress: {
   "current": 27,
   "total": 100,
   "percentage": 27
 }
-[2026-01-30T22:23:39.120Z] [LOG] [useLoadBlockchainProgress] Loading levels 28-30...
-[2026-01-30T22:23:41.209Z] [LOG] [useLoadBlockchainProgress] Rate limit for level 28, retry 1/3 after 1000ms
-[2026-01-30T22:23:41.210Z] [LOG] [useLoadBlockchainProgress] Rate limit for level 29, retry 1/3 after 1000ms
-[2026-01-30T22:23:41.211Z] [LOG] [useLoadBlockchainProgress] Rate limit for level 30, retry 1/3 after 1000ms
-[2026-01-30T22:23:44.164Z] [LOG] [useLoadBlockchainProgress] Found empty batch at levels 28-30, stopping early
-[2026-01-30T22:23:44.164Z] [LOG] [useLoadBlockchainProgress] Stopping at level 31 - no more progress beyond this point
-[2026-01-30T22:23:44.165Z] [LOG] [useLoadBlockchainProgress] Loaded from blockchain: {
+[2026-01-30T22:39:57.272Z] [LOG] [useLoadBlockchainProgress] Loading levels 28-30...
+[2026-01-30T22:39:57.512Z] [LOG] [useLoadBlockchainProgress] Found empty batch at levels 28-30, stopping early
+[2026-01-30T22:39:57.512Z] [LOG] [useLoadBlockchainProgress] Stopping at level 31 - no more progress beyond this point
+[2026-01-30T22:39:57.513Z] [LOG] [useLoadBlockchainProgress] Loaded from blockchain: {
   "total": 37,
   "updated": 1769810691,
   "levelsWithStars": 25,
@@ -660,15 +650,15 @@
   "stoppedEarly": true,
   "lastLevelChecked": 30
 }
-[2026-01-30T22:23:44.166Z] [LOG] ✅ Blockchain sync complete! Found 25 levels with progress (37 total stars)
-[2026-01-30T22:23:44.173Z] [LOG] [App] isLoadingBlockchain changed: false progress: {
+[2026-01-30T22:39:57.513Z] [LOG] ✅ Blockchain sync complete! Found 25 levels with progress (37 total stars)
+[2026-01-30T22:39:57.524Z] [LOG] [App] isLoadingBlockchain changed: false progress: {
   "current": 30,
   "total": 100,
   "percentage": 30
 }
-[2026-01-30T22:23:44.174Z] [LOG] [App] Blockchain progress already loaded, skipping auto-load
-[2026-01-30T22:23:44.175Z] [LOG] [App] Blockchain progress loaded, merging with local progress...
-[2026-01-30T22:23:44.176Z] [LOG] [App] Current local progress: {
+[2026-01-30T22:39:57.525Z] [LOG] [App] Blockchain progress already loaded, skipping auto-load
+[2026-01-30T22:39:57.526Z] [LOG] [App] Blockchain progress loaded, merging with local progress...
+[2026-01-30T22:39:57.527Z] [LOG] [App] Current local progress: {
   "completedLevels": [
     3,
     1,
@@ -699,24 +689,28 @@
   "highestUnlockedLevel": 26,
   "levelStarsCount": 25
 }
-[2026-01-30T22:23:44.178Z] [LOG] [App] Blockchain progress: {
+[2026-01-30T22:39:57.528Z] [LOG] [App] Blockchain progress: {
   "total": 37,
   "updated": 1769810691,
   "levelsWithStars": 25
 }
-[2026-01-30T22:23:44.178Z] [LOG] [useSyncManager] ========== mergeFromBlockchain called ==========
-[2026-01-30T22:23:44.179Z] [LOG] [useSyncManager] isConnected: true
-[2026-01-30T22:23:44.179Z] [LOG] [useSyncManager] address: 0xAb24862fc70dfAa91d67Fc465C2be8Cae2e9fe02
-[2026-01-30T22:23:44.180Z] [LOG] [useSyncManager] onChainProgress: {
+[2026-01-30T22:39:57.529Z] [LOG] [useSyncManager] ========== mergeFromBlockchain called ==========
+[2026-01-30T22:39:57.530Z] [LOG] [useSyncManager] isConnected: true
+[2026-01-30T22:39:57.530Z] [LOG] [useSyncManager] address: 0xAb24862fc70dfAa91d67Fc465C2be8Cae2e9fe02
+[2026-01-30T22:39:57.531Z] [LOG] [useSyncManager] onChainProgress: {
   "total": 37,
   "updated": 1769810691,
   "levelStars": {}
 }
-[2026-01-30T22:23:44.180Z] [LOG] [useSyncManager] onChainProgress details: {
+[2026-01-30T22:39:57.532Z] [LOG] [useSyncManager] onChainProgress details: {
   "total": 37,
   "updated": 1769810691,
   "levelStarsSize": 25,
   "levelStarsEntries": [
+    [
+      1,
+      2
+    ],
     [
       2,
       1
@@ -724,10 +718,6 @@
     [
       3,
       1
-    ],
-    [
-      1,
-      2
     ],
     [
       4,
@@ -819,7 +809,7 @@
     ]
   ]
 }
-[2026-01-30T22:23:44.181Z] [LOG] [useSyncManager] Calling mergeProgress with: {
+[2026-01-30T22:39:57.534Z] [LOG] [useSyncManager] Calling mergeProgress with: {
   "localLevels": [
     [
       3,
@@ -924,16 +914,16 @@
   ],
   "blockchainLevels": [
     [
+      1,
+      2
+    ],
+    [
       2,
       1
     ],
     [
       3,
       1
-    ],
-    [
-      1,
-      2
     ],
     [
       4,
@@ -1025,13 +1015,13 @@
     ]
   ]
 }
-[2026-01-30T22:23:44.182Z] [LOG] [mergeProgress] Merge successful: {
+[2026-01-30T22:39:57.535Z] [LOG] [mergeProgress] Merge successful: {
   "localLevels": 25,
   "onChainLevels": 25,
   "mergedLevels": 25,
   "highestUnlockedLevel": 26
 }
-[2026-01-30T22:23:44.184Z] [LOG] [useSyncManager] Merged progress result: {
+[2026-01-30T22:39:57.537Z] [LOG] [useSyncManager] Merged progress result: {
   "completedLevels": [
     3,
     1,
@@ -1164,7 +1154,7 @@
     ]
   ]
 }
-[2026-01-30T22:23:44.185Z] [LOG] [App] Merged progress: {
+[2026-01-30T22:39:57.539Z] [LOG] [App] Merged progress: {
   "completedLevels": [
     3,
     1,
@@ -1195,9 +1185,9 @@
   "highestUnlockedLevel": 26,
   "levelStarsCount": 25
 }
-[2026-01-30T22:23:44.186Z] [LOG] [App] No changes in progress, skipping update
-[2026-01-30T22:23:44.186Z] [LOG] [App] ✅ Progress applied from blockchain successfully
-[2026-01-30T22:23:44.289Z] [LOG] [SaveAllProgressButton] Checking unsaved levels: {
+[2026-01-30T22:39:57.540Z] [LOG] [App] No changes in progress, skipping update
+[2026-01-30T22:39:57.541Z] [LOG] [App] ✅ Progress applied from blockchain successfully
+[2026-01-30T22:39:57.714Z] [LOG] [SaveAllProgressButton] Checking unsaved levels: {
   "localLevels": [
     [
       3,
@@ -1302,16 +1292,16 @@
   ],
   "blockchainLevels": [
     [
+      1,
+      2
+    ],
+    [
       2,
       1
     ],
     [
       3,
       1
-    ],
-    [
-      1,
-      2
     ],
     [
       4,
@@ -1405,7 +1395,7 @@
   "unsavedCount": 0,
   "unsavedLevels": []
 }
-[2026-01-30T22:23:44.289Z] [LOG] [SaveAllProgressButton] Checking unsaved levels: {
+[2026-01-30T22:39:57.715Z] [LOG] [SaveAllProgressButton] Checking unsaved levels: {
   "localLevels": [
     [
       3,
@@ -1510,16 +1500,16 @@
   ],
   "blockchainLevels": [
     [
+      1,
+      2
+    ],
+    [
       2,
       1
     ],
     [
       3,
       1
-    ],
-    [
-      1,
-      2
     ],
     [
       4,
@@ -1613,3 +1603,8 @@
   "unsavedCount": 0,
   "unsavedLevels": []
 }
+[2026-01-30T22:40:02.011Z] [LOG] [ResetProgressButton] Starting reset process...
+[2026-01-30T22:40:02.013Z] [LOG] [ResetProgressButton] Resetting 100 levels to 0 stars...
+[2026-01-30T22:40:02.014Z] [ERROR] [ResetProgressButton] ❌ Failed to reset progress: {}
+[2026-01-30T22:40:02.020Z] [ERROR] [LevelSelect] Failed to reset progress: Transaction failed. Please try again.
+[2026-01-30T22:40:05.233Z] [WARN] [fetchWithRetry] Suppressing analytics error: Failed to fetch

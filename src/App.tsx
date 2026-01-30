@@ -59,7 +59,6 @@ function App() {
   // Current screen state
   const [currentScreen, setCurrentScreen] = useState<Screen>('login');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [hasLoadedBlockchainProgress, setHasLoadedBlockchainProgress] = useState(false);
   
   // Ref to prevent duplicate loading calls
   const isLoadingRef = useRef(false);
@@ -105,7 +104,7 @@ function App() {
    */
   useEffect(() => {
     if (!isConnected || !address || !isAuthenticated) {
-      setHasLoadedBlockchainProgress(false);
+      hasLoadedRef.current = false;
     }
   }, [isConnected, address, isAuthenticated]);
 
@@ -125,7 +124,6 @@ function App() {
         console.log('[App] User already authenticated, auto-loading blockchain progress...');
         isLoadingRef.current = true;
         hasLoadedRef.current = true;
-        setHasLoadedBlockchainProgress(true);
         refetchBlockchainProgress().finally(() => {
           isLoadingRef.current = false;
         });
@@ -155,7 +153,6 @@ function App() {
       console.log('[App] Authentication successful, triggering blockchain progress load...');
       isLoadingRef.current = true;
       hasLoadedRef.current = true;
-      setHasLoadedBlockchainProgress(true);
       refetchBlockchainProgress().finally(() => {
         isLoadingRef.current = false;
       });
