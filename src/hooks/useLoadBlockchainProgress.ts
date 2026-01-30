@@ -46,8 +46,13 @@ export function useLoadBlockchainProgress(options: UseLoadBlockchainProgressOpti
   const [shouldLoad, setShouldLoad] = useState(false);
   const [hasAttemptedLoad, setHasAttemptedLoad] = useState(false);
   
-  // Ref to store callbacks for when loading completes
-  const loadCompleteCallbacksRef = useRef<Array<() => void>>([]);
+  // Use ref to track loading state for refetch promise
+  const isLoadingRef = useRef(false);
+  
+  // Keep ref in sync with state
+  useEffect(() => {
+    isLoadingRef.current = isLoading;
+  }, [isLoading]);
 
   // Read total stars
   const { data: totalData } = useReadContract({
@@ -226,19 +231,11 @@ export function useLoadBlockchainProgress(options: UseLoadBlockchainProgressOpti
       });
       setIsLoading(false);
       setShouldLoad(false); // Prevent re-loading
-      
-      // Call all pending callbacks
-      loadCompleteCallbacksRef.current.forEach(callback => callback());
-      loadCompleteCallbacksRef.current = [];
     } catch (err) {
       console.error('[useLoadBlockchainProgress] Error loading progress:', err);
       setError(err instanceof Error ? err : new Error('Failed to load progress'));
       setIsLoading(false);
       setShouldLoad(false); // Prevent re-loading on error
-      
-      // Call all pending callbacks even on error
-      loadCompleteCallbacksRef.current.forEach(callback => callback());
-      loadCompleteCallbacksRef.current = [];
     }
   }, [address, isConnected, contractAddress, totalData, updatedData, isLoading]);
 
@@ -266,20 +263,35 @@ export function useLoadBlockchainProgress(options: UseLoadBlockchainProgressOpti
     
     // Return a promise that resolves when loading is complete
     return new Promise<void>((resolve) => {
-      // Add callback to be called when loading completes
-      loadCompleteCallbacksRef.current.push(() => {
-        console.log('[useLoadBlockchainProgress] Refetch completed');
-        resolve();
-      });
+      let checkCount = 0;
+      const maxChecks = 300; // 30 seconds (100ms * 300)
       
-      // Trigger new load
+      // Trigger the load
       setShouldLoad(true);
       
-      // Timeout after 30 seconds as safety
+      // Wait a bit for state to update
       setTimeout(() => {
-        console.log('[useLoadBlockchainProgress] Refetch timeout');
-        resolve();
-      }, 30000);
+        // Poll until loading completes using ref
+        const checkInterval = setInterval(() => {
+          checkCount++;
+          
+          // Check if loading is complete using ref
+          if (!isLoadingRef.current) {
+            console.log('[useLoadBlockchainProgress] Refetch completed');
+            clearInterval(checkInterval);
+            resolve();
+            return;
+          }
+          
+          // Check if we've exceeded max checks
+          if (checkCount >= maxChecks) {
+            console.warn('[useLoadBlockchainProgress] Refetch timeout after 30 seconds');
+            clearInterval(checkInterval);
+            resolve();
+            return;
+          }
+        }, 100);
+      }, 50);
     });
   }, []);
 
