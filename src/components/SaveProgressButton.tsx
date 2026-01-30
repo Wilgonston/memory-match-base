@@ -4,7 +4,6 @@ import { getContractAddress, MEMORY_MATCH_PROGRESS_ABI } from '../types/blockcha
 import { useLoadBlockchainProgress } from '../hooks/useLoadBlockchainProgress';
 import { usePaymasterTransaction } from '../hooks/usePaymasterTransaction';
 import { playSound } from '../utils/soundManager';
-import { isSmartWallet } from '../utils/walletDetection';
 import './SaveProgressButton.css';
 
 export interface SaveProgressButtonProps {
@@ -22,21 +21,17 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
   onError,
   className = '',
 }) => {
-  const { address, isConnected, connector } = useAccount();
+  const { address, isConnected } = useAccount();
   const contractAddress = getContractAddress();
   const { progress: onChainProgress, isLoading: isLoadingBlockchain, refetch } = useLoadBlockchainProgress();
   const [isVerifying, setIsVerifying] = React.useState(false);
 
-  // Determine if this is a Smart Wallet
-  const isSmartWalletConnected = isSmartWallet(connector?.id);
-
-  // Use Paymaster transaction hook
+  // Use Paymaster transaction hook (now just regular transactions)
   const {
     sendTransaction,
     isPending,
     isSuccess,
     error,
-    hasPaymaster,
   } = usePaymasterTransaction({
     address: contractAddress,
     abi: MEMORY_MATCH_PROGRESS_ABI,
@@ -105,7 +100,7 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
         onClick={handleSave}
         disabled={isPending || isSuccess || isVerifying}
         className="save-progress-button"
-        title={hasPaymaster ? "Save progress to blockchain (Gas-Free)" : "Save progress to blockchain"}
+        title="Save progress to blockchain (you pay gas)"
       >
         {isPending || isVerifying ? (
           <>
@@ -130,9 +125,7 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
       )}
 
       <p className="gas-free-info">
-        {isSmartWalletConnected 
-          ? '⚡ Gas-free transaction (sponsored)' 
-          : '⚡ You will pay gas for this transaction'}
+        ⚡ You will pay gas for this transaction
       </p>
     </div>
   );

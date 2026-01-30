@@ -11,7 +11,6 @@ import { useLoadBlockchainProgress } from '../hooks/useLoadBlockchainProgress';
 import { getContractAddress } from '../types/blockchain';
 import { ProgressData } from '../types';
 import { getUnsavedLevels } from '../utils/unsavedProgress';
-import { isSmartWallet } from '../utils/walletDetection';
 import './SaveAllProgressButton.css';
 
 export interface SaveAllProgressButtonProps {
@@ -27,7 +26,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
   onError,
   className = '',
 }) => {
-  const { isConnected, connector } = useAccount();
+  const { isConnected } = useAccount();
   const { updateLevels, isPending, error, isSuccess, progress, reset, hash } = useSequentialUpdateLevels();
   const { progress: onChainProgress, isLoading: isLoadingBlockchain, refetch } = useLoadBlockchainProgress();
   const [isSaving, setIsSaving] = useState(false);
@@ -35,9 +34,6 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
   const [showError, setShowError] = useState<string | null>(null);
   const [savedHash, setSavedHash] = useState<string | null>(null);
   const [isVerifying, setIsVerifying] = useState(false);
-
-  // Determine if this is a Smart Wallet
-  const isSmartWalletConnected = isSmartWallet(connector?.id);
 
   // Get only unsaved levels (compare with blockchain)
   const levelsToSave = useMemo(() => {
@@ -173,7 +169,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
         onClick={handleSave}
         disabled={isLoading || showSuccess}
         className={`save-all-progress-button ${showSuccess ? 'success' : ''}`}
-        title={`Save ${levelsToSave.count} level${levelsToSave.count > 1 ? 's' : ''} to blockchain`}
+        title={`Save ${levelsToSave.count} level${levelsToSave.count > 1 ? 's' : ''} to blockchain (you pay gas)`}
       >
         {isLoading ? (
           <>
@@ -198,9 +194,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       )}
 
       <p className="save-all-info">
-        {isSmartWalletConnected 
-          ? `⚡ Gas-free transaction • Saves ${levelsToSave.count} level${levelsToSave.count > 1 ? 's' : ''}`
-          : `⚡ You will pay gas • Saves ${levelsToSave.count} level${levelsToSave.count > 1 ? 's' : ''}`}
+        ⚡ You will pay gas • Saves {levelsToSave.count} level{levelsToSave.count > 1 ? 's' : ''}
       </p>
     </div>
   );

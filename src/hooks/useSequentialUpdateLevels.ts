@@ -1,9 +1,8 @@
 /**
  * useSequentialUpdateLevels Hook
  * 
- * Custom hook for updating multiple levels' progress sequentially.
- * Uses standard wagmi hooks for better wallet compatibility.
- * Falls back to sequential updates when batch calls are not supported.
+ * Custom hook for updating multiple levels' progress in a single batch transaction.
+ * User pays gas for all transactions.
  * 
  * Requirements: 19.5
  */
