@@ -201,8 +201,12 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
         total,
         updated,
         levelsWithStars: levelStars.size,
-        levels: Array.from(levelStars.keys()),
+        levels: Array.from(levelStars.entries()).sort((a, b) => a[0] - b[0]),
+        stoppedEarly: foundEmptyLevel,
+        lastLevelChecked: batchStart - 1,
       });
+      
+      console.log(`✅ Blockchain sync complete! Found ${levelStars.size} levels with progress (${total} total stars)`);
 
       setProgress({
         total,
