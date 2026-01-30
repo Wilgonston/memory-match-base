@@ -1,22 +1,19 @@
 import { http, createConfig, cookieStorage, createStorage } from 'wagmi';
-import { base, baseSepolia } from 'wagmi/chains';
+import { base } from 'wagmi/chains';
 import { coinbaseWallet, walletConnect, injected } from 'wagmi/connectors';
-import { isMainnet } from '../utils/network';
 
 // Get environment variables
 const walletConnectProjectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || '';
 const appUrl = import.meta.env.VITE_APP_URL || window.location.origin;
 
-// CRITICAL: Always use Base Mainnet as first chain
-// This ensures Smart Wallet is created on Base Mainnet by default
-const chains = [base, baseSepolia] as const;
+// Use only Base Mainnet
+const chains = [base] as const;
 
 // Create wagmi configuration with multiple wallet options
 export const wagmiConfig = createConfig({
   chains,
   connectors: [
     // Coinbase Wallet with Smart Wallet (Base Account) - RECOMMENDED
-    // IMPORTANT: Smart Wallet will be created on the first chain (Base Mainnet)
     coinbaseWallet({
       appName: 'Memory Match BASE',
       appLogoUrl: `${appUrl}/assets/miniapp/icon-512-improved.svg`,
@@ -45,6 +42,5 @@ export const wagmiConfig = createConfig({
   ssr: false,
   transports: {
     [base.id]: http(),
-    [baseSepolia.id]: http(),
   },
 });

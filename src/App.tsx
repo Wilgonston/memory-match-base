@@ -297,6 +297,7 @@ function App() {
               progressData={progress}
               blockchainProgress={blockchainProgress}
               onRefetchBlockchain={refetchBlockchainProgress}
+              onResetProgress={resetProgress}
               onLevelSelect={handleLevelSelect}
               onBackToMenu={handleBackToMenu}
             />

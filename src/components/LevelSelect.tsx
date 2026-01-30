@@ -12,6 +12,7 @@ import { ProgressData } from '../types';
 import { type OnChainProgress } from '../types/blockchain';
 import { hapticButtonPress } from '../utils/haptics';
 import { SaveAllProgressButton } from './SaveAllProgressButton';
+import { ResetProgressButton } from './ResetProgressButton';
 import './LevelSelect.css';
 
 export interface LevelSelectProps {
@@ -21,6 +22,8 @@ export interface LevelSelectProps {
   blockchainProgress?: OnChainProgress | null;
   /** Callback to refetch blockchain progress */
   onRefetchBlockchain?: () => Promise<void>;
+  /** Callback to reset local progress */
+  onResetProgress?: () => void;
   /** Callback when a level is selected */
   onLevelSelect: (level: number) => void;
   /** Callback when back to menu is clicked (logout) */
@@ -34,6 +37,7 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
   progressData,
   blockchainProgress,
   onRefetchBlockchain,
+  onResetProgress,
   onLevelSelect,
   onBackToMenu,
 }) => {
@@ -214,6 +218,22 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
             console.error('[LevelSelect] Failed to save progress:', error);
             // Error is already shown in SaveAllProgressButton component
             // No need to show alert here
+          }}
+        />
+
+        {/* Reset all progress button */}
+        <ResetProgressButton
+          onResetLocal={() => {
+            console.log('[LevelSelect] Resetting local progress...');
+            onResetProgress?.();
+          }}
+          onRefetchBlockchain={onRefetchBlockchain}
+          onSuccess={() => {
+            console.log('[LevelSelect] Progress reset successfully!');
+            setErrorMessage(null);
+          }}
+          onError={(error) => {
+            console.error('[LevelSelect] Failed to reset progress:', error);
           }}
         />
       </div>
