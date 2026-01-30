@@ -43,7 +43,6 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState<string | null>(null);
   const [savedHash, setSavedHash] = useState<string | null>(null);
-  const [isVerifying, setIsVerifying] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
 
   // Determine if this is a Smart Wallet
@@ -129,7 +128,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
 
   // Handle success - only when transaction is confirmed on blockchain
   useEffect(() => {
-    if (isSuccess && !isPending && hash && !isVerifying) {
+    if (isSuccess && !isPending && hash) {
       console.log('[SaveAllProgressButton] ✅ Transaction confirmed on blockchain');
       console.log('[SaveAllProgressButton] Transaction/UserOp ID:', hash);
       console.log('[SaveAllProgressButton] View on BaseScan:', `https://basescan.org/tx/${hash}`);
@@ -138,45 +137,37 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       setShowError(null);
       setIsSaving(false);
       setSavedHash(hash);
-      setIsVerifying(true);
       setShowNotification(true); // Show notification
       
-      // Refetch blockchain progress to verify save
-      const verifyAndRefetch = async () => {
-        try {
-          console.log('[SaveAllProgressButton] Waiting for blockchain to process transaction...');
-          // Wait a bit for blockchain to process
-          await new Promise(resolve => setTimeout(resolve, 2000));
-          
-          console.log('[SaveAllProgressButton] Refetching blockchain progress...');
-          
-          // Use external refetch if provided, otherwise use internal
-          if (onRefetchBlockchain) {
-            console.log('[SaveAllProgressButton] Calling external refetch...');
-            await onRefetchBlockchain();
-          } else {
-            console.log('[SaveAllProgressButton] Calling internal refetch...');
-            await refetch();
-          }
-          
-          console.log('[SaveAllProgressButton] ✅ Blockchain data refreshed');
-        } catch (error) {
-          console.error('[SaveAllProgressButton] Failed to refetch:', error);
-        } finally {
-          // Always reset verifying state
-          console.log('[SaveAllProgressButton] Resetting isVerifying to false');
-          setIsVerifying(false);
+      // Wait for blockchain to update, then refetch (same as after authentication)
+      const verifyTimer = setTimeout(() => {
+        console.log('[SaveAllProgressButton] Triggering blockchain progress reload...');
+        console.log('[SaveAllProgressButton] onRefetchBlockchain available:', !!onRefetchBlockchain);
+        
+        // Use external refetch if provided, otherwise use internal
+        // This triggers the same loading process as after authentication
+        if (onRefetchBlockchain) {
+          console.log('[SaveAllProgressButton] Calling external refetch...');
+          onRefetchBlockchain();
+        } else {
+          console.log('[SaveAllProgressButton] Calling internal refetch...');
+          refetch();
         }
-      };
+        
+        console.log('[SaveAllProgressButton] Blockchain reload triggered');
+      }, TIMEOUTS.VERIFY_DELAY);
       
-      verifyAndRefetch();
       onSuccess?.();
+      
+      return () => {
+        clearTimeout(verifyTimer);
+      };
     }
-  }, [isSuccess, isPending, hash, onSuccess, onRefetchBlockchain, refetch, isVerifying]);
+  }, [isSuccess, isPending, hash, onSuccess, onRefetchBlockchain, refetch]);
 
-  // Handle error - but ignore if we're verifying (transaction was successful)
+  // Handle error - but ignore user cancellations
   useEffect(() => {
-    if (error && shouldDisplayError(error) && !isVerifying) {
+    if (error && shouldDisplayError(error)) {
       const errorMsg = getUserFriendlyError(error);
       if (errorMsg) {
         setShowError(errorMsg);
@@ -185,9 +176,9 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
         onError?.(errorMsg);
       }
     }
-  }, [error, onError, isVerifying]);
+  }, [error, onError]);
 
-  const isLoading = isSaving || isPending || isVerifying;
+  const isLoading = isSaving || isPending;
 
   return (
     <div className={`save-all-progress-container ${className}`}>
@@ -197,12 +188,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
         className={`save-all-progress-button ${showSuccess ? 'success' : ''}`}
         title={`Save ${levelsToSave.count} level${levelsToSave.count > 1 ? 's' : ''} to blockchain`}
       >
-        {isVerifying ? (
-          <>
-            <span className="save-all-spinner"></span>
-            Verifying...
-          </>
-        ) : showSuccess ? (
+        {showSuccess ? (
           <>✓ All Saved!</>
         ) : isLoading ? (
           <>

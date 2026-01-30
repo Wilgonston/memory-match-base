@@ -5,7 +5,7 @@ import { useLoadBlockchainProgress } from '../hooks/useLoadBlockchainProgress';
 import { usePaymasterTransaction } from '../hooks/usePaymasterTransaction';
 import { playSound } from '../utils/soundManager';
 import { isSmartWallet } from '../utils/walletDetection';
-import { getUserFriendlyError, shouldDisplayError } from '../utils/errorMessages';
+import { getUserFriendlyError, shouldDisplayError, TIMEOUTS } from '../utils/errorMessages';
 import './SaveProgressButton.css';
 
 export interface SaveProgressButtonProps {
@@ -26,7 +26,6 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
   const { address, isConnected, connector } = useAccount();
   const contractAddress = getContractAddress();
   const { progress: onChainProgress, isLoading: isLoadingBlockchain, refetch } = useLoadBlockchainProgress({ autoLoad: false });
-  const [isVerifying, setIsVerifying] = React.useState(false);
 
   // Determine if this is a Smart Wallet
   const isSmartWalletConnected = isSmartWallet(connector?.id);
@@ -46,28 +45,18 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
     onSuccess: async (hash) => {
       console.log('[SaveProgressButton] Transaction confirmed:', hash);
       playSound('transaction-confirmed');
-      setIsVerifying(true);
       
-      // Refetch blockchain progress to verify save
-      const verifyAndRefetch = async () => {
-        try {
-          console.log('[SaveProgressButton] Waiting for blockchain to process transaction...');
-          // Wait a bit for blockchain to process
-          await new Promise(resolve => setTimeout(resolve, 2000));
-          
-          console.log('[SaveProgressButton] Refetching blockchain progress...');
-          await refetch();
-          
-          console.log('[SaveProgressButton] ✅ Blockchain data refreshed');
-        } catch (error) {
-          console.error('[SaveProgressButton] Failed to refetch:', error);
-        } finally {
-          setIsVerifying(false);
-        }
-      };
+      // Wait for blockchain to update, then refetch (same as after authentication)
+      const verifyTimer = setTimeout(() => {
+        console.log('[SaveProgressButton] Triggering blockchain progress reload...');
+        refetch();
+        console.log('[SaveProgressButton] Blockchain reload triggered');
+      }, TIMEOUTS.VERIFY_DELAY);
       
-      verifyAndRefetch();
       onSuccess?.();
+      
+      // Cleanup timer on unmount
+      return () => clearTimeout(verifyTimer);
     },
     onError: (errorMsg) => {
       console.error('[SaveProgressButton] Transaction error:', errorMsg);
@@ -110,14 +99,14 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
     <div className={`save-progress-button-container ${className}`}>
       <button
         onClick={handleSave}
-        disabled={isPending || isSuccess || isVerifying}
+        disabled={isPending || isSuccess}
         className="save-progress-button"
         title={hasPaymaster ? "Save progress to blockchain (Gas-Free)" : "Save progress to blockchain"}
       >
-        {isPending || isVerifying ? (
+        {isPending ? (
           <>
             <span className="save-progress-spinner"></span>
-            {isVerifying ? 'Verifying...' : 'Saving...'}
+            Saving...
           </>
         ) : isSuccess ? (
           <>✓ Saved!</>
@@ -126,7 +115,7 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
         )}
       </button>
 
-      {error && shouldDisplayError(error) && !isVerifying && (
+      {error && shouldDisplayError(error) && (
         <p className="save-progress-error">
           ⚠️ {getUserFriendlyError(error)}
         </p>
