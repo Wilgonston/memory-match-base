@@ -141,6 +141,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       
       // Wait for blockchain to update, then refetch (same as after authentication)
       const verifyTimer = setTimeout(() => {
+        console.log('[SaveAllProgressButton] Waiting for blockchain to process transaction...');
         console.log('[SaveAllProgressButton] Triggering blockchain progress reload...');
         console.log('[SaveAllProgressButton] onRefetchBlockchain available:', !!onRefetchBlockchain);
         
