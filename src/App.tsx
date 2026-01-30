@@ -63,6 +63,7 @@ function App() {
   
   // Ref to prevent duplicate loading calls
   const isLoadingRef = useRef(false);
+  const hasLoadedRef = useRef(false);
 
   /**
    * Check if user has seen welcome screen before
@@ -119,16 +120,16 @@ function App() {
       setCurrentScreen('level-select');
       
       // Auto-load blockchain progress if already authenticated and not currently loading
-      // hasLoadedBlockchainProgress prevents re-loading after manual refetch (e.g., after save)
-      // isLoadingRef prevents duplicate calls during React re-renders
-      if (!hasLoadedBlockchainProgress && !isLoadingBlockchain && !isLoadingRef.current) {
+      // Use refs to prevent re-triggering when state changes
+      if (!hasLoadedRef.current && !isLoadingBlockchain && !isLoadingRef.current) {
         console.log('[App] User already authenticated, auto-loading blockchain progress...');
         isLoadingRef.current = true;
-        setHasLoadedBlockchainProgress(true); // Mark as loaded immediately to prevent re-trigger
+        hasLoadedRef.current = true;
+        setHasLoadedBlockchainProgress(true);
         refetchBlockchainProgress().finally(() => {
           isLoadingRef.current = false;
         });
-      } else if (hasLoadedBlockchainProgress) {
+      } else if (hasLoadedRef.current) {
         console.log('[App] Blockchain progress already loaded, skipping auto-load');
       } else if (isLoadingBlockchain || isLoadingRef.current) {
         console.log('[App] Blockchain loading in progress, skipping auto-load');
@@ -137,8 +138,9 @@ function App() {
       setIsAuthenticated(false);
       setCurrentScreen('login');
       clearAuthentication();
+      hasLoadedRef.current = false;
     }
-  }, [address, isConnected, hasLoadedBlockchainProgress, isLoadingBlockchain, refetchBlockchainProgress]);
+  }, [address, isConnected, isLoadingBlockchain, refetchBlockchainProgress]);
 
   /**
    * Handle successful authentication
@@ -149,15 +151,16 @@ function App() {
     setCurrentScreen('level-select');
     
     // Trigger blockchain loading after authentication
-    if (isConnected && address && !hasLoadedBlockchainProgress && !isLoadingRef.current) {
+    if (isConnected && address && !hasLoadedRef.current && !isLoadingRef.current) {
       console.log('[App] Authentication successful, triggering blockchain progress load...');
       isLoadingRef.current = true;
-      setHasLoadedBlockchainProgress(true); // Mark as loaded immediately to prevent re-trigger
+      hasLoadedRef.current = true;
+      setHasLoadedBlockchainProgress(true);
       refetchBlockchainProgress().finally(() => {
         isLoadingRef.current = false;
       });
     }
-  }, [isConnected, address, hasLoadedBlockchainProgress, refetchBlockchainProgress]);
+  }, [isConnected, address, refetchBlockchainProgress]);
 
   /**
    * Apply blockchain progress when it becomes available
