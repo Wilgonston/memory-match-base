@@ -63,8 +63,8 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
 
   // Load all levels sequentially with delays
   const loadAllLevels = useCallback(async () => {
-    if (!address || !isConnected) {
-      console.log('[useLoadBlockchainProgress] No address or not connected');
+    if (!address || !isConnected || isLoading) {
+      console.log('[useLoadBlockchainProgress] Skipping load - already loading or no address');
       return;
     }
 
@@ -85,6 +85,7 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
         console.log('[useLoadBlockchainProgress] No progress on blockchain');
         setProgress(null);
         setIsLoading(false);
+        setShouldLoad(false); // Prevent re-loading
         return;
       }
 
@@ -167,26 +168,29 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
         levelStars,
       });
       setIsLoading(false);
+      setShouldLoad(false); // Prevent re-loading
     } catch (err) {
       console.error('[useLoadBlockchainProgress] Error loading progress:', err);
       setError(err instanceof Error ? err : new Error('Failed to load progress'));
       setIsLoading(false);
+      setShouldLoad(false); // Prevent re-loading on error
     }
-  }, [address, isConnected, contractAddress, totalData, updatedData]);
+  }, [address, isConnected, contractAddress, totalData, updatedData, isLoading]);
 
-  // Trigger load when enabled
+  // Trigger load when enabled (only if not already loading)
   useEffect(() => {
-    if (shouldLoad && address && isConnected && totalData !== undefined && updatedData !== undefined) {
+    if (shouldLoad && address && isConnected && totalData !== undefined && updatedData !== undefined && !isLoading) {
       loadAllLevels();
     }
-  }, [shouldLoad, address, isConnected, totalData, updatedData, loadAllLevels]);
+  }, [shouldLoad, address, isConnected, totalData, updatedData, loadAllLevels, isLoading]);
 
-  // Auto-load on mount
+  // Auto-load on mount (only once)
   useEffect(() => {
-    if (address && isConnected && !shouldLoad) {
+    if (address && isConnected && !shouldLoad && !isLoading && !progress) {
+      console.log('[useLoadBlockchainProgress] Auto-triggering initial load');
       setShouldLoad(true);
     }
-  }, [address, isConnected, shouldLoad]);
+  }, [address, isConnected, shouldLoad, isLoading, progress]);
 
   const refetch = useCallback(() => {
     console.log('[useLoadBlockchainProgress] Manual refetch triggered');
