@@ -12,6 +12,7 @@ import { getContractAddress, type OnChainProgress } from '../types/blockchain';
 import { ProgressData } from '../types';
 import { getUnsavedLevels } from '../utils/unsavedProgress';
 import { isSmartWallet } from '../utils/walletDetection';
+import { TransactionNotification } from './TransactionNotification';
 import './SaveAllProgressButton.css';
 
 export interface SaveAllProgressButtonProps {
@@ -42,6 +43,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
   const [showError, setShowError] = useState<string | null>(null);
   const [savedHash, setSavedHash] = useState<string | null>(null);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
 
   // Determine if this is a Smart Wallet
   const isSmartWalletConnected = isSmartWallet(connector?.id);
@@ -141,6 +143,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       setIsSaving(false);
       setSavedHash(hash);
       setIsVerifying(true);
+      setShowNotification(true); // Show notification
       
       // Wait for blockchain to update, then refetch and verify
       const verifyTimer = setTimeout(async () => {
@@ -237,6 +240,17 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
           ? `⚡ Gas-free transaction • Saves ${levelsToSave.count} level${levelsToSave.count > 1 ? 's' : ''}`
           : `⚡ You will pay gas • Saves ${levelsToSave.count} level${levelsToSave.count > 1 ? 's' : ''}`}
       </p>
+
+      {/* Transaction notification */}
+      {showNotification && savedHash && (
+        <TransactionNotification
+          hash={savedHash}
+          status="confirmed"
+          network="mainnet"
+          onDismiss={() => setShowNotification(false)}
+          autoDismissDelay={8000}
+        />
+      )}
     </div>
   );
 };
