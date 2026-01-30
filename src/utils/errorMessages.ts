@@ -7,8 +7,7 @@
 // Common timeout values
 export const TIMEOUTS = {
   REFETCH_DELAY: 2000,
-  VERIFY_DELAY: 1000, // Initial delay before starting verification
-  BLOCKCHAIN_WAIT: 4000, // Wait for blockchain to process transaction
+  VERIFY_DELAY: 3000,
   AUTO_DISMISS: 8000,
   WALLET_RESET: 2000,
 } as const;

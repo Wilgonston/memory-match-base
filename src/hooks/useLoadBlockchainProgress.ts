@@ -246,23 +246,36 @@ export function useLoadBlockchainProgress(options: UseLoadBlockchainProgressOpti
     }
   }, [autoLoad, address, isConnected, shouldLoad, isLoading, hasAttemptedLoad]);
 
-  const refetch = useCallback(async () => {
+  const refetch = useCallback(() => {
     console.log('[useLoadBlockchainProgress] Manual refetch triggered');
-    
-    // Reset state
     setHasAttemptedLoad(false);
-    setProgress(null);
+    setProgress(null); // Clear old progress
     setError(null);
     setLoadingProgress({ current: 0, total: 100, percentage: 0 });
+    setShouldLoad(false);
     
-    // Trigger load
-    setShouldLoad(true);
-    
-    // Call loadAllLevels directly and wait for it to complete
-    await loadAllLevels();
-    
-    console.log('[useLoadBlockchainProgress] Refetch completed');
-  }, [loadAllLevels]);
+    // Return a promise that resolves when loading is complete
+    return new Promise<void>((resolve) => {
+      // Use setTimeout to ensure state updates are processed
+      setTimeout(() => {
+        setShouldLoad(true);
+        
+        // Wait for loading to complete
+        const checkInterval = setInterval(() => {
+          if (!isLoading) {
+            clearInterval(checkInterval);
+            resolve();
+          }
+        }, 100);
+        
+        // Timeout after 30 seconds
+        setTimeout(() => {
+          clearInterval(checkInterval);
+          resolve();
+        }, 30000);
+      }, 50);
+    });
+  }, [isLoading]);
 
   return {
     progress,
