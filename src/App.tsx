@@ -40,7 +40,7 @@ function App() {
   const { address, isConnected } = useAccount();
   
   // Progress management hook
-  const { progress, completeLevel, updateProgress, resetProgress } = useProgress();
+  const { progress, completeLevel, updateProgress } = useProgress();
 
   // Sync manager for blockchain synchronization
   const { mergeFromBlockchain } = useSyncManager();
@@ -308,7 +308,6 @@ function App() {
               progressData={progress}
               blockchainProgress={blockchainProgress}
               onRefetchBlockchain={refetchBlockchainProgress}
-              onResetProgress={resetProgress}
               onLevelSelect={handleLevelSelect}
               onBackToMenu={handleBackToMenu}
             />
