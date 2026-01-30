@@ -134,10 +134,6 @@ function App() {
         // Wait for blockchain data to load
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        // Check if blockchain has more progress
-        const { hasMoreProgressOnBlockchain } = await import('./utils/unsavedProgress');
-        const { progress: onChainProgress } = await import('./hooks/useLoadBlockchainProgress');
-        
         // Get blockchain progress through mergeFromBlockchain (it loads the data)
         const mergedProgress = await mergeFromBlockchain(progress);
         
