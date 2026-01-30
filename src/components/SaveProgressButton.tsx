@@ -5,6 +5,7 @@ import { useLoadBlockchainProgress } from '../hooks/useLoadBlockchainProgress';
 import { usePaymasterTransaction } from '../hooks/usePaymasterTransaction';
 import { playSound } from '../utils/soundManager';
 import { isSmartWallet } from '../utils/walletDetection';
+import { getUserFriendlyError, shouldDisplayError, TIMEOUTS } from '../utils/errorMessages';
 import './SaveProgressButton.css';
 
 export interface SaveProgressButtonProps {
@@ -52,10 +53,10 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
         console.log('[SaveProgressButton] Refetching blockchain progress...');
         refetch();
         // Wait a bit for refetch to complete
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, TIMEOUTS.REFETCH_DELAY));
         setIsVerifying(false);
         console.log('[SaveProgressButton] Blockchain data refreshed');
-      }, 3000);
+      }, TIMEOUTS.VERIFY_DELAY);
       
       onSuccess?.();
       
@@ -65,14 +66,9 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
     onError: (errorMsg) => {
       console.error('[SaveProgressButton] Transaction error:', errorMsg);
       
-      // User-friendly error messages
-      if (errorMsg.includes('User rejected') || errorMsg.includes('User denied')) {
-        onError?.('Transaction cancelled');
-      } else if (errorMsg.includes('insufficient funds')) {
-        onError?.('Insufficient funds for gas');
-      } else if (!errorMsg.includes('wallet_getCapabilities') && 
-                 !errorMsg.includes('wallet_sendCalls')) {
-        onError?.(errorMsg);
+      const friendlyError = getUserFriendlyError(errorMsg);
+      if (friendlyError) {
+        onError?.(friendlyError);
       }
     },
   });
@@ -124,13 +120,9 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
         )}
       </button>
 
-      {error && !error.includes('wallet_getCapabilities') && !error.includes('wallet_sendCalls') && !isVerifying && (
+      {error && shouldDisplayError(error) && !isVerifying && (
         <p className="save-progress-error">
-          ⚠️ {error.includes('User rejected') || error.includes('User denied')
-            ? 'Transaction cancelled'
-            : error.includes('insufficient funds')
-            ? 'Insufficient funds for gas'
-            : 'Transaction failed. Please try again.'}
+          ⚠️ {getUserFriendlyError(error)}
         </p>
       )}
 

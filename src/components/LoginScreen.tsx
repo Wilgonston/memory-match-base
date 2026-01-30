@@ -4,6 +4,7 @@ import { base } from 'wagmi/chains';
 import { Avatar } from '@coinbase/onchainkit/identity';
 import { useBasename } from '../hooks/useBasename';
 import { setAuthentication } from '../utils/auth';
+import { getUserFriendlyError, TIMEOUTS } from '../utils/errorMessages';
 import './LoginScreen.css';
 
 interface LoginScreenProps {
@@ -92,7 +93,7 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
       // Auto-refresh after 2 seconds
       setTimeout(() => {
         window.location.reload();
-      }, 2000);
+      }, TIMEOUTS.WALLET_RESET);
     } catch (err) {
       console.error('[LoginScreen] Failed to clear wallet data:', err);
       setError('Failed to reset wallet. Please clear your browser cache manually and refresh.');
@@ -166,14 +167,8 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
       console.error('Authentication failed:', err);
       const errorMessage = err instanceof Error ? err.message : 'Authentication failed';
       
-      // Handle specific errors
-      if (errorMessage.includes('User rejected') || errorMessage.includes('User denied')) {
-        setError('You rejected the signature request. Please try again.');
-      } else if (errorMessage.includes('pending') || errorMessage.includes('владельца')) {
-        setError('There is a pending transaction. Please wait or cancel it in your wallet.');
-      } else {
-        setError('Authentication failed. Please try again.');
-      }
+      const friendlyError = getUserFriendlyError(errorMessage);
+      setError(friendlyError || 'Authentication failed. Please try again.');
     } finally {
       setIsAuthenticating(false);
     }

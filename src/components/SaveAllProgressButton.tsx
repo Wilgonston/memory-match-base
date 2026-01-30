@@ -12,6 +12,7 @@ import { getContractAddress, type OnChainProgress } from '../types/blockchain';
 import { ProgressData } from '../types';
 import { getUnsavedLevels } from '../utils/unsavedProgress';
 import { isSmartWallet } from '../utils/walletDetection';
+import { getUserFriendlyError, shouldDisplayError, TIMEOUTS } from '../utils/errorMessages';
 import { TransactionNotification } from './TransactionNotification';
 import './SaveAllProgressButton.css';
 
@@ -118,14 +119,9 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       console.error('[SaveAllProgressButton] ❌ Failed to save progress:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to save progress';
       
-      // User-friendly error messages
-      if (errorMessage.includes('User rejected') || errorMessage.includes('User denied')) {
-        setShowError('Transaction cancelled');
-      } else if (errorMessage.includes('insufficient funds')) {
-        setShowError('Insufficient funds for gas');
-      } else if (!errorMessage.includes('wallet_getCapabilities') && 
-                 !errorMessage.includes('wallet_sendCalls')) {
-        setShowError('Transaction failed. Please try again.');
+      const friendlyError = getUserFriendlyError(errorMessage);
+      if (friendlyError) {
+        setShowError(friendlyError);
       }
       setIsSaving(false);
     }
@@ -156,12 +152,12 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
             console.log('[SaveAllProgressButton] Calling external refetch...');
             onRefetchBlockchain();
             // Wait a bit for refetch to complete
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            await new Promise(resolve => setTimeout(resolve, TIMEOUTS.REFETCH_DELAY));
           } else {
             console.log('[SaveAllProgressButton] Calling internal refetch...');
             refetch();
             // Wait a bit for refetch to complete
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            await new Promise(resolve => setTimeout(resolve, TIMEOUTS.REFETCH_DELAY));
           }
           
           console.log('[SaveAllProgressButton] Blockchain data refreshed');
@@ -172,7 +168,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
           console.log('[SaveAllProgressButton] Resetting isVerifying to false');
           setIsVerifying(false);
         }
-      }, 3000);
+      }, TIMEOUTS.VERIFY_DELAY);
       
       onSuccess?.();
       
@@ -184,20 +180,14 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
 
   // Handle error - but ignore if we're verifying (transaction was successful)
   useEffect(() => {
-    if (error && !error.includes('wallet_getCapabilities') && !error.includes('wallet_sendCalls') && !isVerifying) {
-      // User-friendly error messages
-      let errorMsg = 'Transaction failed. Please try again.';
-      
-      if (error.includes('User rejected') || error.includes('User denied')) {
-        errorMsg = 'Transaction cancelled';
-      } else if (error.includes('insufficient funds')) {
-        errorMsg = 'Insufficient funds for gas';
+    if (error && shouldDisplayError(error) && !isVerifying) {
+      const errorMsg = getUserFriendlyError(error);
+      if (errorMsg) {
+        setShowError(errorMsg);
+        setShowSuccess(false);
+        setIsSaving(false);
+        onError?.(errorMsg);
       }
-      
-      setShowError(errorMsg);
-      setShowSuccess(false);
-      setIsSaving(false);
-      onError?.(errorMsg);
     }
   }, [error, onError, isVerifying]);
 
@@ -248,7 +238,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
           status="confirmed"
           network="mainnet"
           onDismiss={() => setShowNotification(false)}
-          autoDismissDelay={8000}
+          autoDismissDelay={TIMEOUTS.AUTO_DISMISS}
         />
       )}
     </div>
