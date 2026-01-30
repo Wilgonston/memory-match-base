@@ -143,10 +143,11 @@ function App() {
 
   /**
    * Apply blockchain progress when it becomes available
+   * This runs both on initial load and after refetch
    */
   useEffect(() => {
-    // Only run when blockchain progress is loaded and we haven't applied it yet
-    if (blockchainProgress && !hasLoadedBlockchainProgress && isAuthenticated) {
+    // Run when blockchain progress is loaded and user is authenticated
+    if (blockchainProgress && isAuthenticated) {
       const applyBlockchainProgress = async () => {
         try {
           console.log('[App] Blockchain progress loaded, merging with local progress...');
@@ -179,17 +180,22 @@ function App() {
             console.log('[App] No changes in progress, skipping update');
           }
 
-          setHasLoadedBlockchainProgress(true);
+          // Mark as loaded on first load
+          if (!hasLoadedBlockchainProgress) {
+            setHasLoadedBlockchainProgress(true);
+          }
           console.log('[App] ✅ Progress applied from blockchain successfully');
         } catch (error) {
           console.error('Failed to apply blockchain progress:', error);
-          setHasLoadedBlockchainProgress(true);
+          if (!hasLoadedBlockchainProgress) {
+            setHasLoadedBlockchainProgress(true);
+          }
         }
       };
 
       applyBlockchainProgress();
     }
-  }, [blockchainProgress, hasLoadedBlockchainProgress, isAuthenticated, progress, mergeFromBlockchain, updateProgress]);
+  }, [blockchainProgress, isAuthenticated, progress, mergeFromBlockchain, updateProgress, hasLoadedBlockchainProgress]);
 
   /**
    * Handle back to main menu (logout)
