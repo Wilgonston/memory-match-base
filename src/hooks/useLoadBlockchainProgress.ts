@@ -97,6 +97,15 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
       const BATCH_SIZE = 5;
       const DELAY_BETWEEN_BATCHES = 300; // 300ms delay between batches
 
+      // Multiple RPC URLs for load balancing and fallback
+      const RPC_URLS = [
+        'https://base.llamarpc.com',
+        'https://mainnet.base.org',
+        'https://base.gateway.tenderly.co',
+        'https://base-rpc.publicnode.com',
+      ];
+      let currentRpcIndex = 0;
+
       for (let batchStart = 1; batchStart <= 100; batchStart += BATCH_SIZE) {
         const batchEnd = Math.min(batchStart + BATCH_SIZE - 1, 100);
         
@@ -105,11 +114,12 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
         // Load batch in parallel
         const batchPromises = [];
         for (let level = batchStart; level <= batchEnd; level++) {
-          // Use wagmi's readContract directly
+          // Rotate through RPC URLs for load balancing
+          const rpcUrl = RPC_URLS[currentRpcIndex % RPC_URLS.length];
+          currentRpcIndex++;
+
           const promise = (async () => {
             try {
-              // Use environment variable for RPC URL with fallback
-              const rpcUrl = import.meta.env.VITE_BASE_RPC_URL || 'https://base.llamarpc.com';
               const response = await fetch(rpcUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
