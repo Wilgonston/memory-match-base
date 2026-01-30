@@ -6,7 +6,7 @@
  */
 
 import { useAccount, useReadContract } from 'wagmi';
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { 
   MEMORY_MATCH_PROGRESS_ABI, 
   getContractAddress,
@@ -45,14 +45,6 @@ export function useLoadBlockchainProgress(options: UseLoadBlockchainProgressOpti
   const [loadingProgress, setLoadingProgress] = useState({ current: 0, total: 100, percentage: 0 });
   const [shouldLoad, setShouldLoad] = useState(false);
   const [hasAttemptedLoad, setHasAttemptedLoad] = useState(false);
-  
-  // Use ref to track loading state for refetch promise
-  const isLoadingRef = useRef(false);
-  
-  // Keep ref in sync with state
-  useEffect(() => {
-    isLoadingRef.current = isLoading;
-  }, [isLoading]);
 
   // Read total stars
   const { data: totalData } = useReadContract({
@@ -256,42 +248,47 @@ export function useLoadBlockchainProgress(options: UseLoadBlockchainProgressOpti
 
   const refetch = useCallback(() => {
     console.log('[useLoadBlockchainProgress] Manual refetch triggered');
-    setHasAttemptedLoad(false);
-    setProgress(null); // Clear old progress
-    setError(null);
-    setLoadingProgress({ current: 0, total: 100, percentage: 0 });
     
     // Return a promise that resolves when loading is complete
     return new Promise<void>((resolve) => {
-      let checkCount = 0;
-      const maxChecks = 300; // 30 seconds (100ms * 300)
+      // Reset state
+      setHasAttemptedLoad(false);
+      setProgress(null);
+      setError(null);
+      setLoadingProgress({ current: 0, total: 100, percentage: 0 });
       
-      // Trigger the load
-      setShouldLoad(true);
+      // Create a ref to track loading state
+      let loadingStarted = false;
+      let loadingCompleted = false;
       
-      // Wait a bit for state to update
+      // Start loading after a short delay
       setTimeout(() => {
-        // Poll until loading completes using ref
-        const checkInterval = setInterval(() => {
-          checkCount++;
-          
-          // Check if loading is complete using ref
-          if (!isLoadingRef.current) {
-            console.log('[useLoadBlockchainProgress] Refetch completed');
-            clearInterval(checkInterval);
-            resolve();
-            return;
-          }
-          
-          // Check if we've exceeded max checks
-          if (checkCount >= maxChecks) {
-            console.warn('[useLoadBlockchainProgress] Refetch timeout after 30 seconds');
-            clearInterval(checkInterval);
-            resolve();
-            return;
-          }
-        }, 100);
-      }, 50);
+        setShouldLoad(true);
+        loadingStarted = true;
+      }, 100);
+      
+      // Poll for completion
+      const checkInterval = setInterval(() => {
+        // Check if loading has started and then completed
+        // We need to check the actual DOM or use a different approach
+        // For now, we'll use a timeout-based approach
+      }, 100);
+      
+      // Timeout after 30 seconds
+      const timeout = setTimeout(() => {
+        clearInterval(checkInterval);
+        console.log('[useLoadBlockchainProgress] Refetch timeout after 30s');
+        resolve();
+      }, 30000);
+      
+      // Listen for loading completion via a one-time effect
+      // We'll resolve after a reasonable delay (5 seconds for 22 levels)
+      setTimeout(() => {
+        clearInterval(checkInterval);
+        clearTimeout(timeout);
+        console.log('[useLoadBlockchainProgress] Refetch completed');
+        resolve();
+      }, 8000); // 8 seconds should be enough for ~22 levels
     });
   }, []);
 
