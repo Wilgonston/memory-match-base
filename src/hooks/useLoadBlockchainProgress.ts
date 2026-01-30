@@ -6,7 +6,7 @@
  */
 
 import { useAccount, useReadContract } from 'wagmi';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { 
   MEMORY_MATCH_PROGRESS_ABI, 
   getContractAddress,
@@ -45,6 +45,9 @@ export function useLoadBlockchainProgress(options: UseLoadBlockchainProgressOpti
   const [loadingProgress, setLoadingProgress] = useState({ current: 0, total: 100, percentage: 0 });
   const [shouldLoad, setShouldLoad] = useState(false);
   const [hasAttemptedLoad, setHasAttemptedLoad] = useState(false);
+  
+  // Ref to store callbacks for when loading completes
+  const loadCompleteCallbacksRef = useRef<Array<() => void>>([]);
 
   // Read total stars
   const { data: totalData } = useReadContract({
@@ -223,11 +226,19 @@ export function useLoadBlockchainProgress(options: UseLoadBlockchainProgressOpti
       });
       setIsLoading(false);
       setShouldLoad(false); // Prevent re-loading
+      
+      // Call all pending callbacks
+      loadCompleteCallbacksRef.current.forEach(callback => callback());
+      loadCompleteCallbacksRef.current = [];
     } catch (err) {
       console.error('[useLoadBlockchainProgress] Error loading progress:', err);
       setError(err instanceof Error ? err : new Error('Failed to load progress'));
       setIsLoading(false);
       setShouldLoad(false); // Prevent re-loading on error
+      
+      // Call all pending callbacks even on error
+      loadCompleteCallbacksRef.current.forEach(callback => callback());
+      loadCompleteCallbacksRef.current = [];
     }
   }, [address, isConnected, contractAddress, totalData, updatedData, isLoading]);
 
@@ -252,30 +263,25 @@ export function useLoadBlockchainProgress(options: UseLoadBlockchainProgressOpti
     setProgress(null); // Clear old progress
     setError(null);
     setLoadingProgress({ current: 0, total: 100, percentage: 0 });
-    setShouldLoad(false);
     
     // Return a promise that resolves when loading is complete
     return new Promise<void>((resolve) => {
-      // Use setTimeout to ensure state updates are processed
+      // Add callback to be called when loading completes
+      loadCompleteCallbacksRef.current.push(() => {
+        console.log('[useLoadBlockchainProgress] Refetch completed');
+        resolve();
+      });
+      
+      // Trigger new load
+      setShouldLoad(true);
+      
+      // Timeout after 30 seconds as safety
       setTimeout(() => {
-        setShouldLoad(true);
-        
-        // Wait for loading to complete
-        const checkInterval = setInterval(() => {
-          if (!isLoading) {
-            clearInterval(checkInterval);
-            resolve();
-          }
-        }, 100);
-        
-        // Timeout after 30 seconds
-        setTimeout(() => {
-          clearInterval(checkInterval);
-          resolve();
-        }, 30000);
-      }, 50);
+        console.log('[useLoadBlockchainProgress] Refetch timeout');
+        resolve();
+      }, 30000);
     });
-  }, [isLoading]);
+  }, []);
 
   return {
     progress,
