@@ -20,7 +20,7 @@ export interface LevelSelectProps {
   /** Blockchain progress data (optional) */
   blockchainProgress?: OnChainProgress | null;
   /** Callback to refetch blockchain progress */
-  onRefetchBlockchain?: () => void;
+  onRefetchBlockchain?: () => Promise<void>;
   /** Callback when a level is selected */
   onLevelSelect: (level: number) => void;
   /** Callback when back to menu is clicked (logout) */
