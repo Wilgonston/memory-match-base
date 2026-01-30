@@ -17,6 +17,7 @@ import './SaveAllProgressButton.css';
 export interface SaveAllProgressButtonProps {
   progressData: ProgressData;
   blockchainProgress?: OnChainProgress | null;
+  onRefetchBlockchain?: () => void;
   onSuccess?: () => void;
   onError?: (error: string) => void;
   className?: string;
@@ -25,6 +26,7 @@ export interface SaveAllProgressButtonProps {
 export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
   progressData,
   blockchainProgress: externalBlockchainProgress,
+  onRefetchBlockchain,
   onSuccess,
   onError,
   className = '',
@@ -143,18 +145,25 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       // Wait for blockchain to update, then refetch and verify
       const verifyTimer = setTimeout(async () => {
         console.log('[SaveAllProgressButton] Refetching blockchain progress...');
-        await refetch();
+        
+        // Use external refetch if provided, otherwise use internal
+        if (onRefetchBlockchain) {
+          await onRefetchBlockchain();
+        } else {
+          await refetch();
+        }
         
         // After refetch, component will re-render and check levelsToSave
         // If levelsToSave.count === 0, it will show "All progress synced"
         console.log('[SaveAllProgressButton] Blockchain data refreshed');
+        setIsVerifying(false);
       }, 3000);
       
       onSuccess?.();
       
       return () => clearTimeout(verifyTimer);
     }
-  }, [isSuccess, isPending, hash, onSuccess, refetch, isVerifying]);
+  }, [isSuccess, isPending, hash, onSuccess, onRefetchBlockchain, refetch, isVerifying]);
 
   // Handle error - but ignore if we're verifying (transaction was successful)
   useEffect(() => {

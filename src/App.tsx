@@ -276,6 +276,7 @@ function App() {
             <LevelSelect
               progressData={progress}
               blockchainProgress={blockchainProgress}
+              onRefetchBlockchain={refetchBlockchainProgress}
               onLevelSelect={handleLevelSelect}
               onBackToMenu={handleBackToMenu}
             />

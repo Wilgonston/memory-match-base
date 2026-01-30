@@ -19,6 +19,8 @@ export interface LevelSelectProps {
   progressData: ProgressData;
   /** Blockchain progress data (optional) */
   blockchainProgress?: OnChainProgress | null;
+  /** Callback to refetch blockchain progress */
+  onRefetchBlockchain?: () => void;
   /** Callback when a level is selected */
   onLevelSelect: (level: number) => void;
   /** Callback when back to menu is clicked (logout) */
@@ -31,12 +33,12 @@ export interface LevelSelectProps {
 export const LevelSelect: React.FC<LevelSelectProps> = ({
   progressData,
   blockchainProgress,
+  onRefetchBlockchain,
   onLevelSelect,
   onBackToMenu,
 }) => {
   const { completedLevels, levelStars, highestUnlockedLevel } = progressData;
   const { disconnect } = useDisconnect();
-  const [isResetting, setIsResetting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   /**
@@ -67,84 +69,6 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
     if (isLevelUnlocked(level)) {
       hapticButtonPress();
       onLevelSelect(level);
-    }
-  };
-
-  /**
-   * Handle wallet reset - clear all wallet data and disconnect
-   */
-  const handleResetWallet = async () => {
-    if (!confirm('⚠️ This will disconnect your wallet and clear all wallet data.\n\nYou will need to create a NEW Smart Wallet on Base Mainnet.\n\nYour game progress will be saved locally.\n\nContinue?')) {
-      return;
-    }
-
-    setIsResetting(true);
-    console.log('[LevelSelect] Resetting wallet...');
-
-    try {
-      // Disconnect wallet first
-      disconnect();
-
-      // Clear all wallet-related data
-      const keysToRemove = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && (
-          key.includes('coinbase') ||
-          key.includes('walletlink') ||
-          key.includes('-walletUsername') ||
-          key.includes('CBWSDK') ||
-          key.includes('wagmi') ||
-          key.includes('recentConnector') ||
-          key.toLowerCase().includes('wallet')
-        )) {
-          // Don't remove game progress
-          if (!key.includes('memory-match-base-progress')) {
-            keysToRemove.push(key);
-          }
-        }
-      }
-
-      keysToRemove.forEach(key => {
-        console.log('[LevelSelect] Removing localStorage key:', key);
-        localStorage.removeItem(key);
-      });
-
-      // Clear sessionStorage
-      sessionStorage.clear();
-
-      // Clear IndexedDB
-      if (window.indexedDB) {
-        window.indexedDB.databases().then((databases) => {
-          databases.forEach((db) => {
-            if (db.name && (
-              db.name.includes('coinbase') ||
-              db.name.includes('walletlink') ||
-              db.name.includes('CBWSDK')
-            )) {
-              console.log('[LevelSelect] Deleting IndexedDB:', db.name);
-              window.indexedDB.deleteDatabase(db.name);
-            }
-          });
-        });
-      }
-
-      console.log('[LevelSelect] Wallet reset complete. Redirecting to login...');
-      
-      // Clear authentication and redirect to login
-      localStorage.removeItem('authenticated');
-      localStorage.removeItem('authenticatedAddress');
-      localStorage.removeItem('authTimestamp');
-
-      // Reload page to go back to login screen
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
-
-    } catch (error) {
-      console.error('[LevelSelect] Failed to reset wallet:', error);
-      setErrorMessage('Failed to reset wallet. Please try again or clear your browser cache manually.');
-      setIsResetting(false);
     }
   };
 
@@ -258,18 +182,6 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
             Logout
           </button>
         )}
-
-        {/* Wallet reset button */}
-        <button 
-          className="back-to-menu-button wallet-reset-button"
-          onClick={handleResetWallet}
-          disabled={isResetting}
-          style={{ right: 0, left: 'auto' }}
-          aria-label="Reset wallet and clear wallet data"
-          title="Delete Smart Wallet and create new one on Base Mainnet"
-        >
-          {isResetting ? 'Resetting...' : '🔄 Reset Wallet'}
-        </button>
         
         <h1 className="level-select-title">Select Level</h1>
         
@@ -293,6 +205,7 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
         <SaveAllProgressButton 
           progressData={progressData}
           blockchainProgress={blockchainProgress}
+          onRefetchBlockchain={onRefetchBlockchain}
           onSuccess={() => {
             console.log('[LevelSelect] All progress saved to blockchain successfully!');
             setErrorMessage(null);
