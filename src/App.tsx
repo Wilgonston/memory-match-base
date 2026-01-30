@@ -113,7 +113,7 @@ function App() {
 
   /**
    * Handle successful authentication
-   * Load blockchain progress after authentication
+   * Load blockchain progress after authentication ONLY if blockchain has more progress
    */
   const handleAuthenticated = useCallback(async () => {
     setIsAuthenticated(true);
@@ -123,37 +123,51 @@ function App() {
       setIsLoadingBlockchainProgress(true);
       
       try {
-        console.log('[App] Authentication successful, loading blockchain progress...');
+        console.log('[App] Authentication successful, checking blockchain progress...');
         console.log('[App] Current local progress:', {
           completedLevels: Array.from(progress.completedLevels),
           highestUnlockedLevel: progress.highestUnlockedLevel,
           levelStarsCount: progress.levelStars.size,
+          levelStars: Array.from(progress.levelStars.entries()),
         });
 
         // Wait for blockchain data to load
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        // Merge with blockchain progress
+        // Check if blockchain has more progress
+        const { hasMoreProgressOnBlockchain } = await import('./utils/unsavedProgress');
+        const { progress: onChainProgress } = await import('./hooks/useLoadBlockchainProgress');
+        
+        // Get blockchain progress through mergeFromBlockchain (it loads the data)
         const mergedProgress = await mergeFromBlockchain(progress);
-        console.log('[App] Merged progress:', {
-          completedLevels: Array.from(mergedProgress.completedLevels),
-          highestUnlockedLevel: mergedProgress.highestUnlockedLevel,
-          levelStarsCount: mergedProgress.levelStars.size,
+        
+        console.log('[App] Blockchain progress check:', {
+          blockchainLevelStarsCount: mergedProgress.levelStars.size,
+          blockchainLevelStars: Array.from(mergedProgress.levelStars.entries()),
         });
 
-        // Only update if merge actually changed something
-        if (mergedProgress.levelStars.size !== progress.levelStars.size ||
-            Array.from(mergedProgress.levelStars.entries()).some(([level, stars]) => 
-              progress.levelStars.get(level) !== stars
-            )) {
-          console.log('[App] Progress changed, updating UI...');
+        // Only update if blockchain has MORE progress than local
+        let shouldUpdate = false;
+        
+        // Check if any level on blockchain has more stars than local
+        for (const [level, blockchainStars] of mergedProgress.levelStars.entries()) {
+          const localStars = progress.levelStars.get(level) || 0;
+          if (blockchainStars > localStars) {
+            shouldUpdate = true;
+            console.log(`[App] Level ${level}: blockchain has ${blockchainStars} stars, local has ${localStars} stars`);
+            break;
+          }
+        }
+
+        if (shouldUpdate) {
+          console.log('[App] Blockchain has more progress, updating local...');
           updateProgress(() => mergedProgress);
         } else {
-          console.log('[App] No changes in progress, skipping update');
+          console.log('[App] Local progress is up to date or better than blockchain');
         }
 
         setHasLoadedBlockchainProgress(true);
-        console.log('[App] Progress loaded from blockchain successfully');
+        console.log('[App] Progress check completed');
       } catch (error) {
         console.error('Failed to load blockchain progress:', error);
         // Continue with local progress on error
@@ -248,7 +262,6 @@ function App() {
               progressData={progress}
               onLevelSelect={handleLevelSelect}
               onBackToMenu={handleBackToMenu}
-              onUpdateProgress={updateProgress}
             />
           </Wallet>
         )}

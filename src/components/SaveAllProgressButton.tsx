@@ -10,14 +10,13 @@ import { useSequentialUpdateLevels } from '../hooks/useSequentialUpdateLevels';
 import { useLoadBlockchainProgress } from '../hooks/useLoadBlockchainProgress';
 import { getContractAddress } from '../types/blockchain';
 import { ProgressData } from '../types';
-import { getUnsavedLevels, hasMoreProgressOnBlockchain } from '../utils/unsavedProgress';
+import { getUnsavedLevels } from '../utils/unsavedProgress';
 import './SaveAllProgressButton.css';
 
 export interface SaveAllProgressButtonProps {
   progressData: ProgressData;
   onSuccess?: () => void;
   onError?: (error: string) => void;
-  onLoadFromBlockchain?: () => void;
   className?: string;
 }
 
@@ -25,7 +24,6 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
   progressData,
   onSuccess,
   onError,
-  onLoadFromBlockchain,
   className = '',
 }) => {
   const { isConnected } = useAccount();
@@ -51,11 +49,6 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
     return unsaved;
   }, [progressData, onChainProgress]);
 
-  // Check if blockchain has more progress
-  const blockchainHasMore = useMemo(() => {
-    return hasMoreProgressOnBlockchain(progressData, onChainProgress);
-  }, [progressData, onChainProgress]);
-
   if (!isConnected) {
     return null;
   }
@@ -72,30 +65,12 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
   }
 
   // Hide button if no progress to save (all synced!)
-  if (levelsToSave.count === 0 && !blockchainHasMore) {
+  if (levelsToSave.count === 0) {
     return (
       <div className={`save-all-progress-container ${className}`}>
         <div className="save-all-success-message">
           ✅ All progress synced to blockchain!
         </div>
-      </div>
-    );
-  }
-
-  // Show "Load from blockchain" button if blockchain has more progress
-  if (blockchainHasMore && levelsToSave.count === 0) {
-    return (
-      <div className={`save-all-progress-container ${className}`}>
-        <button
-          onClick={onLoadFromBlockchain}
-          className="save-all-progress-button load-button"
-          title="Load progress from blockchain"
-        >
-          📥 Load from Blockchain
-        </button>
-        <p className="save-all-info">
-          ⚠️ Blockchain has more progress than local
-        </p>
       </div>
     );
   }
