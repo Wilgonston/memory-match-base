@@ -39,7 +39,7 @@ export const ResetProgressButton: React.FC<ResetProgressButtonProps> = ({
     return null;
   }
 
-  const handleReset = async () => {
+  const handleReset = () => {
     console.log('[ResetProgressButton] Starting reset process...');
     setIsResetting(true);
     setShowSuccess(false);
@@ -47,32 +47,16 @@ export const ResetProgressButton: React.FC<ResetProgressButtonProps> = ({
     setShowConfirm(false);
     reset();
     
-    try {
-      // Reset all 100 levels to 0 stars in blockchain
-      const levels = Array.from({ length: 100 }, (_, i) => i + 1);
-      const stars = Array(100).fill(0);
-      
-      console.log('[ResetProgressButton] Resetting 100 levels to 0 stars...');
-      
-      // Validate that we have valid data before calling updateLevels
-      if (levels.length === 0 || stars.length === 0) {
-        throw new Error('Invalid reset data');
-      }
-      
-      updateLevels(levels, stars);
-      
-      console.log('[ResetProgressButton] ✅ Reset transaction initiated');
-    } catch (err) {
-      console.error('[ResetProgressButton] ❌ Failed to reset progress:', err);
-      const errorMessage = err instanceof Error ? err.message : String(err || 'Failed to reset progress');
-      
-      const friendlyError = getUserFriendlyError(errorMessage);
-      if (friendlyError) {
-        setShowError(friendlyError);
-        onError?.(friendlyError);
-      }
-      setIsResetting(false);
-    }
+    // Reset all 100 levels to 0 stars in blockchain
+    const levels = Array.from({ length: 100 }, (_, i) => i + 1);
+    const stars = Array(100).fill(0);
+    
+    console.log('[ResetProgressButton] Resetting 100 levels to 0 stars...');
+    
+    // Call updateLevels - errors will be handled by useEffect
+    updateLevels(levels, stars);
+    
+    console.log('[ResetProgressButton] ✅ Reset transaction initiated');
   };
 
   // Handle success - only when transaction is confirmed on blockchain
@@ -119,6 +103,7 @@ export const ResetProgressButton: React.FC<ResetProgressButtonProps> = ({
     if (error && shouldDisplayError(error)) {
       const errorMsg = getUserFriendlyError(error);
       if (errorMsg) {
+        console.error('[ResetProgressButton] Error detected:', error);
         setShowError(errorMsg);
         setShowSuccess(false);
         setIsResetting(false);

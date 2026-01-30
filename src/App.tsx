@@ -120,7 +120,7 @@ function App() {
       
       // Auto-load blockchain progress if already authenticated and not currently loading
       // Use refs to prevent re-triggering when state changes
-      if (!hasLoadedRef.current && !isLoadingBlockchain && !isLoadingRef.current) {
+      if (!hasLoadedRef.current && !isLoadingRef.current) {
         console.log('[App] User already authenticated, auto-loading blockchain progress...');
         isLoadingRef.current = true;
         hasLoadedRef.current = true;
@@ -129,7 +129,7 @@ function App() {
         });
       } else if (hasLoadedRef.current) {
         console.log('[App] Blockchain progress already loaded, skipping auto-load');
-      } else if (isLoadingBlockchain || isLoadingRef.current) {
+      } else if (isLoadingRef.current) {
         console.log('[App] Blockchain loading in progress, skipping auto-load');
       }
     } else {
@@ -138,7 +138,9 @@ function App() {
       clearAuthentication();
       hasLoadedRef.current = false;
     }
-  }, [address, isConnected, isLoadingBlockchain, refetchBlockchainProgress]);
+    // IMPORTANT: Do NOT include isLoadingBlockchain in dependencies - it causes double loading
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [address, isConnected, refetchBlockchainProgress]);
 
   /**
    * Handle successful authentication
