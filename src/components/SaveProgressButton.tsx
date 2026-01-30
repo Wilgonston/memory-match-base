@@ -24,7 +24,7 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
 }) => {
   const { address, isConnected, connector } = useAccount();
   const contractAddress = getContractAddress();
-  const { progress: onChainProgress, isLoading: isLoadingBlockchain, refetch } = useLoadBlockchainProgress();
+  const { progress: onChainProgress, isLoading: isLoadingBlockchain, refetch } = useLoadBlockchainProgress({ autoLoad: false });
   const [isVerifying, setIsVerifying] = React.useState(false);
 
   // Determine if this is a Smart Wallet
@@ -48,14 +48,19 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
       setIsVerifying(true);
       
       // Wait for blockchain to update, then refetch
-      setTimeout(async () => {
+      const verifyTimer = setTimeout(async () => {
         console.log('[SaveProgressButton] Refetching blockchain progress...');
-        await refetch();
+        refetch();
+        // Wait a bit for refetch to complete
+        await new Promise(resolve => setTimeout(resolve, 2000));
         setIsVerifying(false);
         console.log('[SaveProgressButton] Blockchain data refreshed');
       }, 3000);
       
       onSuccess?.();
+      
+      // Cleanup timer on unmount
+      return () => clearTimeout(verifyTimer);
     },
     onError: (errorMsg) => {
       console.error('[SaveProgressButton] Transaction error:', errorMsg);
