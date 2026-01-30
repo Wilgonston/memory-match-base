@@ -9,6 +9,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDisconnect } from 'wagmi';
 import { ProgressData } from '../types';
+import { type OnChainProgress } from '../types/blockchain';
 import { hapticButtonPress } from '../utils/haptics';
 import { SaveAllProgressButton } from './SaveAllProgressButton';
 import './LevelSelect.css';
@@ -16,6 +17,8 @@ import './LevelSelect.css';
 export interface LevelSelectProps {
   /** Player's progress data */
   progressData: ProgressData;
+  /** Blockchain progress data (optional) */
+  blockchainProgress?: OnChainProgress | null;
   /** Callback when a level is selected */
   onLevelSelect: (level: number) => void;
   /** Callback when back to menu is clicked (logout) */
@@ -27,6 +30,7 @@ export interface LevelSelectProps {
  */
 export const LevelSelect: React.FC<LevelSelectProps> = ({
   progressData,
+  blockchainProgress,
   onLevelSelect,
   onBackToMenu,
 }) => {
@@ -288,6 +292,7 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
         {/* Save all progress to blockchain button */}
         <SaveAllProgressButton 
           progressData={progressData}
+          blockchainProgress={blockchainProgress}
           onSuccess={() => {
             console.log('[LevelSelect] All progress saved to blockchain successfully!');
             setErrorMessage(null);

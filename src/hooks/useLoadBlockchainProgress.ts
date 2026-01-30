@@ -25,11 +25,17 @@ export interface UseLoadBlockchainProgressResult {
   };
 }
 
+export interface UseLoadBlockchainProgressOptions {
+  /** Whether to auto-load on mount. Default: false */
+  autoLoad?: boolean;
+}
+
 /**
  * Load complete progress from blockchain
  * Reads stars for all 100 levels sequentially with delays to avoid rate limits
  */
-export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
+export function useLoadBlockchainProgress(options: UseLoadBlockchainProgressOptions = {}): UseLoadBlockchainProgressResult {
+  const { autoLoad = false } = options;
   const { address, isConnected } = useAccount();
   const contractAddress = getContractAddress();
 
@@ -232,19 +238,25 @@ export function useLoadBlockchainProgress(): UseLoadBlockchainProgressResult {
     }
   }, [shouldLoad, address, isConnected, totalData, updatedData, loadAllLevels, isLoading]);
 
-  // Auto-load on mount (only once)
+  // Auto-load on mount (only once) - only if autoLoad is enabled
   useEffect(() => {
-    if (address && isConnected && !shouldLoad && !isLoading && !hasAttemptedLoad) {
+    if (autoLoad && address && isConnected && !shouldLoad && !isLoading && !hasAttemptedLoad) {
       console.log('[useLoadBlockchainProgress] Auto-triggering initial load');
       setShouldLoad(true);
     }
-  }, [address, isConnected, shouldLoad, isLoading, hasAttemptedLoad]);
+  }, [autoLoad, address, isConnected, shouldLoad, isLoading, hasAttemptedLoad]);
 
   const refetch = useCallback(() => {
     console.log('[useLoadBlockchainProgress] Manual refetch triggered');
     setHasAttemptedLoad(false);
+    setProgress(null); // Clear old progress
+    setError(null);
+    setLoadingProgress({ current: 0, total: 100, percentage: 0 });
     setShouldLoad(false);
-    setTimeout(() => setShouldLoad(true), 100);
+    // Use setTimeout to ensure state updates are processed
+    setTimeout(() => {
+      setShouldLoad(true);
+    }, 50);
   }, []);
 
   return {

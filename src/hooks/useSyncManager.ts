@@ -28,7 +28,7 @@ export interface UseSyncManagerResult {
   /** Sync local progress to blockchain */
   syncToBlockchain: (localProgress: ProgressData) => Promise<void>;
   /** Merge blockchain progress with local */
-  mergeFromBlockchain: (localProgress: ProgressData) => Promise<ProgressData>;
+  mergeFromBlockchain: (localProgress: ProgressData, onChainProgress?: OnChainProgress | null) => Promise<ProgressData>;
   /** Manually trigger sync */
   manualSync: (localProgress: ProgressData) => Promise<ProgressData>;
 }
@@ -53,12 +53,11 @@ export interface UseSyncManagerResult {
  * await syncToBlockchain(localProgress);
  * 
  * // Merge blockchain progress with local
- * const merged = await mergeFromBlockchain(localProgress);
+ * const merged = await mergeFromBlockchain(localProgress, blockchainProgress);
  * ```
  */
 export function useSyncManager(): UseSyncManagerResult {
   const { address, isConnected } = useAccount();
-  const { progress: onChainProgress, isLoading: isLoadingProgress } = useLoadBlockchainProgress();
   const { batchUpdate, isPending: isSyncing } = useBatchUpdateLevels();
 
   const [syncStatus, setSyncStatus] = useState<SyncStatus>({
@@ -75,10 +74,10 @@ export function useSyncManager(): UseSyncManagerResult {
     }
   }, [isConnected, address]);
 
-  // Update syncing state (include loading progress from blockchain)
+  // Update syncing state
   useEffect(() => {
-    setSyncStatus(prev => ({ ...prev, isSyncing: isSyncing || isLoadingProgress }));
-  }, [isSyncing, isLoadingProgress]);
+    setSyncStatus(prev => ({ ...prev, isSyncing: isSyncing }));
+  }, [isSyncing]);
 
   /**
    * Sync local progress to blockchain
@@ -127,36 +126,19 @@ export function useSyncManager(): UseSyncManagerResult {
 
   /**
    * Merge blockchain progress with local
+   * Now accepts onChainProgress as parameter instead of loading it internally
    */
   const mergeFromBlockchain = useCallback(
-    async (localProgress: ProgressData): Promise<ProgressData> => {
+    async (localProgress: ProgressData, onChainProgress?: OnChainProgress | null): Promise<ProgressData> => {
       console.log('[useSyncManager] ========== mergeFromBlockchain called ==========');
       console.log('[useSyncManager] isConnected:', isConnected);
       console.log('[useSyncManager] address:', address);
-      console.log('[useSyncManager] isLoadingProgress:', isLoadingProgress);
       console.log('[useSyncManager] onChainProgress:', onChainProgress);
       
       if (!isConnected || !address) {
         // Return local progress if not connected
         console.log('[useSyncManager] No blockchain connection, returning local progress');
         return localProgress;
-      }
-
-      // Wait for blockchain data to finish loading
-      if (isLoadingProgress) {
-        console.log('[useSyncManager] Waiting for blockchain data to load...');
-        // Wait up to 30 seconds for loading to complete
-        const maxWaitTime = 30000;
-        const startTime = Date.now();
-        
-        while (isLoadingProgress && (Date.now() - startTime) < maxWaitTime) {
-          await new Promise(resolve => setTimeout(resolve, 500));
-        }
-        
-        if (isLoadingProgress) {
-          console.log('[useSyncManager] Timeout waiting for blockchain data, using local progress');
-          return localProgress;
-        }
       }
       
       if (onChainProgress) {
@@ -201,7 +183,7 @@ export function useSyncManager(): UseSyncManagerResult {
         return localProgress;
       }
     },
-    [isConnected, address, onChainProgress, isLoadingProgress]
+    [isConnected, address]
   );
 
   /**

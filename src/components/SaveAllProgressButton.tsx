@@ -8,7 +8,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useAccount } from 'wagmi';
 import { useSequentialUpdateLevels } from '../hooks/useSequentialUpdateLevels';
 import { useLoadBlockchainProgress } from '../hooks/useLoadBlockchainProgress';
-import { getContractAddress } from '../types/blockchain';
+import { getContractAddress, type OnChainProgress } from '../types/blockchain';
 import { ProgressData } from '../types';
 import { getUnsavedLevels } from '../utils/unsavedProgress';
 import { isSmartWallet } from '../utils/walletDetection';
@@ -16,6 +16,7 @@ import './SaveAllProgressButton.css';
 
 export interface SaveAllProgressButtonProps {
   progressData: ProgressData;
+  blockchainProgress?: OnChainProgress | null;
   onSuccess?: () => void;
   onError?: (error: string) => void;
   className?: string;
@@ -23,14 +24,18 @@ export interface SaveAllProgressButtonProps {
 
 export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
   progressData,
+  blockchainProgress: externalBlockchainProgress,
   onSuccess,
   onError,
   className = '',
 }) => {
   const { isConnected, connector } = useAccount();
   const { updateLevels, isPending, error, isSuccess, progress, reset, hash } = useSequentialUpdateLevels();
-  const { progress: onChainProgress, isLoading: isLoadingBlockchain, refetch } = useLoadBlockchainProgress();
+  const { progress: onChainProgress, isLoading: isLoadingBlockchain, refetch } = useLoadBlockchainProgress({ autoLoad: false });
   const [isSaving, setIsSaving] = useState(false);
+  
+  // Use external blockchain progress if provided, otherwise use internal
+  const blockchainProgress = externalBlockchainProgress !== undefined ? externalBlockchainProgress : onChainProgress;
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState<string | null>(null);
   const [savedHash, setSavedHash] = useState<string | null>(null);
@@ -41,24 +46,29 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
 
   // Get only unsaved levels (compare with blockchain)
   const levelsToSave = useMemo(() => {
-    const unsaved = getUnsavedLevels(progressData, onChainProgress);
+    // Don't calculate if still loading
+    if (isLoadingBlockchain) {
+      return { levels: [], stars: [], count: 0 };
+    }
+    
+    const unsaved = getUnsavedLevels(progressData, blockchainProgress);
     
     console.log('[SaveAllProgressButton] Checking unsaved levels:', {
       localLevels: Array.from(progressData.levelStars.entries()),
-      blockchainLevels: onChainProgress ? Array.from(onChainProgress.levelStars.entries()) : 'null',
+      blockchainLevels: blockchainProgress ? Array.from(blockchainProgress.levelStars.entries()) : 'null',
       unsavedCount: unsaved.count,
       unsavedLevels: unsaved.levels,
     });
     
     return unsaved;
-  }, [progressData, onChainProgress]);
+  }, [progressData, blockchainProgress, isLoadingBlockchain]);
 
   if (!isConnected) {
     return null;
   }
 
-  // Hide button if loading blockchain data
-  if (isLoadingBlockchain) {
+  // Hide button if loading blockchain data OR if blockchain data hasn't loaded yet
+  if (isLoadingBlockchain || (!blockchainProgress && !isLoadingBlockchain && externalBlockchainProgress === undefined)) {
     return (
       <div className={`save-all-progress-container ${className}`}>
         <p className="save-all-info">

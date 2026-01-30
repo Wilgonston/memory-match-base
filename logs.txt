@@ -1,80 +1,202 @@
-[2026-01-30T18:33:10.559Z] [LOG] Console logger initialized. Use downloadConsoleLogs() to download logs.
-[2026-01-30T18:33:10.612Z] [DEBUG] [vite] connecting...
-[2026-01-30T18:33:10.663Z] [DEBUG] [vite] connected.
-[2026-01-30T18:33:10.953Z] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[2026-01-30T18:33:11.181Z] [WARN] Module "buffer" has been externalized for browser compatibility. Cannot access "buffer.Buffer" in client code. See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
-[2026-01-30T18:33:11.391Z] [LOG] 🌐 Running in standard browser
-[2026-01-30T18:33:11.391Z] [LOG] [fetchRetry] Global fetch interceptor installed with retry logic
-[2026-01-30T18:33:11.391Z] [LOG] [fetchRetry] Global error handler installed
-[2026-01-30T18:33:11.443Z] [LOG] [useProgress] Initial progress loaded: {
-  "completedLevels": [],
-  "highestUnlockedLevel": 1,
-  "levelStarsCount": 0
+[2026-01-30T19:41:56.798Z] [LOG] Console logger initialized. Use downloadConsoleLogs() to download logs.
+[2026-01-30T19:41:56.897Z] [DEBUG] [vite] connecting...
+[2026-01-30T19:41:56.959Z] [DEBUG] [vite] connected.
+[2026-01-30T19:41:57.161Z] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[2026-01-30T19:41:57.416Z] [WARN] Module "buffer" has been externalized for browser compatibility. Cannot access "buffer.Buffer" in client code. See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[2026-01-30T19:41:57.580Z] [LOG] 🌐 Running in standard browser
+[2026-01-30T19:41:57.580Z] [LOG] [fetchRetry] Global fetch interceptor installed with retry logic
+[2026-01-30T19:41:57.581Z] [LOG] [fetchRetry] Global error handler installed
+[2026-01-30T19:41:57.596Z] [LOG] [useProgress] Initial progress loaded: {
+  "completedLevels": [
+    3,
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "highestUnlockedLevel": 13,
+  "levelStarsCount": 12
 }
-[2026-01-30T18:33:11.444Z] [LOG] [useProgress] Initial progress loaded: {
-  "completedLevels": [],
-  "highestUnlockedLevel": 1,
-  "levelStarsCount": 0
+[2026-01-30T19:41:57.596Z] [LOG] [useProgress] Initial progress loaded: {
+  "completedLevels": [
+    3,
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "highestUnlockedLevel": 13,
+  "levelStarsCount": 12
 }
-[2026-01-30T18:33:11.642Z] [LOG] [useLoadBlockchainProgress] Auto-triggering initial load
-[2026-01-30T18:33:11.647Z] [LOG] [useLoadBlockchainProgress] Auto-triggering initial load
-[2026-01-30T18:33:11.648Z] [LOG] [Config] ✅ All configuration validated successfully
-[2026-01-30T18:33:11.688Z] [LOG] [Base Account SDK] Initialized successfully
-[2026-01-30T18:33:11.697Z] [LOG] [useLoadBlockchainProgress] Auto-triggering initial load
-[2026-01-30T18:33:11.698Z] [LOG] [useLoadBlockchainProgress] Auto-triggering initial load
-[2026-01-30T18:33:11.699Z] [LOG] [Config] ✅ All configuration validated successfully
-[2026-01-30T18:33:11.704Z] [LOG] [Base Account SDK] Initialized successfully
-[2026-01-30T18:33:11.868Z] [LOG] [SaveAllProgressButton] Checking unsaved levels: {
-  "localLevels": [],
+[2026-01-30T19:41:57.636Z] [WARN] The configured WalletConnect 'metadata.url':https://memory-match-base.vercel.app differs from the actual page url:http://localhost:3000. This is probably unintended and can lead to issues.
+[2026-01-30T19:41:57.649Z] [LOG] [App] isLoadingBlockchain changed: false progress: {
+  "current": 0,
+  "total": 100,
+  "percentage": 0
+}
+[2026-01-30T19:41:57.650Z] [LOG] [Config] ✅ All configuration validated successfully
+[2026-01-30T19:41:57.657Z] [LOG] [Base Account SDK] Initialized successfully
+[2026-01-30T19:41:57.659Z] [LOG] [App] isLoadingBlockchain changed: false progress: {
+  "current": 0,
+  "total": 100,
+  "percentage": 0
+}
+[2026-01-30T19:41:57.659Z] [LOG] [Config] ✅ All configuration validated successfully
+[2026-01-30T19:41:57.660Z] [LOG] [Base Account SDK] Initialized successfully
+[2026-01-30T19:41:57.755Z] [LOG] [SaveAllProgressButton] Checking unsaved levels: {
+  "localLevels": [
+    [
+      3,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      6,
+      1
+    ],
+    [
+      7,
+      1
+    ],
+    [
+      8,
+      1
+    ],
+    [
+      9,
+      1
+    ],
+    [
+      10,
+      1
+    ],
+    [
+      11,
+      1
+    ],
+    [
+      12,
+      1
+    ]
+  ],
   "blockchainLevels": "null",
-  "unsavedCount": 0,
-  "unsavedLevels": []
+  "unsavedCount": 12,
+  "unsavedLevels": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
 }
-[2026-01-30T18:33:11.869Z] [LOG] [SaveAllProgressButton] Checking unsaved levels: {
-  "localLevels": [],
+[2026-01-30T19:41:57.755Z] [LOG] [SaveAllProgressButton] Checking unsaved levels: {
+  "localLevels": [
+    [
+      3,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      6,
+      1
+    ],
+    [
+      7,
+      1
+    ],
+    [
+      8,
+      1
+    ],
+    [
+      9,
+      1
+    ],
+    [
+      10,
+      1
+    ],
+    [
+      11,
+      1
+    ],
+    [
+      12,
+      1
+    ]
+  ],
   "blockchainLevels": "null",
-  "unsavedCount": 0,
-  "unsavedLevels": []
+  "unsavedCount": 12,
+  "unsavedLevels": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
 }
-[2026-01-30T18:33:11.892Z] [LOG] [useLoadBlockchainProgress] Auto-triggering initial load
-[2026-01-30T18:33:11.896Z] [LOG] [useLoadBlockchainProgress] Auto-triggering initial load
-[2026-01-30T18:33:11.945Z] [WARN] Failed to load sound transaction-submitted: {
-  "isTrusted": true
-}
-[2026-01-30T18:33:11.972Z] [WARN] The configured WalletConnect 'metadata.url':https://memory-match-base.vercel.app differs from the actual page url:http://localhost:3000. This is probably unintended and can lead to issues.
-[2026-01-30T18:33:12.206Z] [WARN] Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
-[2026-01-30T18:33:12.330Z] [LOG] Sound Manager initialized (5/6 sounds loaded)
-[2026-01-30T18:33:12.448Z] [LOG] Sound Manager initialized (6/6 sounds loaded)
-[2026-01-30T18:33:12.679Z] [LOG] [useLoadBlockchainProgress] Starting to load progress from blockchain...
-[2026-01-30T18:33:12.680Z] [LOG] [useLoadBlockchainProgress] Total stars: 15 Updated: 1769788105
-[2026-01-30T18:33:12.681Z] [LOG] [useLoadBlockchainProgress] Loading levels 1-3...
-[2026-01-30T18:33:12.684Z] [LOG] [useLoadBlockchainProgress] Starting to load progress from blockchain...
-[2026-01-30T18:33:12.686Z] [LOG] [useLoadBlockchainProgress] Total stars: 15 Updated: 1769788105
-[2026-01-30T18:33:12.687Z] [LOG] [useLoadBlockchainProgress] Loading levels 1-3...
-[2026-01-30T18:33:12.688Z] [LOG] [useLoadBlockchainProgress] Starting to load progress from blockchain...
-[2026-01-30T18:33:12.689Z] [LOG] [useLoadBlockchainProgress] Total stars: 15 Updated: 1769788105
-[2026-01-30T18:33:12.690Z] [LOG] [useLoadBlockchainProgress] Loading levels 1-3...
-[2026-01-30T18:33:12.882Z] [LOG] Paymaster service not available for batch update
-[2026-01-30T18:33:12.882Z] [LOG] Paymaster service not available for batch update
-[2026-01-30T18:33:13.908Z] [LOG] [useLoadBlockchainProgress] Loading levels 4-6...
-[2026-01-30T18:33:13.908Z] [LOG] [useLoadBlockchainProgress] Loading levels 4-6...
-[2026-01-30T18:33:13.908Z] [LOG] [useLoadBlockchainProgress] Loading levels 4-6...
-[2026-01-30T18:33:14.914Z] [LOG] [useLoadBlockchainProgress] Loading levels 7-9...
-[2026-01-30T18:33:14.915Z] [LOG] [useLoadBlockchainProgress] Loading levels 7-9...
-[2026-01-30T18:33:14.915Z] [LOG] [useLoadBlockchainProgress] Loading levels 7-9...
-[2026-01-30T18:33:15.919Z] [LOG] [useLoadBlockchainProgress] Loading levels 10-12...
-[2026-01-30T18:33:15.920Z] [LOG] [useLoadBlockchainProgress] Loading levels 10-12...
-[2026-01-30T18:33:15.921Z] [LOG] [useLoadBlockchainProgress] Loading levels 10-12...
-[2026-01-30T18:33:16.974Z] [LOG] [useLoadBlockchainProgress] Loading levels 13-15...
-[2026-01-30T18:33:16.974Z] [LOG] [useLoadBlockchainProgress] Loading levels 13-15...
-[2026-01-30T18:33:16.975Z] [LOG] [useLoadBlockchainProgress] Loading levels 13-15...
-[2026-01-30T18:33:17.049Z] [WARN] [fetchWithRetry] Suppressing analytics error: Failed to fetch
-[2026-01-30T18:33:17.170Z] [LOG] [useLoadBlockchainProgress] Found empty batch at levels 13-15, stopping early
-[2026-01-30T18:33:17.171Z] [LOG] [useLoadBlockchainProgress] Stopping at level 16 - no more progress beyond this point
-[2026-01-30T18:33:17.171Z] [ERROR] [useLoadBlockchainProgress] Error loading progress: {}
-[2026-01-30T18:33:17.172Z] [LOG] [useLoadBlockchainProgress] Found empty batch at levels 13-15, stopping early
-[2026-01-30T18:33:17.172Z] [LOG] [useLoadBlockchainProgress] Stopping at level 16 - no more progress beyond this point
-[2026-01-30T18:33:17.172Z] [ERROR] [useLoadBlockchainProgress] Error loading progress: {}
-[2026-01-30T18:33:17.172Z] [LOG] [useLoadBlockchainProgress] Found empty batch at levels 13-15, stopping early
-[2026-01-30T18:33:17.173Z] [LOG] [useLoadBlockchainProgress] Stopping at level 16 - no more progress beyond this point
-[2026-01-30T18:33:17.173Z] [ERROR] [useLoadBlockchainProgress] Error loading progress: {}
+[2026-01-30T19:41:57.860Z] [WARN] Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[2026-01-30T19:41:57.896Z] [LOG] Sound Manager initialized (6/6 sounds loaded)
+[2026-01-30T19:41:58.022Z] [LOG] Sound Manager initialized (6/6 sounds loaded)
+[2026-01-30T19:41:58.704Z] [LOG] Paymaster service not available for batch update
+[2026-01-30T19:41:58.704Z] [LOG] Paymaster service not available for batch update
+[2026-01-30T19:42:03.184Z] [LOG] Console logs downloaded!
+[2026-01-30T19:42:03.198Z] [WARN] [fetchWithRetry] Suppressing analytics error: Failed to fetch
