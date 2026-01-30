@@ -47,3 +47,6 @@ export { TransactionNotification } from './TransactionNotification';
 
 export { Web3ErrorBoundary } from './Web3ErrorBoundary';
 
+export { WelcomeScreen } from './WelcomeScreen';
+export type { WelcomeScreenProps } from './WelcomeScreen';
+
