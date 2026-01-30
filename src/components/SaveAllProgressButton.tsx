@@ -145,13 +145,20 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       // Wait for blockchain to update, then refetch and verify
       const verifyTimer = setTimeout(async () => {
         console.log('[SaveAllProgressButton] Refetching blockchain progress...');
+        console.log('[SaveAllProgressButton] onRefetchBlockchain available:', !!onRefetchBlockchain);
         
         try {
           // Use external refetch if provided, otherwise use internal
           if (onRefetchBlockchain) {
-            await onRefetchBlockchain();
+            console.log('[SaveAllProgressButton] Calling external refetch...');
+            onRefetchBlockchain();
+            // Wait a bit for refetch to complete
+            await new Promise(resolve => setTimeout(resolve, 2000));
           } else {
-            await refetch();
+            console.log('[SaveAllProgressButton] Calling internal refetch...');
+            refetch();
+            // Wait a bit for refetch to complete
+            await new Promise(resolve => setTimeout(resolve, 2000));
           }
           
           console.log('[SaveAllProgressButton] Blockchain data refreshed');
@@ -159,6 +166,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
           console.error('[SaveAllProgressButton] Failed to refetch:', error);
         } finally {
           // Always reset verifying state
+          console.log('[SaveAllProgressButton] Resetting isVerifying to false');
           setIsVerifying(false);
         }
       }, 3000);
