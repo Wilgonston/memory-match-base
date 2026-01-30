@@ -248,6 +248,7 @@ function App() {
               progressData={progress}
               onLevelSelect={handleLevelSelect}
               onBackToMenu={handleBackToMenu}
+              onUpdateProgress={updateProgress}
             />
           </Wallet>
         )}

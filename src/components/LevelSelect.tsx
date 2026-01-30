@@ -20,6 +20,8 @@ export interface LevelSelectProps {
   onLevelSelect: (level: number) => void;
   /** Callback when back to menu is clicked (logout) */
   onBackToMenu?: () => void;
+  /** Callback to update progress (for loading from blockchain) */
+  onUpdateProgress?: (updater: (prev: ProgressData) => ProgressData) => void;
 }
 
 /**
@@ -29,6 +31,7 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
   progressData,
   onLevelSelect,
   onBackToMenu,
+  onUpdateProgress,
 }) => {
   const { completedLevels, levelStars, highestUnlockedLevel } = progressData;
   const { disconnect } = useDisconnect();
@@ -296,6 +299,17 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
             console.error('[LevelSelect] Failed to save progress:', error);
             // Error is already shown in SaveAllProgressButton component
             // No need to show alert here
+          }}
+          onLoadFromBlockchain={async () => {
+            if (!onUpdateProgress) return;
+            
+            console.log('[LevelSelect] Loading progress from blockchain...');
+            
+            // Import the merge function
+            const { useSyncManager } = await import('../hooks/useSyncManager');
+            
+            // This will be handled by App.tsx through the callback
+            window.location.reload();
           }}
         />
       </div>
