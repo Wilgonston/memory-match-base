@@ -63,6 +63,7 @@ function App() {
   // Ref to prevent duplicate loading calls
   const isLoadingRef = useRef(false);
   const hasLoadedRef = useRef(false);
+  const lastLoadTimestamp = useRef<number>(0);
 
   /**
    * Check if user has seen welcome screen before
@@ -120,10 +121,15 @@ function App() {
       
       // Auto-load blockchain progress if already authenticated and not currently loading
       // Use refs to prevent re-triggering when state changes
-      if (!hasLoadedRef.current && !isLoadingRef.current) {
+      // Also check timestamp to prevent double loading in StrictMode
+      const now = Date.now();
+      const timeSinceLastLoad = now - lastLoadTimestamp.current;
+      
+      if (!hasLoadedRef.current && !isLoadingRef.current && timeSinceLastLoad > 1000) {
         console.log('[App] User already authenticated, auto-loading blockchain progress...');
         isLoadingRef.current = true;
         hasLoadedRef.current = true;
+        lastLoadTimestamp.current = now;
         refetchBlockchainProgress().finally(() => {
           isLoadingRef.current = false;
         });
@@ -131,6 +137,8 @@ function App() {
         console.log('[App] Blockchain progress already loaded, skipping auto-load');
       } else if (isLoadingRef.current) {
         console.log('[App] Blockchain loading in progress, skipping auto-load');
+      } else if (timeSinceLastLoad <= 1000) {
+        console.log('[App] Recent load detected (StrictMode double render), skipping auto-load');
       }
     } else {
       setIsAuthenticated(false);
@@ -151,10 +159,14 @@ function App() {
     setCurrentScreen('level-select');
     
     // Trigger blockchain loading after authentication
-    if (isConnected && address && !hasLoadedRef.current && !isLoadingRef.current) {
+    const now = Date.now();
+    const timeSinceLastLoad = now - lastLoadTimestamp.current;
+    
+    if (isConnected && address && !hasLoadedRef.current && !isLoadingRef.current && timeSinceLastLoad > 1000) {
       console.log('[App] Authentication successful, triggering blockchain progress load...');
       isLoadingRef.current = true;
       hasLoadedRef.current = true;
+      lastLoadTimestamp.current = now;
       refetchBlockchainProgress().finally(() => {
         isLoadingRef.current = false;
       });

@@ -47,11 +47,12 @@ export const ResetProgressButton: React.FC<ResetProgressButtonProps> = ({
     setShowConfirm(false);
     reset();
     
-    // Reset all 100 levels to 0 stars in blockchain
+    // Reset all 100 levels to 1 star (minimum allowed by contract)
+    // Note: Contract requires stars to be 1-3, cannot use 0
     const levels = Array.from({ length: 100 }, (_, i) => i + 1);
-    const stars = Array(100).fill(0);
+    const stars = Array(100).fill(1); // Changed from 0 to 1
     
-    console.log('[ResetProgressButton] Resetting 100 levels to 0 stars...');
+    console.log('[ResetProgressButton] Resetting 100 levels to 1 star (minimum)...');
     
     // Call updateLevels - errors will be handled by useEffect
     updateLevels(levels, stars);
