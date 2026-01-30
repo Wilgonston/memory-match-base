@@ -5,7 +5,7 @@ import { useLoadBlockchainProgress } from '../hooks/useLoadBlockchainProgress';
 import { usePaymasterTransaction } from '../hooks/usePaymasterTransaction';
 import { playSound } from '../utils/soundManager';
 import { isSmartWallet } from '../utils/walletDetection';
-import { getUserFriendlyError, shouldDisplayError, TIMEOUTS } from '../utils/errorMessages';
+import { getUserFriendlyError, shouldDisplayError } from '../utils/errorMessages';
 import './SaveProgressButton.css';
 
 export interface SaveProgressButtonProps {
@@ -48,23 +48,26 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
       playSound('transaction-confirmed');
       setIsVerifying(true);
       
-      // Wait for blockchain to update, then refetch
-      const verifyTimer = setTimeout(async () => {
-        console.log('[SaveProgressButton] Waiting for blockchain to update...');
-        
-        // Wait for blockchain to process the transaction
-        await new Promise(resolve => setTimeout(resolve, TIMEOUTS.BLOCKCHAIN_WAIT));
-        
-        console.log('[SaveProgressButton] Refetching blockchain progress...');
-        await refetch();
-        setIsVerifying(false);
-        console.log('[SaveProgressButton] Blockchain data refreshed');
-      }, TIMEOUTS.VERIFY_DELAY);
+      // Refetch blockchain progress to verify save
+      const verifyAndRefetch = async () => {
+        try {
+          console.log('[SaveProgressButton] Waiting for blockchain to process transaction...');
+          // Wait a bit for blockchain to process
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          
+          console.log('[SaveProgressButton] Refetching blockchain progress...');
+          await refetch();
+          
+          console.log('[SaveProgressButton] ✅ Blockchain data refreshed');
+        } catch (error) {
+          console.error('[SaveProgressButton] Failed to refetch:', error);
+        } finally {
+          setIsVerifying(false);
+        }
+      };
       
+      verifyAndRefetch();
       onSuccess?.();
-      
-      // Cleanup timer on unmount
-      return () => clearTimeout(verifyTimer);
     },
     onError: (errorMsg) => {
       console.error('[SaveProgressButton] Transaction error:', errorMsg);

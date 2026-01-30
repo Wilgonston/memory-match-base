@@ -246,51 +246,23 @@ export function useLoadBlockchainProgress(options: UseLoadBlockchainProgressOpti
     }
   }, [autoLoad, address, isConnected, shouldLoad, isLoading, hasAttemptedLoad]);
 
-  const refetch = useCallback(() => {
+  const refetch = useCallback(async () => {
     console.log('[useLoadBlockchainProgress] Manual refetch triggered');
     
-    // Return a promise that resolves when loading is complete
-    return new Promise<void>((resolve) => {
-      // Reset state
-      setHasAttemptedLoad(false);
-      setProgress(null);
-      setError(null);
-      setLoadingProgress({ current: 0, total: 100, percentage: 0 });
-      
-      // Create a ref to track loading state
-      let loadingStarted = false;
-      let loadingCompleted = false;
-      
-      // Start loading after a short delay
-      setTimeout(() => {
-        setShouldLoad(true);
-        loadingStarted = true;
-      }, 100);
-      
-      // Poll for completion
-      const checkInterval = setInterval(() => {
-        // Check if loading has started and then completed
-        // We need to check the actual DOM or use a different approach
-        // For now, we'll use a timeout-based approach
-      }, 100);
-      
-      // Timeout after 30 seconds
-      const timeout = setTimeout(() => {
-        clearInterval(checkInterval);
-        console.log('[useLoadBlockchainProgress] Refetch timeout after 30s');
-        resolve();
-      }, 30000);
-      
-      // Listen for loading completion via a one-time effect
-      // We'll resolve after a reasonable delay (5 seconds for 22 levels)
-      setTimeout(() => {
-        clearInterval(checkInterval);
-        clearTimeout(timeout);
-        console.log('[useLoadBlockchainProgress] Refetch completed');
-        resolve();
-      }, 8000); // 8 seconds should be enough for ~22 levels
-    });
-  }, []);
+    // Reset state
+    setHasAttemptedLoad(false);
+    setProgress(null);
+    setError(null);
+    setLoadingProgress({ current: 0, total: 100, percentage: 0 });
+    
+    // Trigger load
+    setShouldLoad(true);
+    
+    // Call loadAllLevels directly and wait for it to complete
+    await loadAllLevels();
+    
+    console.log('[useLoadBlockchainProgress] Refetch completed');
+  }, [loadAllLevels]);
 
   return {
     progress,

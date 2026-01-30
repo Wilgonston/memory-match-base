@@ -141,17 +141,15 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
       setIsVerifying(true);
       setShowNotification(true); // Show notification
       
-      // Wait for blockchain to update, then refetch and verify
-      const verifyTimer = setTimeout(async () => {
-        console.log('[SaveAllProgressButton] Waiting for blockchain to update...');
-        
-        // Wait for blockchain to process the transaction
-        await new Promise(resolve => setTimeout(resolve, TIMEOUTS.BLOCKCHAIN_WAIT));
-        
-        console.log('[SaveAllProgressButton] Refetching blockchain progress...');
-        console.log('[SaveAllProgressButton] onRefetchBlockchain available:', !!onRefetchBlockchain);
-        
+      // Refetch blockchain progress to verify save
+      const verifyAndRefetch = async () => {
         try {
+          console.log('[SaveAllProgressButton] Waiting for blockchain to process transaction...');
+          // Wait a bit for blockchain to process
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          
+          console.log('[SaveAllProgressButton] Refetching blockchain progress...');
+          
           // Use external refetch if provided, otherwise use internal
           if (onRefetchBlockchain) {
             console.log('[SaveAllProgressButton] Calling external refetch...');
@@ -161,7 +159,7 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
             await refetch();
           }
           
-          console.log('[SaveAllProgressButton] Blockchain data refreshed');
+          console.log('[SaveAllProgressButton] ✅ Blockchain data refreshed');
         } catch (error) {
           console.error('[SaveAllProgressButton] Failed to refetch:', error);
         } finally {
@@ -169,13 +167,10 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
           console.log('[SaveAllProgressButton] Resetting isVerifying to false');
           setIsVerifying(false);
         }
-      }, TIMEOUTS.VERIFY_DELAY);
-      
-      onSuccess?.();
-      
-      return () => {
-        clearTimeout(verifyTimer);
       };
+      
+      verifyAndRefetch();
+      onSuccess?.();
     }
   }, [isSuccess, isPending, hash, onSuccess, onRefetchBlockchain, refetch, isVerifying]);
 
