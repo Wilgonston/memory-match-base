@@ -51,9 +51,7 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
       // Wait for blockchain to update, then refetch
       const verifyTimer = setTimeout(async () => {
         console.log('[SaveProgressButton] Refetching blockchain progress...');
-        refetch();
-        // Wait a bit for refetch to complete
-        await new Promise(resolve => setTimeout(resolve, TIMEOUTS.REFETCH_DELAY));
+        await refetch();
         setIsVerifying(false);
         console.log('[SaveProgressButton] Blockchain data refreshed');
       }, TIMEOUTS.VERIFY_DELAY);

@@ -17,7 +17,7 @@ export interface UseLoadBlockchainProgressResult {
   progress: OnChainProgress | null;
   isLoading: boolean;
   error: Error | null;
-  refetch: () => void;
+  refetch: () => Promise<void>;
   loadingProgress: {
     current: number;
     total: number;
@@ -253,11 +253,29 @@ export function useLoadBlockchainProgress(options: UseLoadBlockchainProgressOpti
     setError(null);
     setLoadingProgress({ current: 0, total: 100, percentage: 0 });
     setShouldLoad(false);
-    // Use setTimeout to ensure state updates are processed
-    setTimeout(() => {
-      setShouldLoad(true);
-    }, 50);
-  }, []);
+    
+    // Return a promise that resolves when loading is complete
+    return new Promise<void>((resolve) => {
+      // Use setTimeout to ensure state updates are processed
+      setTimeout(() => {
+        setShouldLoad(true);
+        
+        // Wait for loading to complete
+        const checkInterval = setInterval(() => {
+          if (!isLoading) {
+            clearInterval(checkInterval);
+            resolve();
+          }
+        }, 100);
+        
+        // Timeout after 30 seconds
+        setTimeout(() => {
+          clearInterval(checkInterval);
+          resolve();
+        }, 30000);
+      }, 50);
+    });
+  }, [isLoading]);
 
   return {
     progress,

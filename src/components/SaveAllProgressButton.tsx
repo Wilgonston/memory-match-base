@@ -150,14 +150,10 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
           // Use external refetch if provided, otherwise use internal
           if (onRefetchBlockchain) {
             console.log('[SaveAllProgressButton] Calling external refetch...');
-            onRefetchBlockchain();
-            // Wait a bit for refetch to complete
-            await new Promise(resolve => setTimeout(resolve, TIMEOUTS.REFETCH_DELAY));
+            await onRefetchBlockchain();
           } else {
             console.log('[SaveAllProgressButton] Calling internal refetch...');
-            refetch();
-            // Wait a bit for refetch to complete
-            await new Promise(resolve => setTimeout(resolve, TIMEOUTS.REFETCH_DELAY));
+            await refetch();
           }
           
           console.log('[SaveAllProgressButton] Blockchain data refreshed');
