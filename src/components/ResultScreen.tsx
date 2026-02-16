@@ -13,7 +13,6 @@ import React, { useEffect, useRef } from 'react';
 import { formatTime } from '../utils/timeFormat';
 import { trapFocus, storeFocus, announceToScreenReader } from '../utils/accessibility';
 import { hapticButtonPress } from '../utils/haptics';
-import { SaveProgressButton } from './SaveProgressButton';
 import './ResultScreen.css';
 
 export interface ResultScreenProps {
@@ -142,14 +141,6 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
             </span>
           </div>
         </div>
-
-        {/* Save to Blockchain Button */}
-        <SaveProgressButton
-          level={level}
-          stars={stars}
-          onSuccess={() => announceToScreenReader('Progress saved to blockchain!', 'polite')}
-          onError={(error) => announceToScreenReader(`Failed to save: ${error}`, 'assertive')}
-        />
 
         {/* Action Buttons */}
         <div className="action-buttons" role="group" aria-label="Level completion actions">

@@ -202,6 +202,13 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
                 ✨ No seed phrases • 🔐 Secure with biometrics • ⚡ Gas-free transactions
               </p>
               
+              <div className="login-gas-info">
+                <p className="login-gas-info-text">
+                  💡 <strong>Tip:</strong> After connecting, wait ~10 seconds for gas sponsorship to activate. 
+                  You'll see "⚡ Gas-free transaction (sponsored)" when ready.
+                </p>
+              </div>
+              
               {!showConnectors ? (
                 <>
                   <button 

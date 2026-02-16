@@ -587,7 +587,27 @@
   color: rgba(255, 255, 255, 0.7);
   font-size: 14px;
   line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.login-gas-info {
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 12px;
+  padding: 12px 16px;
   margin-bottom: 24px;
+}
+
+.login-gas-info-text {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0;
+  text-align: left;
+}
+
+.login-gas-info-text strong {
+  color: #00D4FF;
 }
 
 .login-note {
