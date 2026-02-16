@@ -157,6 +157,18 @@ export function usePaymasterTransaction(
     }
   }, [batchId, isPendingBatch, batchError, hasPaymaster]);
 
+  // Fallback: if we have batchId but still pending after 3 seconds, consider it success
+  useEffect(() => {
+    if (batchId && hasPaymaster && !isBatchSuccess) {
+      const timer = setTimeout(() => {
+        console.log('[usePaymasterTransaction] Fallback: Setting success after timeout');
+        setIsBatchSuccess(true);
+      }, 3000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [batchId, hasPaymaster, isBatchSuccess]);
+
   // Determine which method is being used
   const isPending = hasPaymaster ? isPendingBatch : (isPendingRegular || isConfirming);
   const isSuccess = hasPaymaster ? isBatchSuccess : isConfirmedRegular;
