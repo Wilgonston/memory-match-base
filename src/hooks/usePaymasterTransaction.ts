@@ -144,9 +144,9 @@ export function usePaymasterTransaction(
     return typeof batchId === 'string' ? batchId : batchId.id;
   }, [batchId]);
 
-  // For batch transactions, consider success immediately after getting batchId
-  // Smart Wallet handles confirmation internally, no need to wait
-  const isBatchSuccess = Boolean(batchId && !batchError);
+  // For batch transactions, consider success when we have batchId and not pending
+  // Smart Wallet handles confirmation internally
+  const isBatchSuccess = Boolean(batchId && !isPendingBatch && !batchError);
 
   // Determine which method is being used
   const isPending = hasPaymaster ? isPendingBatch : (isPendingRegular || isConfirming);
@@ -192,12 +192,12 @@ export function usePaymasterTransaction(
 
   // Handle batch transaction success
   useEffect(() => {
-    if (batchId && !isPendingBatch && !batchError && isBatchSuccess) {
+    if (isBatchSuccess && batchId) {
       console.log('[usePaymasterTransaction] Batch transaction successful:', batchId);
       const hashString = typeof batchId === 'string' ? batchId : batchId.id;
       options.onSuccess?.(hashString);
     }
-  }, [batchId, isPendingBatch, batchError, isBatchSuccess, options]);
+  }, [isBatchSuccess, batchId, options]);
 
   // Handle regular transaction success
   useEffect(() => {
