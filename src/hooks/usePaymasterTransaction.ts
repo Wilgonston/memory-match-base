@@ -9,7 +9,7 @@
  */
 
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { useCapabilities, useWriteContracts, useCallsStatus } from 'wagmi/experimental';
+import { useCapabilities, useWriteContracts } from 'wagmi/experimental';
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { Address } from 'viem';
 import { base } from 'wagmi/chains';
@@ -147,27 +147,15 @@ export function usePaymasterTransaction(
     return typeof batchId === 'string' ? batchId : batchId.id;
   }, [batchId]);
 
-  // Track batch transaction status using useCallsStatus
-  const { data: callsStatus } = useCallsStatus({
-    id: batchCallId as string,
-    query: {
-      enabled: !!batchCallId && hasPaymaster,
-      refetchInterval: (data) => {
-        // Stop refetching if status is final
-        const status = data?.state?.data?.status;
-        return status === 'success' || status === 'failure' ? false : 1000;
-      },
-    },
-  });
-
-  // Update batch success based on calls status
+  // For batch transactions, consider success immediately after getting batchId
+  // Smart Wallet handles confirmation internally
   useEffect(() => {
-    const status = callsStatus?.status;
-    if (status === 'success') {
-      console.log('[usePaymasterTransaction] Batch transaction confirmed via useCallsStatus');
+    if (batchId && !isPendingBatch && !batchError && hasPaymaster) {
+      console.log('[usePaymasterTransaction] Batch transaction submitted:', batchId);
+      // Set success immediately for Smart Wallet transactions
       setIsBatchSuccess(true);
     }
-  }, [callsStatus?.status]);
+  }, [batchId, isPendingBatch, batchError, hasPaymaster]);
 
   // Determine which method is being used
   const isPending = hasPaymaster ? isPendingBatch : (isPendingRegular || isConfirming);
