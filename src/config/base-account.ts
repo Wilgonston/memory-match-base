@@ -1,18 +1,17 @@
 /**
  * Base Account SDK Configuration
- * 
+ *
  * This module configures the Base Account SDK for authentication and payments.
  * The Base Account SDK provides Sign in with Base (SIWB) and Base Pay functionality.
- * 
+ *
  * @see https://docs.base.org/base-account/quickstart/web-react
  */
 
-import { base, baseSepolia } from 'wagmi/chains';
+import { base } from 'wagmi/chains';
 
 // Get environment variables
 const cdpProjectId = import.meta.env.VITE_CDP_PROJECT_ID || '';
-const network = import.meta.env.VITE_BASE_ACCOUNT_NETWORK || import.meta.env.VITE_NETWORK || 'sepolia';
-const appName = import.meta.env.VITE_APP_NAME || 'Memory Match BASE';
+const appName = 'Memory Match BASE';
 const appUrl = import.meta.env.VITE_APP_URL || window.location.origin;
 
 /**
@@ -21,27 +20,27 @@ const appUrl = import.meta.env.VITE_APP_URL || window.location.origin;
 export interface BaseAccountConfig {
   /** CDP Project ID from Coinbase Developer Platform */
   projectId: string;
-  /** Network to use: 'mainnet' or 'sepolia' */
-  network: 'mainnet' | 'sepolia';
+  /** Network to use: always 'mainnet' */
+  network: 'mainnet';
   /** Application name displayed in wallet UI */
   appName: string;
   /** Application logo URL */
   appLogoUrl: string;
   /** Application URL */
   appUrl: string;
-  /** Whether to use testnet (true for sepolia, false for mainnet) */
+  /** Whether to use testnet (always false for mainnet) */
   testnet: boolean;
 }
 
 /**
  * Determine if we're using testnet based on network configuration
  */
-export const isTestnet = network === 'sepolia';
+export const isTestnet = false;
 
 /**
  * Get the appropriate chain based on network configuration
  */
-export const baseAccountChain = isTestnet ? baseSepolia : base;
+export const baseAccountChain = base;
 
 /**
  * Base Account SDK configuration object
@@ -49,11 +48,11 @@ export const baseAccountChain = isTestnet ? baseSepolia : base;
  */
 export const baseAccountConfig: BaseAccountConfig = {
   projectId: cdpProjectId,
-  network: network as 'mainnet' | 'sepolia',
+  network: 'mainnet',
   appName,
-  appLogoUrl: `${appUrl}/assets/miniapp/icon-512.svg`,
+  appLogoUrl: `${appUrl}/assets/miniapp/icon-512-improved.svg`,
   appUrl,
-  testnet: isTestnet,
+  testnet: false,
 };
 
 /**
@@ -69,11 +68,11 @@ export function validateBaseAccountConfig(): boolean {
     );
     return false;
   }
-  
+
   return true;
 }
 
 /**
  * Export chain constants for convenience
  */
-export { base, baseSepolia };
+export { base };

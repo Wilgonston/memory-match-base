@@ -38,15 +38,15 @@ jobs:
       run: npm run build
       env:
         VITE_NETWORK: ${{ secrets.VITE_NETWORK }}
-        VITE_CHAIN_ID: ${{ secrets.VITE_CHAIN_ID }}
         VITE_CONTRACT_ADDRESS: ${{ secrets.VITE_CONTRACT_ADDRESS }}
         VITE_ONCHAINKIT_API_KEY: ${{ secrets.VITE_ONCHAINKIT_API_KEY }}
         VITE_CDP_PROJECT_ID: ${{ secrets.VITE_CDP_PROJECT_ID }}
-        VITE_PAYMASTER_URL: ${{ secrets.VITE_PAYMASTER_URL }}
         VITE_WALLETCONNECT_PROJECT_ID: ${{ secrets.VITE_WALLETCONNECT_PROJECT_ID }}
-        VITE_APP_NAME: ${{ secrets.VITE_APP_NAME }}
         VITE_APP_URL: ${{ secrets.VITE_APP_URL }}
-        VITE_APP_DESCRIPTION: ${{ secrets.VITE_APP_DESCRIPTION }}
+        VITE_FARCASTER_FID: ${{ secrets.VITE_FARCASTER_FID }}
+        VITE_FARCASTER_CUSTODY_ADDRESS: ${{ secrets.VITE_FARCASTER_CUSTODY_ADDRESS }}
+        VITE_ACCOUNT_ASSOCIATION_SIGNATURE: ${{ secrets.VITE_ACCOUNT_ASSOCIATION_SIGNATURE }}
+        VITE_ACCOUNT_ASSOCIATION_TIMESTAMP: ${{ secrets.VITE_ACCOUNT_ASSOCIATION_TIMESTAMP }}
     
     - name: Setup Pages
       uses: actions/configure-pages@v4

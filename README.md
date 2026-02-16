@@ -56,16 +56,19 @@ Edit `.env` and add your API keys:
 ```env
 # Required - Get from https://portal.cdp.coinbase.com/
 VITE_ONCHAINKIT_API_KEY=your_api_key_here
+VITE_CDP_PROJECT_ID=your_project_id_here
 
 # Required - Get from https://cloud.walletconnect.com/
 VITE_WALLETCONNECT_PROJECT_ID=your_project_id_here
 
 # Network Configuration
 VITE_NETWORK=mainnet
-VITE_CHAIN_ID=8453
 
 # Smart Contract (Base Mainnet)
 VITE_CONTRACT_ADDRESS=0x93aC1C769aCE5caE403a454cBd236aB2EA7B17F5
+
+# Optional - Get from https://base.dev/ > Settings > Builder Code
+VITE_BUILDER_CODE=bc_xxxxxxxx
 ```
 
 ### Run Development Server
@@ -112,10 +115,11 @@ Set these in your deployment platform:
 | Variable | Value | Required |
 |----------|-------|----------|
 | `VITE_NETWORK` | `mainnet` | Yes |
-| `VITE_CHAIN_ID` | `8453` | Yes |
 | `VITE_CONTRACT_ADDRESS` | `0x93aC1C769aCE5caE403a454cBd236aB2EA7B17F5` | Yes |
 | `VITE_ONCHAINKIT_API_KEY` | Your API key | Yes |
+| `VITE_CDP_PROJECT_ID` | Your project ID | Yes |
 | `VITE_WALLETCONNECT_PROJECT_ID` | Your project ID | Yes |
+| `VITE_BUILDER_CODE` | Your Builder Code | Optional |
 
 ## 🔑 Getting API Keys
 
@@ -140,6 +144,24 @@ This key enables both OnchainKit features AND Paymaster gas sponsorship.
 2. Create a new project
 3. Copy the Project ID
 4. Add to your `.env` file
+
+### Builder Code (Optional)
+
+Builder Codes enable transaction attribution for analytics and rewards.
+
+1. Visit [base.dev](https://base.dev/)
+2. Register your app
+3. Go to **Settings** → **Builder Code**
+4. Copy your code (format: `bc_xxxxxxxx`)
+5. Add to your `.env` file
+
+**Benefits:**
+- Track onchain usage and user acquisition
+- Qualify for BASE rewards program
+- Show up in BASE App leaderboards
+- Understand user acquisition channels
+
+See [docs/BUILDER_CODES.md](docs/BUILDER_CODES.md) for detailed integration guide.
 
 ## 🎮 How to Play
 

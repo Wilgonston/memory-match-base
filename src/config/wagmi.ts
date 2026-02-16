@@ -1,14 +1,20 @@
 import { http, createConfig, cookieStorage, createStorage } from 'wagmi';
 import { base } from 'wagmi/chains';
 import { coinbaseWallet, walletConnect, injected } from 'wagmi/connectors';
+import { generateBuilderCodeSuffix, getBuilderCode } from '../utils/builderCode';
 
 // Get environment variables
 const walletConnectProjectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || '';
 const appUrl = import.meta.env.VITE_APP_URL || window.location.origin;
-const baseRpcUrl = import.meta.env.VITE_BASE_RPC_URL;
 
 // Use only Base Mainnet
 const chains = [base] as const;
+
+// Generate Builder Code data suffix for transaction attribution
+// This automatically appends the Builder Code to all transactions
+// See: https://docs.base.org/base-chain/builder-codes/app-developers
+const builderCode = getBuilderCode();
+const DATA_SUFFIX = builderCode ? generateBuilderCodeSuffix(builderCode) : undefined;
 
 // Create wagmi configuration with multiple wallet options
 export const wagmiConfig = createConfig({
@@ -42,7 +48,11 @@ export const wagmiConfig = createConfig({
   }),
   ssr: false,
   transports: {
-    // Use single RPC endpoint (custom or default)
-    [base.id]: http(baseRpcUrl || undefined),
+    // Use default Base RPC endpoint
+    [base.id]: http(),
   },
+  // Builder Code attribution for transaction tracking
+  // Automatically appends Builder Code to all transactions for analytics and rewards
+  // See: https://docs.base.org/base-chain/builder-codes/builder-codes
+  ...(DATA_SUFFIX && { dataSuffix: DATA_SUFFIX }),
 });

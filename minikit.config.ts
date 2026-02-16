@@ -1,4 +1,5 @@
 // Mini App configuration for BASE App integration
+// Following official BASE documentation: https://docs.base.org/mini-apps/quickstart/new-apps/deploy
 const ROOT_URL = import.meta.env.VITE_APP_URL || 'https://memory-match-base.vercel.app';
 
 /**
@@ -92,6 +93,7 @@ const ACCOUNT_ASSOCIATION_TIMESTAMP = parseInt(
 
 export const minikitConfig = {
   // Account Association for Farcaster integration
+  // https://docs.farcaster.xyz/developers/guides/accounts/account-association
   accountAssociation: {
     header: {
       // Your Farcaster ID - get from https://warpcast.com/~/settings
@@ -133,7 +135,8 @@ export const minikitConfig = {
     ogTitle: "Memory Match BASE - Blockchain Memory Game",
     ogDescription: "Test your memory with BASE blockchain projects. 100 levels of crypto fun!",
     ogImageUrl: `${ROOT_URL}/assets/miniapp/cover-1200x630.png`,
-    // Webhook URL for Mini App events (optional)
+    // Webhook URL for Mini App events (required for BASE App integration)
+    // https://docs.base.org/mini-apps/quickstart/new-apps/deploy
     webhookUrl: `${ROOT_URL}/api/webhook`,
   },
 } as const;
