@@ -8,10 +8,10 @@
  * Requirements: 2.1, 2.2, 2.3
  */
 
-import { useAccount, useWriteContract, useWaitForTransactionReceipt, useChainId } from 'wagmi';
-import { useCapabilities, useWriteContracts } from 'wagmi/experimental';
+import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useCapabilities, useWriteContracts, useCallsStatus } from 'wagmi/experimental';
 import { useState, useCallback, useMemo, useEffect } from 'react';
-import { Address, Hex } from 'viem';
+import { Address } from 'viem';
 import { base } from 'wagmi/chains';
 
 export interface UsePaymasterTransactionOptions {
@@ -77,7 +77,6 @@ export function usePaymasterTransaction(
   options: UsePaymasterTransactionOptions
 ): UsePaymasterTransactionResult {
   const { address: userAddress } = useAccount();
-  const chainId = useChainId();
   const [localError, setLocalError] = useState<string>();
 
   // Check for paymaster capabilities (EIP-5792)
@@ -142,11 +141,39 @@ export function usePaymasterTransaction(
   // Track batch transaction success
   const [isBatchSuccess, setIsBatchSuccess] = useState(false);
 
+  // Get batch transaction ID (extract from object if needed)
+  const batchCallId = useMemo(() => {
+    if (!batchId) return undefined;
+    return typeof batchId === 'string' ? batchId : batchId.id;
+  }, [batchId]);
+
+  // Track batch transaction status using useCallsStatus
+  const { data: callsStatus } = useCallsStatus({
+    id: batchCallId as string,
+    query: {
+      enabled: !!batchCallId && hasPaymaster,
+      refetchInterval: (data) => {
+        // Stop refetching if status is final
+        const status = data?.state?.data?.status;
+        return status === 'success' || status === 'failure' ? false : 1000;
+      },
+    },
+  });
+
+  // Update batch success based on calls status
+  useEffect(() => {
+    const status = callsStatus?.status;
+    if (status === 'success') {
+      console.log('[usePaymasterTransaction] Batch transaction confirmed via useCallsStatus');
+      setIsBatchSuccess(true);
+    }
+  }, [callsStatus?.status]);
+
   // Determine which method is being used
   const isPending = hasPaymaster ? isPendingBatch : (isPendingRegular || isConfirming);
   const isSuccess = hasPaymaster ? isBatchSuccess : isConfirmedRegular;
   const error = localError || batchError?.message || regularError?.message;
-  const hash = hasPaymaster ? batchId : regularHash;
+  const hash = hasPaymaster ? batchCallId : regularHash;
 
   // Send transaction
   const sendTransaction = useCallback(() => {
@@ -161,7 +188,7 @@ export function usePaymasterTransaction(
           contracts: [
             {
               address: options.address,
-              abi: options.abi,
+              abi: options.abi as any,
               functionName: options.functionName,
               args: options.args,
             },
@@ -187,12 +214,12 @@ export function usePaymasterTransaction(
 
   // Handle batch transaction success
   useEffect(() => {
-    if (batchId && !isPendingBatch && !batchError) {
+    if (batchId && !isPendingBatch && !batchError && isBatchSuccess) {
       console.log('[usePaymasterTransaction] Batch transaction successful:', batchId);
-      setIsBatchSuccess(true);
-      options.onSuccess?.(batchId);
+      const hashString = typeof batchId === 'string' ? batchId : batchId.id;
+      options.onSuccess?.(hashString);
     }
-  }, [batchId, isPendingBatch, batchError, options]);
+  }, [batchId, isPendingBatch, batchError, isBatchSuccess, options]);
 
   // Handle regular transaction success
   useEffect(() => {
