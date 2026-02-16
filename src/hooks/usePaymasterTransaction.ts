@@ -10,7 +10,7 @@
 
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { useCapabilities, useWriteContracts } from 'wagmi/experimental';
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { Address } from 'viem';
 import { base } from 'wagmi/chains';
 
@@ -78,6 +78,15 @@ export function usePaymasterTransaction(
 ): UsePaymasterTransactionResult {
   const { address: userAddress } = useAccount();
   const [localError, setLocalError] = useState<string>();
+
+  // Store callbacks in refs to avoid recreating effects
+  const onSuccessRef = useRef(options.onSuccess);
+  const onErrorRef = useRef(options.onError);
+  
+  useEffect(() => {
+    onSuccessRef.current = options.onSuccess;
+    onErrorRef.current = options.onError;
+  });
 
   // Check for paymaster capabilities (EIP-5792)
   const { data: availableCapabilities } = useCapabilities({
@@ -186,43 +195,43 @@ export function usePaymasterTransaction(
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Transaction failed';
       setLocalError(errorMsg);
-      options.onError?.(errorMsg);
+      onErrorRef.current?.(errorMsg);
     }
-  }, [hasPaymaster, writeContracts, writeContract, capabilities, options]);
+  }, [hasPaymaster, writeContracts, writeContract, capabilities, options.address, options.abi, options.functionName, options.args]);
 
   // Handle batch transaction success
   useEffect(() => {
     if (isBatchSuccess && batchId) {
       console.log('[usePaymasterTransaction] Batch transaction successful:', batchId);
       const hashString = typeof batchId === 'string' ? batchId : batchId.id;
-      options.onSuccess?.(hashString);
+      onSuccessRef.current?.(hashString);
     }
-  }, [isBatchSuccess, batchId, options]);
+  }, [isBatchSuccess, batchId]);
 
   // Handle regular transaction success
   useEffect(() => {
     if (isConfirmedRegular && regularHash) {
       console.log('[usePaymasterTransaction] Regular transaction confirmed:', regularHash);
-      options.onSuccess?.(regularHash);
+      onSuccessRef.current?.(regularHash);
     }
-  }, [isConfirmedRegular, regularHash, options]);
+  }, [isConfirmedRegular, regularHash]);
 
   // Handle errors
   useEffect(() => {
     if (batchError) {
       const errorMsg = batchError.message || 'Batch transaction failed';
       setLocalError(errorMsg);
-      options.onError?.(errorMsg);
+      onErrorRef.current?.(errorMsg);
     }
-  }, [batchError, options]);
+  }, [batchError]);
 
   useEffect(() => {
     if (regularError) {
       const errorMsg = regularError.message || 'Transaction failed';
       setLocalError(errorMsg);
-      options.onError?.(errorMsg);
+      onErrorRef.current?.(errorMsg);
     }
-  }, [regularError, options]);
+  }, [regularError]);
 
   // Reset function
   const reset = useCallback(() => {
