@@ -138,9 +138,6 @@ export function usePaymasterTransaction(
     hash: regularHash,
   });
 
-  // Track batch transaction success
-  const [isBatchSuccess, setIsBatchSuccess] = useState(false);
-
   // Get batch transaction ID (extract from object if needed)
   const batchCallId = useMemo(() => {
     if (!batchId) return undefined;
@@ -148,26 +145,8 @@ export function usePaymasterTransaction(
   }, [batchId]);
 
   // For batch transactions, consider success immediately after getting batchId
-  // Smart Wallet handles confirmation internally
-  useEffect(() => {
-    if (batchId && !isPendingBatch && !batchError && hasPaymaster) {
-      console.log('[usePaymasterTransaction] Batch transaction submitted:', batchId);
-      // Set success immediately for Smart Wallet transactions
-      setIsBatchSuccess(true);
-    }
-  }, [batchId, isPendingBatch, batchError, hasPaymaster]);
-
-  // Fallback: if we have batchId but still pending after 3 seconds, consider it success
-  useEffect(() => {
-    if (batchId && hasPaymaster && !isBatchSuccess) {
-      const timer = setTimeout(() => {
-        console.log('[usePaymasterTransaction] Fallback: Setting success after timeout');
-        setIsBatchSuccess(true);
-      }, 3000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [batchId, hasPaymaster, isBatchSuccess]);
+  // Smart Wallet handles confirmation internally, no need to wait
+  const isBatchSuccess = Boolean(batchId && !batchError);
 
   // Determine which method is being used
   const isPending = hasPaymaster ? isPendingBatch : (isPendingRegular || isConfirming);
@@ -178,7 +157,6 @@ export function usePaymasterTransaction(
   // Send transaction
   const sendTransaction = useCallback(() => {
     setLocalError(undefined);
-    setIsBatchSuccess(false);
 
     try {
       if (hasPaymaster) {
@@ -249,7 +227,6 @@ export function usePaymasterTransaction(
   // Reset function
   const reset = useCallback(() => {
     setLocalError(undefined);
-    setIsBatchSuccess(false);
     if (hasPaymaster) {
       resetBatch();
     } else {
