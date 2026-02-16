@@ -173,6 +173,12 @@ function App() {
     }
   }, [isConnected, address, refetchBlockchainProgress]);
 
+  // Ref to store latest progress to avoid stale closures
+  const progressRef = useRef(progress);
+  useEffect(() => {
+    progressRef.current = progress;
+  }, [progress]);
+
   /**
    * Apply blockchain progress when it becomes available
    * This runs both on initial load and after refetch
@@ -183,10 +189,12 @@ function App() {
       const applyBlockchainProgress = async () => {
         try {
           console.log('[App] Blockchain progress loaded, merging with local progress...');
+          const currentProgress = progressRef.current;
+          
           console.log('[App] Current local progress:', {
-            completedLevels: Array.from(progress.completedLevels),
-            highestUnlockedLevel: progress.highestUnlockedLevel,
-            levelStarsCount: progress.levelStars.size,
+            completedLevels: Array.from(currentProgress.completedLevels),
+            highestUnlockedLevel: currentProgress.highestUnlockedLevel,
+            levelStarsCount: currentProgress.levelStars.size,
           });
           console.log('[App] Blockchain progress:', {
             total: blockchainProgress.total,
@@ -194,7 +202,7 @@ function App() {
             levelsWithStars: blockchainProgress.levelStars.size,
           });
 
-          const mergedProgress = await mergeFromBlockchain(progress, blockchainProgress);
+          const mergedProgress = await mergeFromBlockchain(currentProgress, blockchainProgress);
           console.log('[App] Merged progress:', {
             completedLevels: Array.from(mergedProgress.completedLevels),
             highestUnlockedLevel: mergedProgress.highestUnlockedLevel,
@@ -202,9 +210,9 @@ function App() {
           });
 
           // Only update if merge actually changed something
-          if (mergedProgress.levelStars.size !== progress.levelStars.size ||
+          if (mergedProgress.levelStars.size !== currentProgress.levelStars.size ||
               Array.from(mergedProgress.levelStars.entries()).some(([level, stars]) => 
-                progress.levelStars.get(level) !== stars
+                currentProgress.levelStars.get(level) !== stars
               )) {
             console.log('[App] Progress changed, updating UI...');
             updateProgress(() => mergedProgress);
@@ -220,7 +228,7 @@ function App() {
 
       applyBlockchainProgress();
     }
-  }, [blockchainProgress, isAuthenticated, progress, mergeFromBlockchain, updateProgress]);
+  }, [blockchainProgress, isAuthenticated, mergeFromBlockchain, updateProgress]);
 
   /**
    * Handle back to main menu (logout)
