@@ -224,7 +224,7 @@ export function useBatchUpdateLevels(): UseBatchUpdateLevelsResult {
 
   return {
     batchUpdate,
-    id,
+    id: typeof id === 'object' && id ? id.id : id,
     status,
     error,
     isPending,

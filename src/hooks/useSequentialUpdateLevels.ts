@@ -8,7 +8,7 @@
  * Requirements: 19.5
  */
 
-import { useAccount, useChainId, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useChainId, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { useState, useCallback, useEffect } from 'react';
 import { Address } from 'viem';
 import { 

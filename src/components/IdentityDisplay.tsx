@@ -8,13 +8,11 @@ import './IdentityDisplay.css';
 
 export interface IdentityDisplayProps {
   showBalance?: boolean;
-  hasCopyAddressOnClick?: boolean;
   className?: string;
 }
 
 export function IdentityDisplay({
   showBalance = true,
-  hasCopyAddressOnClick = false,
   className = '',
 }: IdentityDisplayProps) {
   const { address } = useAccount();

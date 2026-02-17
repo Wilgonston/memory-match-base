@@ -6,8 +6,7 @@
  * Provides level selection functionality.
  */
 
-import React, { useEffect, useState } from 'react';
-import { useDisconnect } from 'wagmi';
+import React, { useState } from 'react';
 import { ProgressData } from '../types';
 import { type OnChainProgress } from '../types/blockchain';
 import { hapticButtonPress } from '../utils/haptics';
@@ -38,7 +37,6 @@ export const LevelSelect: React.FC<LevelSelectProps> = ({
   onBackToMenu,
 }) => {
   const { completedLevels, levelStars, highestUnlockedLevel } = progressData;
-  const { disconnect } = useDisconnect();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   /**

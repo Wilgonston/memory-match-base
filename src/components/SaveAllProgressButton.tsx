@@ -214,6 +214,13 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
         )}
       </button>
 
+      {!isLoading && !showSuccess && (
+        <p className="save-all-tip">
+          💡 <strong>Tip:</strong> Wait ~10 seconds after clicking before signing the transaction. 
+          This allows the wallet to show "Gas covered by Base" in the confirmation popup.
+        </p>
+      )}
+
       {showError && (
         <p className="save-all-error">
           ⚠️ {showError}
@@ -226,15 +233,17 @@ export const SaveAllProgressButton: React.FC<SaveAllProgressButtonProps> = ({
           : `⚡ You will pay gas • Saves ${levelsToSave.count} level${levelsToSave.count > 1 ? 's' : ''}`}
       </p>
 
-      {/* Transaction notification */}
+      {/* Transaction notification - positioned fixed at top-right */}
       {showNotification && savedHash && (
-        <TransactionNotification
-          hash={savedHash}
-          status="confirmed"
-          network="mainnet"
-          onDismiss={() => setShowNotification(false)}
-          autoDismissDelay={TIMEOUTS.AUTO_DISMISS}
-        />
+        <div className="transaction-notification-container">
+          <TransactionNotification
+            hash={savedHash}
+            status="confirmed"
+            network="mainnet"
+            onDismiss={() => setShowNotification(false)}
+            autoDismissDelay={TIMEOUTS.AUTO_DISMISS}
+          />
+        </div>
       )}
     </div>
   );

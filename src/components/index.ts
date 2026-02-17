@@ -33,8 +33,6 @@ export { WalletComponents } from './WalletComponents';
 
 export { IdentityDisplay } from './IdentityDisplay';
 
-export { SaveProgressButton } from './SaveProgressButton';
-
 export { LoginScreen } from './LoginScreen';
 
 export { NetworkSwitcher } from './NetworkSwitcher';
@@ -46,7 +44,3 @@ export { LoadingIndicator } from './LoadingIndicator';
 export { TransactionNotification } from './TransactionNotification';
 
 export { Web3ErrorBoundary } from './Web3ErrorBoundary';
-
-export { WelcomeScreen } from './WelcomeScreen';
-export type { WelcomeScreenProps } from './WelcomeScreen';
-
