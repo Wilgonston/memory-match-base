@@ -112,6 +112,13 @@ export const SaveProgressButton: React.FC<SaveProgressButtonProps> = ({
         )}
       </button>
 
+      {!isPending && !isSuccess && (
+        <p className="save-progress-tip">
+          💡 <strong>Tip:</strong> Wait ~10 seconds after clicking before signing the transaction. 
+          This allows the wallet to show "Gas covered by Base" in the confirmation popup.
+        </p>
+      )}
+
       {error && shouldDisplayError(error) && (
         <p className="save-progress-error">
           ⚠️ {getUserFriendlyError(error)}

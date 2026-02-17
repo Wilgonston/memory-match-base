@@ -108,6 +108,23 @@
   font-weight: 500;
 }
 
+.save-progress-tip {
+  font-size: 0.8rem;
+  color: rgba(0, 212, 255, 0.9);
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin: 0.5rem 0 0 0;
+  text-align: left;
+  line-height: 1.5;
+  max-width: 400px;
+}
+
+.save-progress-tip strong {
+  color: #00D4FF;
+}
+
 .save-progress-status {
   display: flex;
   align-items: center;
